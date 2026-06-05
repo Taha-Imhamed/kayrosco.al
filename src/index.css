@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 210 100% 6%;
+    --foreground: 180 100% 90%;
+
+    --card: 210 50% 10%;
+    --card-foreground: 180 100% 90%;
+
+    --popover: 210 50% 10%;
+    --popover-foreground: 180 100% 90%;
+
+    --primary: 158 100% 50%;
+    --primary-foreground: 210 100% 6%;
+
+    --secondary: 210 50% 20%;
+    --secondary-foreground: 180 100% 90%;
+
+    --muted: 210 30% 25%;
+    --muted-foreground: 180 20% 60%;
+
+    --accent: 158 100% 50%;
+    --accent-foreground: 210 100% 6%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 30% 25%;
+    --input: 210 30% 20%;
+    --ring: 158 100% 50%;
+
+    --radius: 0.5rem;
+
+    --tech-glow: 158 100% 50%;
+    --tech-dark: 210 100% 6%;
+    --tech-darker: 210 100% 4%;
+    
+    --sidebar-background: 210 50% 10%;
+    --sidebar-foreground: 180 100% 90%;
+    --sidebar-primary: 158 100% 50%;
+    --sidebar-primary-foreground: 210 100% 6%;
+    --sidebar-accent: 210 50% 20%;
+    --sidebar-accent-foreground: 180 100% 90%;
+    --sidebar-border: 210 30% 25%;
+    --sidebar-ring: 158 100% 50%;
+  }
+}
+
+@layer base {
+  :root {
+    /* ── Editorial Cream Design System ───────────────────────────────────── */
+    --bg:          #F4EFE4;
+    --bg-2:        #EEE8DA;
+    --surface:     #FFFFFF;
+    --surface-2:   #FBF8F1;
+    --ink:         #14120E;
+    --ink-2:       #2A2620;
+    --ink-3:       #57524A;
+    --ec-muted:    #8A847A;
+    --hair:        rgba(20,18,14,0.08);
+    --hair-2:      rgba(20,18,14,0.04);
+    --ec-accent:   #B8451F;
+    --accent-ink:  #7A2C12;
+    --accent-tint: #FBEAE0;
+    --positive:    #1F6B3F;
+    --warning:     #A86A14;
+    --info:        #2C5A88;
+
+    /* ── Font families ───────────────────────────────────────────────────── */
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans:  "Geist", ui-sans-serif, -apple-system, sans-serif;
+    --mono:  "Geist Mono", ui-monospace, monospace;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+
+  .glow-text {
+    text-shadow: 0 0 10px hsl(var(--tech-glow) / 0.5),
+                 0 0 20px hsl(var(--tech-glow) / 0.3);
+  }
+
+  .glow-border {
+    box-shadow: 0 0 15px hsl(var(--tech-glow) / 0.3);
+  }
+
+  .tech-grid {
+    background-image:
+      linear-gradient(hsl(var(--tech-glow) / 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--tech-glow) / 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}
+
+/* ── Admin live-indicator pulse ─────────────────────────────────────────────── */
+@keyframes live-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50%       { transform: scale(2.4); opacity: 0; }
+}
+
+.live-pulse-ring {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* ── Mobile drawer slide-up ──────────────────────────────────────────────────── */
+@keyframes sheet-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.mobile-drawer-sheet {
+  animation: sheet-slide-up 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* ── Mobile bottom bar safe-area ────────────────────────────────────────────── */
+.bottom-bar-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Hide scrollbar (keep scroll functionality) ─────────────────────────────── */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
