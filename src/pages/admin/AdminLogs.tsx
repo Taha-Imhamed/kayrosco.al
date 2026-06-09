@@ -8,32 +8,32 @@ import {
 } from "@/lib/adminApi";
 
 const C = {
-  bg:          "#EEF0F7",
+  bg:          "#F4F4F5",
   surface:     "#FFFFFF",
-  surface2:    "#F5F6FF",
-  ink:         "#16213E",
-  ink2:        "#2C3E62",
-  ink3:        "#4A5578",
-  muted:       "#8892A4",
+  surface2:    "#FAFAFA",
+  ink:         "#09090B",
+  ink2:        "#18181B",
+  ink3:        "#3F3F46",
+  muted:       "#71717A",
   hair:        "rgba(0,0,0,0.07)",
-  accent:      "#6C5CE7",
-  accentTint:  "#EDE9FE",
-  positive:    "#10B981",
-  positiveTint:"#D1FAE5",
-  warning:     "#F59E0B",
+  accent:      "#2563EB",
+  accentTint:  "rgba(37,99,235,0.10)",
+  positive:    "#16A34A",
+  positiveTint:"rgba(22,163,74,0.10)",
+  warning:     "#D97706",
   info:        "#3B82F6",
-  danger:      "#EF4444",
-  dangerTint:  "#FEE2E2",
+  danger:      "#DC2626",
+  dangerTint:  "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
 
 const ACTION_COLORS: Record<ActionType, string> = {
-  login: "#10B981",
-  logout: "#8892A4",
+  login: "#16A34A",
+  logout: "#71717A",
   create: "#3B82F6",
-  edit: "#F59E0B",
-  delete: "#EF4444",
+  edit: "#D97706",
+  delete: "#DC2626",
   download: "#7C3AED",
   upload: "#0D9488",
 };
@@ -122,7 +122,7 @@ export default function AdminLogs() {
         </p>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#EF4444", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>

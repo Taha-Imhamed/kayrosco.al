@@ -12,22 +12,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#EEF0F7",
+  bg:          "#F4F4F5",
   surface:     "#FFFFFF",
-  surface2:    "#F5F6FF",
-  ink:         "#16213E",
-  ink2:        "#2C3E62",
-  ink3:        "#4A5578",
-  muted:       "#8892A4",
+  surface2:    "#FAFAFA",
+  ink:         "#09090B",
+  ink2:        "#18181B",
+  ink3:        "#3F3F46",
+  muted:       "#71717A",
   hair:        "rgba(0,0,0,0.07)",
-  accent:      "#6C5CE7",
-  accentTint:  "#EDE9FE",
-  positive:    "#10B981",
-  positiveTint:"#D1FAE5",
-  warning:     "#F59E0B",
+  accent:      "#2563EB",
+  accentTint:  "rgba(37,99,235,0.10)",
+  positive:    "#16A34A",
+  positiveTint:"rgba(22,163,74,0.10)",
+  warning:     "#D97706",
   info:        "#3B82F6",
-  danger:      "#EF4444",
-  dangerTint:  "#FEE2E2",
+  danger:      "#DC2626",
+  dangerTint:  "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -38,7 +38,7 @@ const TYPES: ContractType[] = ["internal", "client", "government"];
 const CAT_COLORS: Record<ContractCategory, string> = {
   tech: "#3B82F6",
   consulting: "#7C3AED",
-  travel: "#10B981",
+  travel: "#16A34A",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -208,8 +208,8 @@ export default function AdminContracts() {
         </button>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#EF4444", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#10B981", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
@@ -270,7 +270,7 @@ export default function AdminContracts() {
                       </button>
                     )}
                     {admin?.role === "admin" && (
-                      <button onClick={() => handleDelete(contract)} style={{ background: "none", border: "none", color: "#EF4444", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>
+                      <button onClick={() => handleDelete(contract)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>
                         Delete
                       </button>
                     )}

@@ -1,21 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Send, Sparkles } from "lucide-react";
 import { getAgentConfig, getAgentWork, sendAgentMessage } from "@/lib/agentApi";
 import type { AgentChatMessage, AgentWorkItem } from "@/lib/agentTypes";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg: "#EEF0F7",
+  bg: "#F4F4F5",
   surface: "#FFFFFF",
-  surface2: "#F5F6FF",
-  ink: "#16213E",
-  ink2: "#2C3E62",
-  muted: "#8892A4",
+  surface2: "#FAFAFA",
+  ink: "#09090B",
+  ink2: "#18181B",
+  muted: "#71717A",
   hair: "rgba(0,0,0,0.07)",
-  accent: "#6C5CE7",
-  accentSoft: "#EDE9FE",
+  accent: "#2563EB",
+  accentSoft: "rgba(37,99,235,0.10)",
   danger: "#DC2626",
-  dangerSoft: "#FEE2E2",
+  dangerSoft: "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";

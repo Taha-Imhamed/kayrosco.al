@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   Deal, getDeals, createDeal, updateDeal, deleteDeal,
   Client, getClients,
@@ -8,22 +8,22 @@ import { applyTx, getAccounts, addAccount } from "@/lib/balanceStore";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:           "#EEF0F7",
+  bg:           "#F4F4F5",
   surface:      "#FFFFFF",
-  surface2:     "#F5F6FF",
-  ink:          "#16213E",
-  ink2:         "#2C3E62",
-  ink3:         "#4A5578",
-  muted:        "#8892A4",
+  surface2:     "#FAFAFA",
+  ink:          "#09090B",
+  ink2:         "#18181B",
+  ink3:         "#3F3F46",
+  muted:        "#71717A",
   hair:         "rgba(0,0,0,0.07)",
-  accent:       "#6C5CE7",
-  accentTint:   "#EDE9FE",
-  positive:     "#10B981",
-  positiveTint: "#D1FAE5",
-  warning:      "#F59E0B",
+  accent:       "#2563EB",
+  accentTint:   "rgba(37,99,235,0.10)",
+  positive:     "#16A34A",
+  positiveTint: "rgba(22,163,74,0.10)",
+  warning:      "#D97706",
   info:         "#3B82F6",
-  danger:       "#EF4444",
-  dangerTint:   "#FEE2E2",
+  danger:       "#DC2626",
+  dangerTint:   "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -75,7 +75,7 @@ function moveToBalance(deal: Deal, byUsername: string) {
 function DueBadge({ dueDate }: { dueDate: string | null }) {
   if (!dueDate) return <span style={{ color: C.muted, fontSize: 11 }}>No due date</span>;
   const days = Math.ceil((new Date(dueDate).getTime() - Date.now()) / 86400000);
-  const color = days < 0 ? C.danger : days <= 7 ? "#F59E0B" : days <= 30 ? C.info : C.positive;
+  const color = days < 0 ? C.danger : days <= 7 ? "#D97706" : days <= 30 ? C.info : C.positive;
   const label = days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? "Today" : `${days}d left`;
   return (
     <span style={{

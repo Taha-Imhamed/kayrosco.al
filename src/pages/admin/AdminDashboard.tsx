@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getDashboardStats,
@@ -26,29 +26,29 @@ import { canAccess, ROLE_LABEL, roleDept, isDeptStaff as checkDeptStaff } from "
 
 // ─── Design tokens — Kayrosco reference system ───────────────────────────────
 const C = {
-  accent:       "#5750e6",
-  accentPress:  "#4842c9",
-  accentSoft:   "#eeedfb",
-  accentRing:   "rgba(87,80,230,0.28)",
-  bg:           "#f6f7f9",
+  accent:       "#2563EB",
+  accentPress:  "#1d4ed8",
+  accentSoft:   "rgba(37,99,235,0.10)",
+  accentRing:   "rgba(37,99,235,0.28)",
+  bg:           "#F4F4F5",
   surface:      "#ffffff",
-  surface2:     "#fbfbfd",
-  border:       "#e9ebf0",
-  borderStrong: "#dfe2e9",
-  text:         "#141925",
-  text2:        "#5b6474",
-  text3:        "#8b93a3",
-  textFaint:    "#aab1bf",
-  pos:          "#0e9f6e",
-  posSoft:      "#e4f5ee",
-  neg:          "#e05260",
-  negSoft:      "#fcebed",
-  warn:         "#c77d12",
-  warnSoft:     "#fbf0db",
+  surface2:     "#FAFAFA",
+  border:       "#E4E4E7",
+  borderStrong: "#D4D4D8",
+  text:         "#09090B",
+  text2:        "#3F3F46",
+  text3:        "#71717A",
+  textFaint:    "#A1A1AA",
+  pos:          "#16A34A",
+  posSoft:      "rgba(22,163,74,0.10)",
+  neg:          "#DC2626",
+  negSoft:      "rgba(220,38,38,0.10)",
+  warn:         "#D97706",
+  warnSoft:     "rgba(217,119,6,0.10)",
 };
 
-const UI   = '"Manrope", system-ui, sans-serif';
-const DISP = '"Space Grotesk", "Manrope", sans-serif';
+const UI   = "'Geist', ui-sans-serif, -apple-system, sans-serif";
+const DISP = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = '"Geist Mono", "JetBrains Mono", ui-monospace, monospace';
 
 const shSm = "0 1px 2px rgba(20,25,37,.04)";
@@ -58,7 +58,7 @@ const shMd = "0 4px 16px -6px rgba(20,25,37,.10), 0 1px 3px rgba(20,25,37,.04)";
 const card: React.CSSProperties = {
   background: C.surface,
   border: `1px solid ${C.border}`,
-  borderRadius: 18,
+  borderRadius: 14,
   padding: 22,
   boxShadow: shSm,
 };
@@ -129,14 +129,14 @@ const Ico = {
 type ActionTile = { bg: string; color: string; Ic: React.FC };
 const ACTION_TILE: Record<string, ActionTile> = {
   login:    { bg: C.accentSoft,              color: C.accent, Ic: Ico.ActLogin    },
-  logout:   { bg: "#f1f5f9",                 color: C.text3,  Ic: Ico.ActLogout   },
+  logout:   { bg: "#FAFAFA",                 color: C.text3,  Ic: Ico.ActLogout   },
   create:   { bg: C.posSoft,                 color: C.pos,    Ic: Ico.ActCreate   },
   edit:     { bg: C.warnSoft,                color: C.warn,   Ic: Ico.ActEdit     },
   delete:   { bg: C.negSoft,                 color: C.neg,    Ic: Ico.ActDelete   },
   download: { bg: C.accentSoft,              color: C.accent, Ic: Ico.ActDownload },
   upload:   { bg: C.posSoft,                 color: C.pos,    Ic: Ico.ActUpload   },
 };
-const DEFAULT_ACT: ActionTile = { bg: "#f1f5f9", color: C.text3, Ic: Ico.Activity };
+const DEFAULT_ACT: ActionTile = { bg: "#FAFAFA", color: C.text3, Ic: Ico.Activity };
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 function Sparkline({ data, color = C.accent, w = 84, h = 28 }: {
@@ -232,7 +232,7 @@ function KpiCard({
         {delta != null && deltaDir && (
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 4,
-            fontSize: 12, fontWeight: 700, padding: "2px 8px", borderRadius: 20,
+            fontSize: 12, fontWeight: 700, padding: "2px 8px", borderRadius: 14,
             ...deltaStyle,
           }}>
             {deltaDir === "up" ? "▲" : deltaDir === "down" ? "▼" : "▸"} {delta}
@@ -326,12 +326,12 @@ function FinanceRow({
         </div>
 
         {/* Progress bar */}
-        <div style={{ height: 10, borderRadius: 20, background: C.surface2, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+        <div style={{ height: 10, borderRadius: 14, background: C.surface2, border: `1px solid ${C.border}`, overflow: "hidden" }}>
           <div style={{
             height: "100%",
             width: allocated > 0 ? `${Math.min(pct, 100)}%` : "0%",
-            background: `linear-gradient(90deg, ${C.accent}, #8b86f0)`,
-            borderRadius: 20,
+            background: `linear-gradient(90deg, ${C.accent}, #60a5fa)`,
+            borderRadius: 14,
             transition: "width .5s cubic-bezier(.4,0,.2,1)",
           }} />
         </div>
@@ -370,7 +370,7 @@ function FinanceRow({
 
         {totalBalance > 0 ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700, padding: "2px 8px", borderRadius: 20, color: C.pos, background: C.posSoft }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 700, padding: "2px 8px", borderRadius: 14, color: C.pos, background: C.posSoft }}>
               ▲ Active
             </span>
             <span style={{ fontSize: 12.5, color: C.text3, fontFamily: UI }}>from all balance accounts</span>
@@ -460,7 +460,7 @@ function QaButton({ label, Ic, onClick }: { label: string; Ic: React.FC<SvgProps
       <div style={{
         width: 30, height: 30, borderRadius: 8, flexShrink: 0,
         background: hov ? C.surface : C.surface2,
-        border: `1px solid ${hov ? "rgba(87,80,230,.35)" : C.border}`,
+        border: `1px solid ${hov ? "rgba(37,99,235,.35)" : C.border}`,
         display: "flex", alignItems: "center", justifyContent: "center",
         color: hov ? C.accent : C.text2,
         transition: "all .14s",
@@ -531,7 +531,7 @@ function TasksWidget({ adminUser, deptFilter }: { adminUser: AdminUser | null; d
           <span style={{ fontSize: 13, fontFamily: UI, fontWeight: 700, color: C.text }}>Tasks</span>
           <span style={{
             fontSize: 11, fontWeight: 700, fontFamily: UI,
-            padding: "1px 7px", borderRadius: 20,
+            padding: "1px 7px", borderRadius: 14,
             background: C.surface2, color: C.text2, border: `1px solid ${C.border}`,
           }}>
             {tasks.length}
@@ -657,7 +657,7 @@ function TasksWidget({ adminUser, deptFilter }: { adminUser: AdminUser | null; d
                   <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 12 }}>
                     <span style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
-                      fontSize: 11, fontWeight: 650, padding: "2px 8px", borderRadius: 20,
+                      fontSize: 11, fontWeight: 650, padding: "2px 8px", borderRadius: 14,
                       color: p.fg, background: p.bg,
                     }}>
                       <span style={{ width: 7, height: 7, borderRadius: "50%", background: "currentColor", display: "inline-block" }} />
@@ -719,7 +719,7 @@ function NotesWidget({ adminUser }: { adminUser: AdminUser | null }) {
           <span style={{ fontSize: 13, fontFamily: UI, fontWeight: 700, color: C.text }}>Notes</span>
           <span style={{
             fontSize: 11, fontWeight: 700, fontFamily: UI,
-            padding: "1px 7px", borderRadius: 20,
+            padding: "1px 7px", borderRadius: 14,
             background: C.surface2, color: C.text2, border: `1px solid ${C.border}`,
           }}>
             {notes.length}
@@ -825,17 +825,6 @@ export default function AdminDashboard() {
   const [accountBalanceTotal, setAccountBalanceTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState("");
-
-  // Inject Manrope + Space Grotesk fonts
-  useEffect(() => {
-    const id = "kayrosco-dash-fonts";
-    if (!document.getElementById(id)) {
-      const link = document.createElement("link");
-      link.id = id; link.rel = "stylesheet";
-      link.href = "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap";
-      document.head.appendChild(link);
-    }
-  }, []);
 
   useEffect(() => {
     const now = new Date();
@@ -956,7 +945,7 @@ export default function AdminDashboard() {
               ? { bg: C.negSoft,  border: "rgba(224,82,96,.25)",  text: C.neg,  label: "URGENT"  }
               : a.level === "warning"
               ? { bg: C.warnSoft, border: "rgba(199,125,18,.25)", text: C.warn, label: "WARNING" }
-              : { bg: C.accentSoft,border: "rgba(87,80,230,.20)", text: C.accent,label: "INFO"   };
+              : { bg: C.accentSoft,border: "rgba(37,99,235,.20)", text: C.accent,label: "INFO"   };
             return (
               <div key={a.id} style={{
                 padding: "12px 16px", borderRadius: 10,
@@ -1106,7 +1095,7 @@ export default function AdminDashboard() {
                         {" "}<span style={{ color: C.text3 }}>{log.action}</span>{" "}
                         <span style={{
                           display: "inline-flex", alignItems: "center",
-                          fontSize: 11, fontWeight: 650, padding: "1px 7px", borderRadius: 20,
+                          fontSize: 11, fontWeight: 650, padding: "1px 7px", borderRadius: 14,
                           color: tile.color, background: tile.bg,
                         }}>
                           {log.action_type}

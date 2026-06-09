@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ServiceRequest, RequestStatus, RequestPriority, RequestLink,
@@ -7,26 +7,26 @@ import {
   TechProject, TechProjectStatus, getTechProjects, createTechProject, updateTechProject, deleteTechProject,
 } from "@/lib/supabaseApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { logActivity } from "@/lib/adminApi";
+import { logActivity, uploadTechProjectImage } from "@/lib/adminApi";
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
-  bg:           "#EEF0F7",
+  bg:           "#F4F4F5",
   surface:      "#FFFFFF",
-  surface2:     "#F5F6FF",
-  ink:          "#16213E",
-  ink2:         "#2C3E62",
-  ink3:         "#4A5578",
-  muted:        "#8892A4",
+  surface2:     "#FAFAFA",
+  ink:          "#09090B",
+  ink2:         "#18181B",
+  ink3:         "#3F3F46",
+  muted:        "#71717A",
   hair:         "rgba(0,0,0,0.07)",
-  accent:       "#6C5CE7",
-  accentTint:   "#EDE9FE",
-  positive:     "#10B981",
-  positiveTint: "#D1FAE5",
-  warning:      "#F59E0B",
+  accent:       "#2563EB",
+  accentTint:   "rgba(37,99,235,0.10)",
+  positive:     "#16A34A",
+  positiveTint: "rgba(22,163,74,0.10)",
+  warning:      "#D97706",
   info:         "#3B82F6",
-  danger:       "#EF4444",
-  dangerTint:   "#FEE2E2",
+  danger:       "#DC2626",
+  dangerTint:   "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -43,18 +43,18 @@ const DEPT_INFO: Record<string, { label: string; color: string; area: ServiceAre
 // ─── Status & priority configs ─────────────────────────────────────────────────
 const STATUS_ORDER: RequestStatus[] = ["new","in_review","awaiting_docs","in_progress","completed"];
 const STATUS_CFG: Record<RequestStatus, { label: string; color: string; bg: string }> = {
-  new:           { label: "New",           color: "#F59E0B", bg: "rgba(245,158,11,0.10)"  },
+  new:           { label: "New",           color: "#D97706", bg: "rgba(245,158,11,0.10)"  },
   in_review:     { label: "In Review",     color: "#3B82F6", bg: "rgba(59,130,246,0.10)"  },
   awaiting_docs: { label: "Awaiting Docs", color: "#F97316", bg: "rgba(249,115,22,0.10)"  },
   in_progress:   { label: "In Progress",   color: "#8B5CF6", bg: "rgba(139,92,246,0.10)"  },
-  completed:     { label: "Completed",     color: "#10B981", bg: "rgba(16,185,129,0.10)"  },
+  completed:     { label: "Completed",     color: "#16A34A", bg: "rgba(16,185,129,0.10)"  },
 };
 const PRIORITY_ORDER: RequestPriority[] = ["low","medium","high","urgent"];
 const PRIORITY_CFG: Record<RequestPriority, { label: string; color: string; bg: string }> = {
-  low:    { label: "Low",    color: "#10B981", bg: "rgba(16,185,129,0.10)" },
+  low:    { label: "Low",    color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
   medium: { label: "Medium", color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
-  high:   { label: "High",   color: "#F59E0B", bg: "rgba(245,158,11,0.10)" },
-  urgent: { label: "Urgent", color: "#EF4444", bg: "rgba(239,68,68,0.10)"  },
+  high:   { label: "High",   color: "#D97706", bg: "rgba(245,158,11,0.10)" },
+  urgent: { label: "Urgent", color: "#DC2626", bg: "rgba(239,68,68,0.10)"  },
 };
 
 // ─── Department-specific link types ───────────────────────────────────────────
@@ -63,30 +63,30 @@ type LinkTypeDef = { key: RequestLinkType; label: string; color: string; icon: s
 const DEPT_LINK_TYPES: Record<string, LinkTypeDef[]> = {
   tech: [
     { key: "demo",    label: "Demo",        color: "#8B5CF6", icon: "▶"  },
-    { key: "repo",    label: "Repository",  color: "#16213E", icon: "</>" },
+    { key: "repo",    label: "Repository",  color: "#09090B", icon: "</>" },
     { key: "figma",   label: "Figma",       color: "#F24E1E", icon: "✦"  },
     { key: "staging", label: "Staging",     color: "#3B82F6", icon: "↗"  },
-    { key: "doc",     label: "Docs",        color: "#6C5CE7", icon: "≡"  },
-    { key: "meet",    label: "Meeting",     color: "#10B981", icon: "◎"  },
-    { key: "other",   label: "Other",       color: "#8892A4", icon: "◈"  },
+    { key: "doc",     label: "Docs",        color: "#2563EB", icon: "≡"  },
+    { key: "meet",    label: "Meeting",     color: "#16A34A", icon: "◎"  },
+    { key: "other",   label: "Other",       color: "#71717A", icon: "◈"  },
   ],
   travel: [
     { key: "staging", label: "Booking Ref",    color: "#8B5CF6", icon: "✈"  },
-    { key: "demo",    label: "Hotel Link",     color: "#10B981", icon: "🏨" },
+    { key: "demo",    label: "Hotel Link",     color: "#16A34A", icon: "🏨" },
     { key: "repo",    label: "Flight Info",    color: "#3B82F6", icon: "🛫" },
     { key: "figma",   label: "Visa Appt",      color: "#F97316", icon: "📋" },
-    { key: "doc",     label: "Document",       color: "#6C5CE7", icon: "📄" },
-    { key: "meet",    label: "Meeting",        color: "#10B981", icon: "◎"  },
-    { key: "other",   label: "Other",          color: "#8892A4", icon: "◈"  },
+    { key: "doc",     label: "Document",       color: "#2563EB", icon: "📄" },
+    { key: "meet",    label: "Meeting",        color: "#16A34A", icon: "◎"  },
+    { key: "other",   label: "Other",          color: "#71717A", icon: "◈"  },
   ],
   consulting: [
     { key: "doc",     label: "Proposal",       color: "#7C3AED", icon: "📄" },
-    { key: "meet",    label: "Meeting",        color: "#10B981", icon: "◎"  },
+    { key: "meet",    label: "Meeting",        color: "#16A34A", icon: "◎"  },
     { key: "staging", label: "Report",         color: "#3B82F6", icon: "📊" },
-    { key: "demo",    label: "Presentation",   color: "#F59E0B", icon: "🎯" },
-    { key: "figma",   label: "Contract",       color: "#EF4444", icon: "📝" },
-    { key: "repo",    label: "Client Site",    color: "#6C5CE7", icon: "🌐" },
-    { key: "other",   label: "Other",          color: "#8892A4", icon: "◈"  },
+    { key: "demo",    label: "Presentation",   color: "#D97706", icon: "🎯" },
+    { key: "figma",   label: "Contract",       color: "#DC2626", icon: "📝" },
+    { key: "repo",    label: "Client Site",    color: "#2563EB", icon: "🌐" },
+    { key: "other",   label: "Other",          color: "#71717A", icon: "◈"  },
   ],
 };
 
@@ -143,15 +143,15 @@ const TRAVEL_SERVICES: Record<string, string> = {
 };
 
 const BUDGET_TIERS = [
-  { key: "Budget",   label: "Budget",   color: "#10B981", sub: "Under $800 · ~$40 hotel + $40 food/day" },
+  { key: "Budget",   label: "Budget",   color: "#16A34A", sub: "Under $800 · ~$40 hotel + $40 food/day" },
   { key: "Standard", label: "Standard", color: "#3B82F6", sub: "$1,000 – $2,000" },
   { key: "Comfort",  label: "Comfort",  color: "#8B5CF6", sub: "$3,000 – $4,000" },
-  { key: "Luxury",   label: "Luxury",   color: "#F59E0B", sub: "Open budget" },
+  { key: "Luxury",   label: "Luxury",   color: "#D97706", sub: "Open budget" },
 ];
 
 // ─── Tech Project status config ────────────────────────────────────────────────
 const PROJECT_STATUS_CFG: Record<TechProjectStatus, { label: string; color: string; bg: string }> = {
-  done:        { label: "Done",        color: "#10B981", bg: "rgba(16,185,129,0.10)" },
+  done:        { label: "Done",        color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
   available:   { label: "Available",   color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
   in_progress: { label: "In Progress", color: "#8B5CF6", bg: "rgba(139,92,246,0.10)" },
 };
@@ -495,6 +495,9 @@ export default function AdminDept() {
   const [showProjectForm,       setShowProjectForm]       = useState(false);
   const [editingProject,        setEditingProject]        = useState<TechProject | null>(null);
   const [projectSaving,         setProjectSaving]         = useState(false);
+  const [photoUploading,        setPhotoUploading]        = useState(false);
+  const [photoUploadError,      setPhotoUploadError]      = useState("");
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const [pForm, setPForm] = useState({
     title:       "",
     description: "",
@@ -680,6 +683,22 @@ export default function AdminDept() {
     setProjectsError("");
     setShowProjectForm(true);
   };
+  const handlePhotoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoUploadError("");
+    setPhotoUploading(true);
+    try {
+      const url = await uploadTechProjectImage(file);
+      setPForm(f => ({ ...f, photo_url: url }));
+    } catch (err) {
+      setPhotoUploadError(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setPhotoUploading(false);
+      if (photoInputRef.current) photoInputRef.current.value = "";
+    }
+  };
+
   const handleProjectSave = async () => {
     if (!pForm.title.trim()) return;
     setProjectSaving(true); setProjectsError("");
@@ -1097,20 +1116,78 @@ export default function AdminDept() {
                   placeholder="Brief description of the project or service…" />
               </div>
 
-              {/* Photo URL + Link */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
-                <div>
-                  <label style={labelStyle}>Photo URL</label>
-                  <input style={inputStyle} value={pForm.photo_url}
+              {/* Photo — URL paste OR file upload */}
+              <div style={{ marginBottom: 14 }}>
+                <label style={labelStyle}>Project Photo</label>
+
+                {/* Hidden native file input */}
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handlePhotoFileChange}
+                />
+
+                {/* URL row + Upload button */}
+                <div style={{ display: "flex", gap: 8 }}>
+                  <input
+                    style={{ ...inputStyle, flex: 1 }}
+                    value={pForm.photo_url}
                     onChange={e => setPForm(f => ({ ...f, photo_url: e.target.value }))}
-                    placeholder="https://…" />
+                    placeholder="Paste a URL, or upload below…"
+                    disabled={photoUploading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => photoInputRef.current?.click()}
+                    disabled={photoUploading}
+                    style={{
+                      flexShrink: 0,
+                      display: "flex", alignItems: "center", gap: 6,
+                      padding: "0 16px", height: 40, borderRadius: 8,
+                      border: `1.5px solid ${C.accent}`,
+                      background: photoUploading ? C.muted : "transparent",
+                      color: photoUploading ? "#fff" : C.accent,
+                      fontSize: 13, fontWeight: 600, fontFamily: SANS,
+                      cursor: photoUploading ? "not-allowed" : "pointer",
+                      whiteSpace: "nowrap",
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    {photoUploading ? (
+                      <>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "spin 0.8s linear infinite" }}>
+                          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                        Uploading…
+                      </>
+                    ) : (
+                      <>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Upload
+                      </>
+                    )}
+                  </button>
                 </div>
-                <div>
-                  <label style={labelStyle}>Project Link</label>
-                  <input style={inputStyle} value={pForm.link}
-                    onChange={e => setPForm(f => ({ ...f, link: e.target.value }))}
-                    placeholder="https://…" />
-                </div>
+
+                {photoUploadError && (
+                  <p style={{ marginTop: 6, fontSize: 12, color: C.danger, fontFamily: SANS }}>{photoUploadError}</p>
+                )}
+                <p style={{ marginTop: 5, fontSize: 11, color: C.muted, fontFamily: SANS }}>
+                  Upload from device (JPG, PNG, WebP) or paste a public image URL.
+                </p>
+              </div>
+
+              {/* Project Link */}
+              <div style={{ marginBottom: 14 }}>
+                <label style={labelStyle}>Project Link</label>
+                <input style={inputStyle} value={pForm.link}
+                  onChange={e => setPForm(f => ({ ...f, link: e.target.value }))}
+                  placeholder="https://…" />
               </div>
 
               {/* Tags + Order */}

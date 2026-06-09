@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   ContractStatus,
   createPartner,
@@ -10,21 +10,21 @@ import {
 } from "@/lib/partnersStore";
 
 const C = {
-  bg: "#EEF0F7",
+  bg: "#F4F4F5",
   surface: "#FFFFFF",
-  surface2: "#F5F6FF",
-  ink: "#16213E",
-  ink2: "#2C3E62",
-  muted: "#8892A4",
+  surface2: "#FAFAFA",
+  ink: "#09090B",
+  ink2: "#18181B",
+  muted: "#71717A",
   hair: "rgba(0,0,0,0.07)",
-  accent: "#6C5CE7",
-  accentTint: "#EDE9FE",
-  positive: "#10B981",
-  positiveTint: "#D1FAE5",
-  warning: "#F59E0B",
+  accent: "#2563EB",
+  accentTint: "rgba(37,99,235,0.10)",
+  positive: "#16A34A",
+  positiveTint: "rgba(22,163,74,0.10)",
+  warning: "#D97706",
   warningTint: "#FFF7E8",
-  danger: "#EF4444",
-  dangerTint: "#FEE2E2",
+  danger: "#DC2626",
+  dangerTint: "rgba(220,38,38,0.10)",
   info: "#3B82F6",
   infoTint: "#EFF6FF",
 };
@@ -366,7 +366,7 @@ export default function AdminPartners() {
                   background: C.surface,
                   borderRadius: 16,
                   border: `1px solid ${expanded ? C.accent : C.hair}`,
-                  boxShadow: expanded ? "0 12px 30px rgba(108,92,231,0.12)" : "0 4px 18px rgba(0,0,0,0.05)",
+                  boxShadow: expanded ? "0 12px 30px rgba(37,99,235,0.12)" : "0 4px 18px rgba(0,0,0,0.05)",
                   overflow: "hidden",
                 }}
               >

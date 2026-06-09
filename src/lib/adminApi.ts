@@ -1180,6 +1180,17 @@ export const uploadTicketFile = async (ticketId: string, file: File): Promise<st
   return data.publicUrl;
 };
 
+export const uploadTechProjectImage = async (file: File): Promise<string> => {
+  const ext  = file.name.split(".").pop() ?? "jpg";
+  const path = `projects/${Date.now()}_${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage
+    .from("tech-project-images")
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+  const { data } = supabase.storage.from("tech-project-images").getPublicUrl(path);
+  return data.publicUrl;
+};
+
 // ─── Deals ────────────────────────────────────────────────────────────────────
 
 export interface Deal {

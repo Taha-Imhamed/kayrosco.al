@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import SeoHead from "@/components/SeoHead";
 import {
   Plane, Car, Hotel, FileText, Globe, Home, Search, Loader,
@@ -1446,6 +1446,7 @@ function Footer({ settings, lang }: { settings: Record<string, string> | null; l
 }
 
 // ─── Hero section ──────────────────────────────────────────────────────────────
+
 function HeroSection({ lang, onPlan, onTrack }: { lang: Lang; onPlan: () => void; onTrack: () => void }) {
   const t = T[lang];
   const mob = useMobile();
@@ -1454,12 +1455,12 @@ function HeroSection({ lang, onPlan, onTrack }: { lang: Lang; onPlan: () => void
     <div
       style={{ position: "relative", minHeight: mob ? "100svh" : "92vh", display: "flex", alignItems: mob ? "flex-end" : "center", overflow: "hidden" }}
     >
-      {/* Background photo */}
       <img
         src="https://albaniannight.com/wp-content/uploads/2025/05/Grama-Bay-in-Karaburun-Peninsula-min-scaled.jpeg"
         alt=""
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", zIndex: 0 }}
       />
+
       <div style={{ position: "absolute", inset: 0, background: mob ? "linear-gradient(to top, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.4) 60%, transparent 100%)" : "linear-gradient(to right, rgba(15,23,42,0.84) 0%, rgba(15,23,42,0.55) 55%, rgba(15,23,42,0.22) 100%)", zIndex: 1 }} />
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: mob ? 200 : 130, background: "linear-gradient(to top, #F0FDFA, transparent)", zIndex: 2 }} />
       <div style={{ position: "relative", zIndex: 3, maxWidth: 1100, margin: "0 auto", padding: mob ? "0 20px 80px" : "0 32px", width: "100%" }}>

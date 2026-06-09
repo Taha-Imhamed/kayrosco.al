@@ -1,37 +1,46 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, NavLink, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { canAccess, ROLE_LABEL, roleDept, isDeptStaff } from "@/lib/roleAccess";
 import type { AdminRole } from "@/lib/adminApi";
 
-// ─── Fasto-style purple design tokens ────────────────────────────────────────
-const C = {
-  bg:               "#EEF0F7",            // light purple-gray page background
-  surface:          "#FFFFFF",
-  surface2:         "#F5F6FF",
-  ink:              "#16213E",            // deep navy text
-  muted:            "#8892A4",
-  hair:             "rgba(0,0,0,0.07)",
-  accent:           "#6C5CE7",            // primary purple
-  sidebarBg:        "#27136B",            // deep violet sidebar
-  sidebarText:      "rgba(255,255,255,0.55)",
-  sidebarActive:    "rgba(108,92,231,0.22)",
-  sidebarActiveText:"#FFFFFF",
+// ─── Design tokens ────────────────────────────────────────────────────────────
+export const C = {
+  bg:                "#F4F4F5",
+  surface:           "#FFFFFF",
+  surface2:          "#FAFAFA",
+  ink:               "#09090B",
+  ink2:              "#3F3F46",
+  muted:             "#71717A",
+  hair:              "rgba(0,0,0,0.07)",
+  border:            "#E4E4E7",
+  accent:            "#2563EB",
+  accentLight:       "rgba(37,99,235,0.10)",
+  success:           "#16A34A",
+  successLight:      "rgba(22,163,74,0.10)",
+  warning:           "#D97706",
+  warningLight:      "rgba(217,119,6,0.10)",
+  danger:            "#DC2626",
+  dangerLight:       "rgba(220,38,38,0.10)",
+  sidebarBg:         "#0F0F11",
+  sidebarBorder:     "rgba(255,255,255,0.06)",
+  sidebarText:       "rgba(255,255,255,0.45)",
+  sidebarTextHover:  "rgba(255,255,255,0.85)",
+  sidebarActive:     "rgba(255,255,255,0.09)",
+  sidebarActiveText: "#FFFFFF",
+  sidebarSection:    "rgba(255,255,255,0.18)",
 };
 
-const SERIF = "'Instrument Serif', 'Times New Roman', serif";
-const SANS  = "'Geist', ui-sans-serif, -apple-system, sans-serif";
-const MONO  = "'Geist Mono', ui-monospace, monospace";
+export const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
+export const MONO = "'Geist Mono', ui-monospace, monospace";
 
-// ─── Icons — accept a `size` prop so the same SVG works at 14px (sidebar),
-//     16px (drawer) and 22px (bottom bar). ────────────────────────────────────
+// ─── Icon library ─────────────────────────────────────────────────────────────
 type IconProps = { size?: number };
-
-const Ico = {
+export const Ico = {
   Dashboard: ({ size = 14 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
     </svg>
   ),
   Staff: ({ size = 14 }: IconProps) => (
@@ -89,8 +98,7 @@ const Ico = {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
       <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
     </svg>
   ),
   Partners: ({ size = 14 }: IconProps) => (
@@ -144,12 +152,17 @@ const Ico = {
   Agent: ({ size = 14 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <rect x="4" y="4" width="16" height="16" rx="4"/>
-      <circle cx="9" cy="10" r="1"/>
-      <circle cx="15" cy="10" r="1"/>
+      <circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>
       <path d="M8 15c1 .8 2.3 1.2 4 1.2s3-.4 4-1.2"/>
     </svg>
   ),
-  // Desktop menu toggle
+  Balance: ({ size = 14 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+      <path d="M16 14a1 1 0 1 0 2 0 1 1 0 0 0-2 0z" fill="currentColor" stroke="none"/>
+      <path d="M2 10h20"/>
+    </svg>
+  ),
   Menu: ({ size = 16 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
       <line x1="3" y1="6" x2="21" y2="6"/>
@@ -157,21 +170,18 @@ const Ico = {
       <line x1="3" y1="18" x2="21" y2="18"/>
     </svg>
   ),
-  // Mobile "More" — 3×3 dot grid
   More: ({ size = 22 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <circle cx="5"  cy="5"  r="1.6"/><circle cx="12" cy="5"  r="1.6"/><circle cx="19" cy="5"  r="1.6"/>
-      <circle cx="5"  cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>
-      <circle cx="5"  cy="19" r="1.6"/><circle cx="12" cy="19" r="1.6"/><circle cx="19" cy="19" r="1.6"/>
+      <circle cx="5" cy="5" r="1.6"/><circle cx="12" cy="5" r="1.6"/><circle cx="19" cy="5" r="1.6"/>
+      <circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>
+      <circle cx="5" cy="19" r="1.6"/><circle cx="12" cy="19" r="1.6"/><circle cx="19" cy="19" r="1.6"/>
     </svg>
   ),
-  // Close ×
   Close: ({ size = 16 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
     </svg>
   ),
-  // Sign out arrow
   SignOut: ({ size = 14 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -179,23 +189,14 @@ const Ico = {
       <line x1="21" y1="12" x2="9" y2="12"/>
     </svg>
   ),
-  // Balance / Wallet
-  Balance: ({ size = 14 }: IconProps) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-      <path d="M16 14a1 1 0 1 0 2 0 1 1 0 0 0-2 0z" fill="currentColor" stroke="none"/>
-      <path d="M2 10h20"/>
-      <path d="M6 3l3-3h6l3 3" opacity="0.5"/>
-    </svg>
-  ),
 };
 
-// ─── Categorised nav (used by sidebar + mobile drawer) ────────────────────────
+// ─── Nav structure ─────────────────────────────────────────────────────────────
 const NAV_CATEGORIES = [
   {
     label: "Overview",
     items: [
-      { to: "/memo/dashboard",      label: "Dashboard",      Icon: Ico.Dashboard,      end: true },
+      { to: "/memo/dashboard", label: "Dashboard", Icon: Ico.Dashboard, end: true },
     ],
   },
   {
@@ -211,18 +212,18 @@ const NAV_CATEGORIES = [
   {
     label: "Contracts",
     items: [
-      { to: "/memo/contracts",      label: "Contracts",      Icon: Ico.Contracts },
-      { to: "/memo/partners",       label: "Partners",       Icon: Ico.Partners },
-      { to: "/memo/pipeline",       label: "Pipeline",       Icon: Ico.Pipeline },
-      { to: "/memo/tickets",        label: "Tickets",        Icon: Ico.Tickets },
+      { to: "/memo/contracts", label: "Contracts", Icon: Ico.Contracts },
+      { to: "/memo/partners",  label: "Partners",  Icon: Ico.Partners },
+      { to: "/memo/pipeline",  label: "Pipeline",  Icon: Ico.Pipeline },
+      { to: "/memo/tickets",   label: "Tickets",   Icon: Ico.Tickets },
     ],
   },
   {
     label: "People",
     items: [
-      { to: "/memo/staff",          label: "Staff",          Icon: Ico.Staff },
-      { to: "/memo/clients",        label: "Clients",        Icon: Ico.Clients },
-      { to: "/memo/permissions",    label: "Permissions",    Icon: Ico.Permissions },
+      { to: "/memo/staff",       label: "Staff",       Icon: Ico.Staff },
+      { to: "/memo/clients",     label: "Clients",     Icon: Ico.Clients },
+      { to: "/memo/permissions", label: "Permissions", Icon: Ico.Permissions },
     ],
   },
   {
@@ -235,84 +236,67 @@ const NAV_CATEGORIES = [
   {
     label: "Company",
     items: [
-      { to: "/memo/company",        label: "Company Info",   Icon: Ico.Company },
-      { to: "/memo/announcements",  label: "Announcements",  Icon: Ico.Announcements },
-      { to: "/memo/logs",           label: "Activity Logs",  Icon: Ico.Logs },
+      { to: "/memo/company",       label: "Company Info",  Icon: Ico.Company },
+      { to: "/memo/announcements", label: "Announcements", Icon: Ico.Announcements },
+      { to: "/memo/logs",          label: "Activity Logs", Icon: Ico.Logs },
     ],
   },
   {
     label: "Departments",
     items: [
-      { to: "/memo/dept/tech",        label: "Tech",       Icon: Ico.Tech },
-      { to: "/memo/dept/consulting",  label: "Consulting", Icon: Ico.Consulting },
-      { to: "/memo/dept/travel",      label: "Travel",     Icon: Ico.Travel },
+      { to: "/memo/dept/tech",       label: "Tech",       Icon: Ico.Tech },
+      { to: "/memo/dept/consulting", label: "Consulting", Icon: Ico.Consulting },
+      { to: "/memo/dept/travel",     label: "Travel",     Icon: Ico.Travel },
     ],
   },
 ] as const;
 
-// ─── Mobile bottom-bar tabs — role-aware ─────────────────────────────────────
-type BottomTab = {
-  label:   string;
-  Icon:    (props: IconProps) => React.ReactElement;
-  to:      string | null;
-  matches: string[];
-};
+type BottomTab = { label: string; Icon: (p: IconProps) => React.ReactElement; to: string | null; matches: string[] };
 
 function getBottomTabs(role: AdminRole | undefined): BottomTab[] {
-  // Dept-staff: minimal set relevant to their work
   if (isDeptStaff(role)) {
-    const dept      = roleDept(role);
-    const deptPath  = `/memo/dept/${dept}`;
-    const DeptIcon  = dept === "tech" ? Ico.Tech : dept === "consulting" ? Ico.Consulting : Ico.Travel;
-    const deptLabel = dept
-      ? dept.charAt(0).toUpperCase() + dept.slice(1)
-      : "Dept";
+    const dept = roleDept(role);
+    const deptPath = `/memo/dept/${dept}`;
+    const DeptIcon = dept === "tech" ? Ico.Tech : dept === "consulting" ? Ico.Consulting : Ico.Travel;
+    const deptLabel = dept ? dept.charAt(0).toUpperCase() + dept.slice(1) : "Dept";
     return [
-      { label: "Home",         Icon: Ico.Dashboard,     to: "/memo/dashboard",    matches: ["/memo/dashboard"]  },
-      { label: "Expenses",     Icon: Ico.Expenses,      to: "/memo/expenses",     matches: ["/memo/expenses"]   },
-      { label: "Clients",      Icon: Ico.Clients,       to: "/memo/clients",      matches: ["/memo/clients"]    },
-      { label: deptLabel,      Icon: DeptIcon,          to: deptPath,              matches: [deptPath]            },
-      { label: "More",         Icon: Ico.More,          to: null,                  matches: []                    },
+      { label: "Home",     Icon: Ico.Dashboard, to: "/memo/dashboard", matches: ["/memo/dashboard"] },
+      { label: "Expenses", Icon: Ico.Expenses,  to: "/memo/expenses",  matches: ["/memo/expenses"]  },
+      { label: "Clients",  Icon: Ico.Clients,   to: "/memo/clients",   matches: ["/memo/clients"]   },
+      { label: deptLabel,  Icon: DeptIcon,       to: deptPath,          matches: [deptPath]           },
+      { label: "More",     Icon: Ico.More,       to: null,              matches: []                   },
     ];
   }
-  // Viewer: financial read-only set
   if (role === "viewer") {
     return [
-      { label: "Home",      Icon: Ico.Dashboard, to: "/memo/dashboard", matches: ["/memo/dashboard"]                                                   },
-      { label: "Finance",   Icon: Ico.Budget,    to: "/memo/budget",    matches: ["/memo/budget", "/memo/revenue", "/memo/contract-value"]            },
-      { label: "Contracts", Icon: Ico.Contracts, to: "/memo/contracts", matches: ["/memo/contracts", "/memo/pipeline"]                                 },
-      { label: "Partners",  Icon: Ico.Partners,  to: "/memo/partners",  matches: ["/memo/partners"]                                                    },
-      { label: "More",      Icon: Ico.More,      to: null,               matches: []                                                                      },
+      { label: "Home",      Icon: Ico.Dashboard, to: "/memo/dashboard", matches: ["/memo/dashboard"]                                          },
+      { label: "Finance",   Icon: Ico.Budget,    to: "/memo/budget",    matches: ["/memo/budget", "/memo/revenue", "/memo/contract-value"]     },
+      { label: "Contracts", Icon: Ico.Contracts, to: "/memo/contracts", matches: ["/memo/contracts", "/memo/pipeline"]                         },
+      { label: "Partners",  Icon: Ico.Partners,  to: "/memo/partners",  matches: ["/memo/partners"]                                            },
+      { label: "More",      Icon: Ico.More,       to: null,              matches: []                                                            },
     ];
   }
-  // Admin: full set
   return [
-    { label: "Home",      Icon: Ico.Dashboard, to: "/memo/dashboard", matches: ["/memo/dashboard"]                                                                              },
+    { label: "Home",      Icon: Ico.Dashboard, to: "/memo/dashboard", matches: ["/memo/dashboard"]                                                                                  },
     { label: "Finance",   Icon: Ico.Budget,    to: "/memo/balance",   matches: ["/memo/balance", "/memo/budget", "/memo/revenue", "/memo/expenses", "/memo/contract-value"] },
     { label: "Contracts", Icon: Ico.Contracts, to: "/memo/contracts", matches: ["/memo/contracts", "/memo/partners", "/memo/pipeline", "/memo/tickets"]                      },
     { label: "People",    Icon: Ico.Staff,     to: "/memo/staff",     matches: ["/memo/staff", "/memo/clients", "/memo/permissions"]                                           },
-    { label: "More",      Icon: Ico.More,      to: null,               matches: []                                                                                                },
+    { label: "More",      Icon: Ico.More,       to: null,              matches: []                                                                                                  },
   ];
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
 export default function AdminLayout() {
   const { admin, logout } = useAdminAuth();
   const navigate           = useNavigate();
   const location           = useLocation();
-
   const [sidebarOpen,    setSidebarOpen]    = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile,       setIsMobile]       = useState(false);
 
-  // ── Role-based access guard ────────────────────────────────────────────────
-  // Redirect to dashboard if the current path is not allowed for this role.
-  // Only fires once admin is loaded (admin !== null).
   if (admin?.role && !canAccess(admin.role, location.pathname, admin.roles ?? [])) {
     return <Navigate to="/memo/dashboard" replace />;
   }
 
-  // Track breakpoint
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -320,12 +304,10 @@ export default function AdminLayout() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Auto-close mobile drawer when route changes
   useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
 
   const handleLogout = () => { logout(); navigate("/memo/login"); };
 
-  // ── Role-filtered nav categories ──────────────────────────────────────────
   const filteredCategories = NAV_CATEGORIES
     .map((cat) => ({
       label: cat.label,
@@ -334,67 +316,49 @@ export default function AdminLayout() {
     }))
     .filter((cat) => cat.items.length > 0);
 
-  // ── Role-aware bottom tabs ────────────────────────────────────────────────
   const bottomTabs = getBottomTabs(admin?.role);
-
-  // Active check for a bottom tab
   const isTabActive = (tab: BottomTab) =>
     tab.to
       ? tab.matches.some((m) => location.pathname === m || location.pathname.startsWith(m + "/"))
       : mobileMenuOpen;
 
-  // Shared NavLink style (sidebar + drawer)
+  // Get current page label for header
+  const currentLabel = NAV_CATEGORIES
+    .flatMap((cat) => cat.items as ReadonlyArray<{ to: string; label: string }>)
+    .find((item) => location.pathname === item.to || location.pathname.startsWith(item.to + "/"))?.label ?? "Dashboard";
+
   const navLinkStyle = ({ isActive }: { isActive: boolean }): React.CSSProperties => ({
     display:        "flex",
     alignItems:     "center",
-    gap:            10,
-    padding:        "7px 10px",
-    borderRadius:   8,
+    gap:            9,
+    padding:        "6px 10px",
+    borderRadius:   7,
     textDecoration: "none",
-    fontSize:       13.5,
+    fontSize:       13,
     fontFamily:     SANS,
-    fontWeight:     500,
+    fontWeight:     isActive ? 500 : 400,
     color:          isActive ? C.sidebarActiveText : C.sidebarText,
-    background:     isActive ? C.sidebarActive     : "transparent",
-    transition:     "background 0.15s, color 0.15s",
+    background:     isActive ? C.sidebarActive : "transparent",
+    transition:     "background 0.13s, color 0.13s",
     cursor:         "pointer",
+    position:       "relative" as const,
   });
 
-  const hoverIn  = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const el = e.currentTarget;
-    if (!el.style.background.includes("108,92,231")) {
-      el.style.background = "rgba(255,255,255,0.08)";
-      el.style.color      = C.sidebarActiveText;
-    }
-  };
-  const hoverOut = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const el = e.currentTarget;
-    if (!el.style.background.includes("108,92,231")) {
-      el.style.background = "transparent";
-      el.style.color      = C.sidebarText;
-    }
-  };
-
-  // Sidebar nav section rendered shared between desktop + mobile drawer
   const SidebarNav = ({ onItemClick, className }: { onItemClick?: () => void; className?: string }) => (
-    <nav className={className} style={{ flex: 1, padding: "10px 8px", overflowY: "auto" }}>
+    <nav className={className} style={{ flex: 1, padding: "8px 10px", overflowY: "auto" }}>
       {filteredCategories.map((cat, ci) => (
-        <div key={cat.label} style={{ marginBottom: 4 }}>
-          {/* Category eyebrow label */}
+        <div key={cat.label} style={{ marginBottom: 2 }}>
           <p style={{
-            padding:       ci === 0 ? "4px 10px 6px" : "14px 10px 6px",
-            fontSize:      9.5,
+            padding:       ci === 0 ? "4px 10px 5px" : "12px 10px 5px",
+            fontSize:      9,
             fontFamily:    MONO,
-            color:         C.sidebarText,
+            color:         C.sidebarSection,
             textTransform: "uppercase",
-            letterSpacing: "0.20em",
+            letterSpacing: "0.18em",
             fontWeight:    500,
-            opacity:       0.45,
           }}>
             {cat.label}
           </p>
-
-          {/* Items */}
           {cat.items.map((item) => (
             <NavLink
               key={item.to}
@@ -402,12 +366,22 @@ export default function AdminLayout() {
               style={navLinkStyle}
               end={"end" in item ? item.end : false}
               onClick={onItemClick}
-              onMouseEnter={hoverIn}
-              onMouseLeave={hoverOut}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget;
+                if (!el.classList.contains("active")) {
+                  el.style.background = "rgba(255,255,255,0.05)";
+                  el.style.color = C.sidebarTextHover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                if (!el.classList.contains("active")) {
+                  el.style.background = "transparent";
+                  el.style.color = C.sidebarText;
+                }
+              }}
             >
-              <span style={{ display: "flex", opacity: 0.75 }}>
-                <item.Icon />
-              </span>
+              <span style={{ display: "flex", opacity: 0.7, flexShrink: 0 }}><item.Icon /></span>
               {item.label}
             </NavLink>
           ))}
@@ -417,91 +391,88 @@ export default function AdminLayout() {
   );
 
   return (
-    <div style={{
-      display:    "flex",
-      minHeight:  "100vh",
-      background: C.bg,
-      fontFamily: SANS,
-      color:      C.ink,
-    }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: C.bg, fontFamily: SANS, color: C.ink }}>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          DESKTOP SIDEBAR  (hidden on mobile)
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── DESKTOP SIDEBAR ── */}
       {!isMobile && (
         <aside style={{
-          width:      sidebarOpen ? 248 : 0,
-          minWidth:   sidebarOpen ? 248 : 0,
-          background: C.sidebarBg,
-          display:    "flex",
+          width:         sidebarOpen ? 240 : 0,
+          minWidth:      sidebarOpen ? 240 : 0,
+          background:    C.sidebarBg,
+          display:       "flex",
           flexDirection: "column",
-          overflow:   "hidden",
-          transition: "width 0.2s, min-width 0.2s",
-          flexShrink: 0,
-          position:   "sticky",
-          top:        0,
-          height:     "100vh",
+          overflow:      "hidden",
+          transition:    "width 0.22s ease, min-width 0.22s ease",
+          flexShrink:    0,
+          position:      "sticky",
+          top:           0,
+          height:        "100vh",
         }}>
 
-          {/* Wordmark */}
-          <div style={{ padding: "22px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-            <span style={{
-              fontFamily: SANS, fontWeight: 800,
-              fontSize:      28,
-              color:         C.sidebarActiveText,
-              letterSpacing: "-0.02em",
-              display:       "block",
-              lineHeight:    1,
-            }}>
-              Kayrosco
-            </span>
-            <p style={{
-              marginTop:     4,
-              fontSize:      10,
-              color:         C.sidebarText,
-              fontFamily:    MONO,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              opacity:       0.7,
-            }}>
-              Admin
-            </p>
+          {/* Logo */}
+          <div style={{ padding: "20px 18px 14px", borderBottom: `1px solid ${C.sidebarBorder}` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: 9,
+                background: "linear-gradient(135deg, #1d1d1f, #2d2d30)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
+                  <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.4)"/>
+                  <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.15)"/>
+                </svg>
+              </div>
+              <div>
+                <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 16, color: "#FFFFFF", letterSpacing: "-0.02em", display: "block", lineHeight: 1.1 }}>
+                  Kayrosco
+                </span>
+                <span style={{ fontSize: 10, color: C.sidebarText, fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}>
+                  Admin
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Categorised nav */}
+          {/* Nav */}
           <SidebarNav className="no-scrollbar" />
 
           {/* User strip */}
-          <div style={{ padding: "12px 16px 16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <p style={{ fontFamily: SANS, fontWeight: 600, color: C.sidebarActiveText, fontSize: 13, marginBottom: 2 }}>
-              {admin?.username ?? "—"}
-            </p>
-            <p style={{ fontSize: 10, color: C.sidebarText, fontFamily: MONO, textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.65 }}>
-              {admin?.role ? ROLE_LABEL[admin.role] : ""}
-              {admin?.department && admin.department !== "admin" ? ` · ${admin.department}` : ""}
-            </p>
+          <div style={{ padding: "10px 14px 14px", borderTop: `1px solid ${C.sidebarBorder}` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 10 }}>
+              <div style={{
+                width: 30, height: 30, borderRadius: "50%",
+                background: "linear-gradient(135deg, #3B82F6, #1d4ed8)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0,
+              }}>
+                {(admin?.username ?? "?").charAt(0).toUpperCase()}
+              </div>
+              <div style={{ overflow: "hidden" }}>
+                <p style={{ fontFamily: SANS, fontWeight: 600, color: "#FFFFFF", fontSize: 12.5, marginBottom: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {admin?.username ?? "—"}
+                </p>
+                <p style={{ fontSize: 9.5, color: C.sidebarText, fontFamily: MONO, textTransform: "uppercase", letterSpacing: "0.10em" }}>
+                  {admin?.role ? ROLE_LABEL[admin.role] : ""}
+                  {admin?.department && admin.department !== "admin" ? ` · ${admin.department}` : ""}
+                </p>
+              </div>
+            </div>
             <button
               onClick={handleLogout}
               style={{
-                marginTop:  10,
-                width:      "100%",
-                padding:    "7px",
-                borderRadius: 6,
-                border:     "1px solid rgba(184,176,162,0.20)",
+                width: "100%", padding: "7px", borderRadius: 7,
+                border: `1px solid ${C.sidebarBorder}`,
                 background: "transparent",
-                color:      C.sidebarText,
-                fontFamily: SANS,
-                fontSize:   12,
-                fontWeight: 500,
-                cursor:     "pointer",
-                transition: "background 0.15s, color 0.15s",
-                display:    "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 6,
+                color: C.sidebarText,
+                fontFamily: SANS, fontSize: 12, fontWeight: 500,
+                cursor: "pointer", transition: "all 0.15s",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
               }}
-              onMouseEnter={(e) => { (e.target as HTMLButtonElement).style.background = "rgba(108,92,231,0.22)"; (e.target as HTMLButtonElement).style.color = C.sidebarActiveText; }}
-              onMouseLeave={(e) => { (e.target as HTMLButtonElement).style.background = "transparent";           (e.target as HTMLButtonElement).style.color = C.sidebarText; }}
+              onMouseEnter={(e) => { (e.currentTarget).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget).style.color = "#fff"; }}
+              onMouseLeave={(e) => { (e.currentTarget).style.background = "transparent"; (e.currentTarget).style.color = C.sidebarText; }}
             >
               <Ico.SignOut /> Sign out
             </button>
@@ -509,71 +480,65 @@ export default function AdminLayout() {
         </aside>
       )}
 
-      {/* ════════════════════════════════════════════════════════════════════
-          MAIN CONTENT AREA
-      ════════════════════════════════════════════════════════════════════ */}
-      <div style={{
-        flex:           1,
-        display:        "flex",
-        flexDirection:  "column",
-        overflow:       "hidden",
-        // leave room for mobile bottom bar
-        paddingBottom:  isMobile ? 64 : 0,
-      }}>
+      {/* ── MAIN CONTENT AREA ── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", paddingBottom: isMobile ? 64 : 0, minWidth: 0 }}>
 
-        {/* Desktop header bar (hidden on mobile) */}
+        {/* Desktop topbar */}
         {!isMobile && (
           <header style={{
-            height:    52,
-            background:C.surface,
-            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-            display:   "flex",
-            alignItems:"center",
-            padding:   "0 36px",
-            gap:       12,
-            flexShrink:0,
-            zIndex:    10,
+            height: 52, background: C.surface,
+            borderBottom: `1px solid ${C.border}`,
+            display: "flex", alignItems: "center",
+            padding: "0 28px", gap: 14, flexShrink: 0, zIndex: 10,
           }}>
             <button
               onClick={() => setSidebarOpen((s) => !s)}
               style={{
-                width: 28, height: 28, background: "none", border: "none",
-                cursor: "pointer", color: C.muted, padding: 0, borderRadius: 6,
+                width: 30, height: 30, background: "none", border: "none",
+                cursor: "pointer", color: C.muted, padding: 0, borderRadius: 7,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 transition: "background 0.15s, color 0.15s",
               }}
               title="Toggle sidebar"
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(108,92,231,0.10)"; (e.currentTarget as HTMLButtonElement).style.color = C.accent; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none";                   (e.currentTarget as HTMLButtonElement).style.color = C.muted; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.ink; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = C.muted; }}
             >
               <Ico.Menu />
             </button>
-            <span style={{ fontSize: 15, fontFamily: SANS, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
-              Dashboard
+            <div style={{ width: 1, height: 18, background: C.border }} />
+            <span style={{ fontSize: 14, fontFamily: SANS, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
+              {currentLabel}
             </span>
+            {/* Spacer */}
+            <div style={{ flex: 1 }} />
+            {/* User pill */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 8,
+              padding: "4px 10px 4px 6px", borderRadius: 20,
+              background: C.bg, border: `1px solid ${C.border}`,
+            }}>
+              <div style={{
+                width: 22, height: 22, borderRadius: "50%",
+                background: "linear-gradient(135deg, #3B82F6, #1d4ed8)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 10, fontWeight: 700, color: "#fff",
+              }}>
+                {(admin?.username ?? "?").charAt(0).toUpperCase()}
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 500, color: C.ink2 }}>{admin?.username ?? "—"}</span>
+            </div>
           </header>
         )}
 
-        {/* Mobile top bar */}
+        {/* Mobile topbar */}
         {isMobile && (
           <header style={{
-            height:       52,
-            background:   C.sidebarBg,
-            display:      "flex",
-            alignItems:   "center",
-            justifyContent: "center",
-            flexShrink:   0,
-            position:     "sticky",
-            top:          0,
-            zIndex:       50,
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            height: 52, background: C.sidebarBg,
+            borderBottom: `1px solid ${C.sidebarBorder}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            flexShrink: 0, position: "sticky", top: 0, zIndex: 50,
           }}>
-            <span style={{
-              fontFamily: SANS, fontWeight: 800,
-              fontSize:      22,
-              color:         C.sidebarActiveText,
-              letterSpacing: "-0.02em",
-            }}>
+            <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 20, color: "#FFFFFF", letterSpacing: "-0.02em" }}>
               Kayrosco
             </span>
           </header>
@@ -582,191 +547,78 @@ export default function AdminLayout() {
         {/* Page content */}
         <main className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
           <div style={{
-            maxWidth:     1440,
-            margin:       "0 auto",
-            padding:      isMobile ? "20px 16px 32px" : "28px 36px 48px",
-            boxSizing:    "border-box",
-            width:        "100%",
+            maxWidth: 1440, margin: "0 auto",
+            padding: isMobile ? "20px 16px 32px" : "28px 32px 48px",
+            boxSizing: "border-box", width: "100%",
           }}>
             <Outlet />
           </div>
         </main>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          MOBILE BOTTOM NAVIGATION BAR
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── MOBILE BOTTOM NAV ── */}
       {isMobile && (
-        <nav
-          className="bottom-bar-safe"
-          style={{
-            position:       "fixed",
-            bottom:         0,
-            left:           0,
-            right:          0,
-            zIndex:         100,
-            minHeight:      64,
-            background:     C.sidebarBg,
-            borderTop:      "1px solid rgba(255,255,255,0.08)",
-            display:        "flex",
-            alignItems:     "stretch",
-          }}
-        >
+        <nav className="bottom-bar-safe" style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
+          minHeight: 64, background: C.sidebarBg,
+          borderTop: `1px solid ${C.sidebarBorder}`,
+          display: "flex", alignItems: "stretch",
+        }}>
           {bottomTabs.map((tab) => {
             const active = isTabActive(tab);
             return (
-              <button
-                key={tab.label}
-                onClick={() => {
-                  if (tab.to) { navigate(tab.to); setMobileMenuOpen(false); }
-                  else        { setMobileMenuOpen((v) => !v); }
-                }}
+              <button key={tab.label}
+                onClick={() => { if (tab.to) { navigate(tab.to); setMobileMenuOpen(false); } else { setMobileMenuOpen((v) => !v); } }}
                 style={{
-                  flex:           1,
-                  display:        "flex",
-                  flexDirection:  "column",
-                  alignItems:     "center",
-                  justifyContent: "center",
-                  gap:            4,
-                  paddingTop:     10,
-                  paddingBottom:  10,
-                  background:     "none",
-                  border:         "none",
-                  cursor:         "pointer",
-                  color:          active ? C.accent : C.sidebarText,
-                  transition:     "color 0.15s",
-                  position:       "relative",
+                  flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                  gap: 4, paddingTop: 10, paddingBottom: 10, background: "none", border: "none", cursor: "pointer",
+                  color: active ? C.accent : C.sidebarText, transition: "color 0.15s", position: "relative",
                 }}
               >
-                {/* Active dot indicator */}
-                {active && (
-                  <span style={{
-                    position:     "absolute",
-                    top:          6,
-                    width:        4,
-                    height:       4,
-                    borderRadius: "50%",
-                    background:   C.accent,
-                  }} />
-                )}
-                <tab.Icon size={22} />
-                <span style={{
-                  fontSize:      10,
-                  fontFamily:    SANS,
-                  fontWeight:    active ? 600 : 500,
-                  letterSpacing: "0.01em",
-                  lineHeight:    1,
-                }}>
-                  {tab.label}
-                </span>
+                {active && <span style={{ position: "absolute", top: 7, width: 3, height: 3, borderRadius: "50%", background: C.accent }} />}
+                <tab.Icon size={21} />
+                <span style={{ fontSize: 10, fontFamily: SANS, fontWeight: active ? 600 : 400, letterSpacing: "0.01em", lineHeight: 1 }}>{tab.label}</span>
               </button>
             );
           })}
         </nav>
       )}
 
-      {/* ════════════════════════════════════════════════════════════════════
-          MOBILE MENU DRAWER  (slide-up sheet)
-      ════════════════════════════════════════════════════════════════════ */}
+      {/* ── MOBILE DRAWER ── */}
       {isMobile && mobileMenuOpen && (
         <>
-          {/* Dark backdrop */}
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              position:       "fixed",
-              inset:          0,
-              zIndex:         150,
-              background:     "rgba(16,14,10,0.65)",
-              backdropFilter: "blur(3px)",
-            }}
-          />
-
-          {/* Sheet */}
-          <div
-            className="mobile-drawer-sheet"
-            style={{
-              position:       "fixed",
-              bottom:         0,
-              left:           0,
-              right:          0,
-              zIndex:         200,
-              background:     C.sidebarBg,
-              borderRadius:   "18px 18px 0 0",
-              maxHeight:      "85vh",
-              display:        "flex",
-              flexDirection:  "column",
-              overflow:       "hidden",
-            }}
-          >
-            {/* Drag handle pill */}
+          <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(3px)" }} />
+          <div className="mobile-drawer-sheet" style={{
+            position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
+            background: C.sidebarBg, borderRadius: "18px 18px 0 0",
+            maxHeight: "85vh", display: "flex", flexDirection: "column", overflow: "hidden",
+          }}>
             <div style={{ display: "flex", justifyContent: "center", paddingTop: 10, paddingBottom: 4 }}>
-              <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.18)" }} />
+              <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.15)" }} />
             </div>
-
-            {/* Sheet header */}
-            <div style={{
-              padding:        "8px 20px 12px",
-              borderBottom:   "1px solid rgba(255,255,255,0.06)",
-              display:        "flex",
-              justifyContent: "space-between",
-              alignItems:     "center",
-            }}>
-              <span style={{ fontFamily: SANS, fontWeight: 800, fontSize: 22, color: C.sidebarActiveText, letterSpacing: "-0.02em" }}>
-                Kayrosco
-              </span>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  width: 32, height: 32, borderRadius: 8,
-                  background: "rgba(255,255,255,0.06)",
-                  border: "none", cursor: "pointer",
-                  color: C.sidebarText,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}
-              >
+            <div style={{ padding: "6px 18px 12px", borderBottom: `1px solid ${C.sidebarBorder}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 20, color: "#FFFFFF", letterSpacing: "-0.02em" }}>Kayrosco</span>
+              <button onClick={() => setMobileMenuOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(255,255,255,0.06)", border: "none", cursor: "pointer", color: C.sidebarText, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Ico.Close size={14} />
               </button>
             </div>
-
-            {/* Scrollable categorised nav */}
             <div className="no-scrollbar" style={{ overflowY: "auto", flex: 1 }}>
               <SidebarNav onItemClick={() => setMobileMenuOpen(false)} />
             </div>
-
-            {/* User strip + sign out */}
-            <div style={{
-              padding:    "12px 16px",
-              borderTop:  "1px solid rgba(255,255,255,0.06)",
-              paddingBottom: "max(16px, env(safe-area-inset-bottom, 16px))",
-            }}>
+            <div style={{ padding: "10px 16px", borderTop: `1px solid ${C.sidebarBorder}`, paddingBottom: "max(14px, env(safe-area-inset-bottom, 14px))" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div>
-                  <p style={{ fontFamily: SANS, fontWeight: 600, color: C.sidebarActiveText, fontSize: 13, marginBottom: 2 }}>
-                    {admin?.username ?? "—"}
-                  </p>
-                  <p style={{ fontSize: 10, color: C.sidebarText, fontFamily: MONO, textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.65 }}>
-                    {admin?.role ? ROLE_LABEL[admin.role] : ""}
-                    {admin?.department && admin.department !== "admin" ? ` · ${admin.department}` : ""}
-                  </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #3B82F6, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>
+                    {(admin?.username ?? "?").charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p style={{ fontFamily: SANS, fontWeight: 600, color: "#FFFFFF", fontSize: 13 }}>{admin?.username ?? "—"}</p>
+                    <p style={{ fontSize: 9.5, color: C.sidebarText, fontFamily: MONO, textTransform: "uppercase", letterSpacing: "0.10em" }}>
+                      {admin?.role ? ROLE_LABEL[admin.role] : ""}
+                    </p>
+                  </div>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    padding:      "8px 14px",
-                    borderRadius: 8,
-                    border:       "1px solid rgba(255,255,255,0.20)",
-                    background:   "transparent",
-                    color:        C.sidebarText,
-                    fontFamily:   SANS,
-                    fontSize:     13,
-                    fontWeight:   500,
-                    cursor:       "pointer",
-                    display:      "flex",
-                    alignItems:   "center",
-                    gap:          6,
-                  }}
-                >
+                <button onClick={handleLogout} style={{ padding: "7px 14px", borderRadius: 8, border: `1px solid ${C.sidebarBorder}`, background: "transparent", color: C.sidebarText, fontFamily: SANS, fontSize: 13, fontWeight: 500, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
                   <Ico.SignOut size={13} /> Sign out
                 </button>
               </div>
@@ -774,7 +626,6 @@ export default function AdminLayout() {
           </div>
         </>
       )}
-
     </div>
   );
 }

@@ -1,6 +1,9 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
+
+const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
+const MONO = "'Geist Mono', ui-monospace, monospace";
 
 export default function AdminLogin() {
   const { login } = useAdminAuth();
@@ -9,6 +12,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,176 +29,203 @@ export default function AdminLogin() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#cfc8b9",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "'Inter Tight', 'Inter', sans-serif",
-      }}
-    >
-      <div
-        style={{
-          background: "#f3efe7",
-          borderRadius: 16,
-          padding: "48px 40px",
-          width: "100%",
-          maxWidth: 400,
-          boxShadow: "0 8px 40px rgba(26,26,26,0.12)",
-        }}
-      >
-        {/* Logo */}
-        <div style={{ marginBottom: 32, textAlign: "center" }}>
-          <span
-            style={{
-              fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif",
-              fontWeight: 600,
-              fontStyle: "italic",
-              fontSize: 32,
-              color: "#16213E",
-              letterSpacing: "-1px",
-            }}
-          >
-            Kayrosco
-          </span>
-          <p
-            style={{
+    <div style={{
+      minHeight: "100vh",
+      background: "#0A0A0B",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: SANS,
+      padding: "24px 16px",
+    }}>
+      {/* Background grid texture */}
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        backgroundImage: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.03) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.02) 0%, transparent 50%)",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{
+        position: "relative",
+        width: "100%",
+        maxWidth: 400,
+      }}>
+        {/* Card */}
+        <div style={{
+          background: "#111113",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 20,
+          padding: "40px 36px",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+        }}>
+          {/* Logo */}
+          <div style={{ marginBottom: 36, textAlign: "center" }}>
+            <div style={{
+              width: 48,
+              height: 48,
+              borderRadius: 14,
+              background: "linear-gradient(135deg, #1a1a1c, #2a2a2e)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
+                <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
+                <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
+                <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.2)"/>
+              </svg>
+            </div>
+            <span style={{
+              fontFamily: SANS,
+              fontWeight: 700,
+              fontSize: 26,
+              color: "#FFFFFF",
+              letterSpacing: "-0.03em",
+              display: "block",
+              lineHeight: 1,
+            }}>
+              Kayrosco
+            </span>
+            <p style={{
               marginTop: 6,
-              fontSize: 12,
-              color: "#8892A4",
-              fontFamily: "'Geist Mono', ui-monospace, monospace",
-              letterSpacing: "0.08em",
+              fontSize: 11,
+              color: "rgba(255,255,255,0.35)",
+              fontFamily: MONO,
+              letterSpacing: "0.12em",
               textTransform: "uppercase",
-            }}
-          >
-            Admin Portal
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: 16 }}>
-            <label
-              style={{
-                display: "block",
-                fontSize: 12,
-                fontWeight: 500,
-                color: "#8892A4",
-                marginBottom: 6,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoFocus
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                borderRadius: 8,
-                border: "1.5px solid #cfc8b9",
-                background: "#faf8f5",
-                fontSize: 15,
-                color: "#16213E",
-                outline: "none",
-                boxSizing: "border-box",
-                transition: "border-color 0.2s",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "#16213E")}
-              onBlur={(e) => (e.target.style.borderColor = "#cfc8b9")}
-            />
+            }}>
+              Admin Portal
+            </p>
           </div>
 
-          <div style={{ marginBottom: 24 }}>
-            <label
-              style={{
+          <form onSubmit={handleSubmit}>
+            {/* Username */}
+            <div style={{ marginBottom: 14 }}>
+              <label style={{
                 display: "block",
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: 500,
-                color: "#8892A4",
-                marginBottom: 6,
+                color: "rgba(255,255,255,0.45)",
+                marginBottom: 7,
                 textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                width: "100%",
-                padding: "10px 14px",
-                borderRadius: 8,
-                border: "1.5px solid #cfc8b9",
-                background: "#faf8f5",
-                fontSize: 15,
-                color: "#16213E",
-                outline: "none",
-                boxSizing: "border-box",
-                transition: "border-color 0.2s",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "#16213E")}
-              onBlur={(e) => (e.target.style.borderColor = "#cfc8b9")}
-            />
-          </div>
+                letterSpacing: "0.08em",
+                fontFamily: MONO,
+              }}>
+                Username
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                autoFocus
+                onFocus={() => setFocusedField("user")}
+                onBlur={() => setFocusedField(null)}
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  borderRadius: 10,
+                  border: `1.5px solid ${focusedField === "user" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)"}`,
+                  background: "rgba(255,255,255,0.04)",
+                  fontSize: 14,
+                  color: "#FFFFFF",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  fontFamily: SANS,
+                  transition: "border-color 0.2s",
+                }}
+              />
+            </div>
 
-          {error && (
-            <div
-              style={{
+            {/* Password */}
+            <div style={{ marginBottom: 24 }}>
+              <label style={{
+                display: "block",
+                fontSize: 11,
+                fontWeight: 500,
+                color: "rgba(255,255,255,0.45)",
+                marginBottom: 7,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                fontFamily: MONO,
+              }}>
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                onFocus={() => setFocusedField("pass")}
+                onBlur={() => setFocusedField(null)}
+                style={{
+                  width: "100%",
+                  padding: "11px 14px",
+                  borderRadius: 10,
+                  border: `1.5px solid ${focusedField === "pass" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)"}`,
+                  background: "rgba(255,255,255,0.04)",
+                  fontSize: 14,
+                  color: "#FFFFFF",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  fontFamily: SANS,
+                  transition: "border-color 0.2s",
+                }}
+              />
+            </div>
+
+            {error && (
+              <div style={{
                 marginBottom: 16,
                 padding: "10px 14px",
                 borderRadius: 8,
-                background: "rgba(239,68,68,0.10)",
-                border: "1px solid #f5c6c2",
+                background: "rgba(239,68,68,0.12)",
+                border: "1px solid rgba(239,68,68,0.25)",
                 fontSize: 13,
-                color: "#EF4444",
+                color: "#F87171",
+                fontFamily: SANS,
+              }}>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "13px",
+                borderRadius: 10,
+                border: "none",
+                background: loading ? "rgba(255,255,255,0.08)" : "#FFFFFF",
+                color: loading ? "rgba(255,255,255,0.35)" : "#09090B",
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: loading ? "not-allowed" : "pointer",
+                letterSpacing: "-0.01em",
+                transition: "all 0.2s",
+                fontFamily: SANS,
               }}
             >
-              {error}
-            </div>
-          )}
+              {loading ? "Signing in…" : "Sign In"}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "12px",
-              borderRadius: 8,
-              border: "none",
-              background: loading ? "#8892A4" : "#16213E",
-              color: "#f3efe7",
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: loading ? "not-allowed" : "pointer",
-              letterSpacing: "0.04em",
-              transition: "background 0.2s",
-            }}
-          >
-            {loading ? "Signing in…" : "Sign In"}
-          </button>
-        </form>
-
-        <p
-          style={{
+          <p style={{
             marginTop: 24,
             textAlign: "center",
             fontSize: 11,
-            color: "#8892A4",
-            fontFamily: "'Geist Mono', ui-monospace, monospace",
-          }}
-        >
-          Restricted access — authorised personnel only
-        </p>
+            color: "rgba(255,255,255,0.2)",
+            fontFamily: MONO,
+            letterSpacing: "0.04em",
+          }}>
+            Restricted access — authorised personnel only
+          </p>
+        </div>
       </div>
     </div>
   );

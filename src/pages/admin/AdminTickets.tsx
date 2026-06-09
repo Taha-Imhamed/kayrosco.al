@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import {
   Ticket, TicketStatus, TicketPriority, TicketAttachment,
   getTickets, createTicket, updateTicket, deleteTicket, uploadTicketFile,
@@ -9,23 +9,23 @@ import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 // ─── Design tokens (Fasto purple) ────────────────────────────────────────────
 const C = {
-  bg:          "#EEF0F7",
+  bg:          "#F4F4F5",
   surface:     "#FFFFFF",
-  surface2:    "#F5F6FF",
-  ink:         "#16213E",
-  ink2:        "#2C3E62",
-  ink3:        "#4A5578",
-  muted:       "#8892A4",
+  surface2:    "#FAFAFA",
+  ink:         "#09090B",
+  ink2:        "#18181B",
+  ink3:        "#3F3F46",
+  muted:       "#71717A",
   hair:        "rgba(0,0,0,0.07)",
   hair2:       "rgba(0,0,0,0.04)",
-  accent:      "#6C5CE7",
-  accentTint:  "#EDE9FE",
-  positive:    "#10B981",
-  positiveTint:"#D1FAE5",
-  warning:     "#F59E0B",
+  accent:      "#2563EB",
+  accentTint:  "rgba(37,99,235,0.10)",
+  positive:    "#16A34A",
+  positiveTint:"rgba(22,163,74,0.10)",
+  warning:     "#D97706",
   info:        "#3B82F6",
-  danger:      "#EF4444",
-  dangerTint:  "#FEE2E2",
+  danger:      "#DC2626",
+  dangerTint:  "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -45,7 +45,7 @@ const PRIORITY_C: Record<TicketPriority, { fg: string; bg: string }> = {
 const DEPT_C: Record<string, { fg: string; bg: string }> = {
   tech:       { fg: "#3B82F6", bg: "rgba(59,130,246,0.10)"  },
   consulting: { fg: "#7C3AED", bg: "rgba(124,58,237,0.10)"  },
-  travel:     { fg: "#10B981", bg: "rgba(16,185,129,0.10)"  },
+  travel:     { fg: "#16A34A", bg: "rgba(16,185,129,0.10)"  },
   admin:      { fg: C.muted,   bg: C.hair2                  },
 };
 
@@ -66,7 +66,7 @@ const lbl: React.CSSProperties = {
 function Pill({ text, fg, bg }: { text: string; fg: string; bg: string }) {
   return (
     <span style={{
-      display: "inline-block", padding: "2px 9px", borderRadius: 20,
+      display: "inline-block", padding: "2px 9px", borderRadius: 14,
       fontSize: 10, fontFamily: MONO, fontWeight: 600,
       textTransform: "uppercase", letterSpacing: "0.06em",
       background: bg, color: fg,
@@ -104,7 +104,7 @@ function AttachPill({ att, onRemove }: { att: TicketAttachment; onRemove: () => 
       display: "inline-flex", alignItems: "center", gap: 6,
       padding: "4px 10px 4px 8px", borderRadius: 8,
       background: isLink ? "rgba(59,130,246,0.08)" : C.accentTint,
-      border: `1px solid ${isLink ? "rgba(59,130,246,0.20)" : "rgba(108,92,231,0.20)"}`,
+      border: `1px solid ${isLink ? "rgba(59,130,246,0.20)" : "rgba(37,99,235,0.20)"}`,
       maxWidth: "100%",
     }}>
       {isLink ? (
@@ -229,7 +229,7 @@ function ClientCard({ client, onClose }: { client: Client; onClose: () => void }
               <a key={i} href={d.url} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px",
                 borderRadius: 6, background: C.accentTint,
-                border: "1px solid rgba(108,92,231,0.20)",
+                border: "1px solid rgba(37,99,235,0.20)",
                 fontFamily: MONO, fontSize: 11, color: C.accent, textDecoration: "none",
               }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -11,22 +11,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#EEF0F7",
+  bg:          "#F4F4F5",
   surface:     "#FFFFFF",
-  surface2:    "#F5F6FF",
-  ink:         "#16213E",
-  ink2:        "#2C3E62",
-  ink3:        "#4A5578",
-  muted:       "#8892A4",
+  surface2:    "#FAFAFA",
+  ink:         "#09090B",
+  ink2:        "#18181B",
+  ink3:        "#3F3F46",
+  muted:       "#71717A",
   hair:        "rgba(0,0,0,0.07)",
-  accent:      "#6C5CE7",
-  accentTint:  "#EDE9FE",
-  positive:    "#10B981",
-  positiveTint:"#D1FAE5",
-  warning:     "#F59E0B",
+  accent:      "#2563EB",
+  accentTint:  "rgba(37,99,235,0.10)",
+  positive:    "#16A34A",
+  positiveTint:"rgba(22,163,74,0.10)",
+  warning:     "#D97706",
   info:        "#3B82F6",
-  danger:      "#EF4444",
-  dangerTint:  "#FEE2E2",
+  danger:      "#DC2626",
+  dangerTint:  "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -41,7 +41,7 @@ function pct(spent: number, allocated: number) {
 
 function BudgetBar({ spent, allocated }: { spent: number; allocated: number }) {
   const p = Math.min(pct(spent, allocated), 100);
-  const color = p >= 100 ? "#EF4444" : p >= 80 ? "#F59E0B" : "#10B981";
+  const color = p >= 100 ? "#DC2626" : p >= 80 ? "#D97706" : "#16A34A";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <div style={{ flex: 1, height: 6, borderRadius: 3, background: C.hair, overflow: "hidden" }}>
@@ -161,8 +161,8 @@ export default function AdminBudget() {
         </button>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#EF4444", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#10B981", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -212,8 +212,8 @@ export default function AdminBudget() {
                     <td style={{ padding: "11px 16px", fontWeight: 600, color: C.ink }}>{entry.category}</td>
                     <td style={{ padding: "11px 16px", color: C.muted }}>${Number(entry.allocated_amount).toLocaleString()}</td>
                     <td style={{ padding: "11px 16px", color: C.muted }}>${Number(entry.spent_amount).toLocaleString()}</td>
-                    <td style={{ padding: "11px 16px", color: balance >= 0 ? "#10B981" : "#EF4444", fontWeight: 600 }}>${balance.toLocaleString()}</td>
-                    <td style={{ padding: "11px 16px", color: p >= 100 ? "#EF4444" : p >= 80 ? "#F59E0B" : "#10B981" }}>{p}%</td>
+                    <td style={{ padding: "11px 16px", color: balance >= 0 ? "#16A34A" : "#DC2626", fontWeight: 600 }}>${balance.toLocaleString()}</td>
+                    <td style={{ padding: "11px 16px", color: p >= 100 ? "#DC2626" : p >= 80 ? "#D97706" : "#16A34A" }}>{p}%</td>
                     <td style={{ padding: "11px 16px", minWidth: 140 }}>
                       <BudgetBar spent={Number(entry.spent_amount)} allocated={Number(entry.allocated_amount)} />
                     </td>
@@ -229,14 +229,14 @@ export default function AdminBudget() {
                             placeholder="Amount"
                             style={{ ...inputStyle, width: 80, padding: "5px 8px", fontSize: 12 }}
                           />
-                          <button onClick={() => handleAdjust(entry.id, 1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#10B981", color: "#fff", cursor: "pointer", fontSize: 11 }}>+</button>
-                          <button onClick={() => handleAdjust(entry.id, -1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#EF4444", color: "#fff", cursor: "pointer", fontSize: 11 }}>−</button>
+                          <button onClick={() => handleAdjust(entry.id, 1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#16A34A", color: "#fff", cursor: "pointer", fontSize: 11 }}>+</button>
+                          <button onClick={() => handleAdjust(entry.id, -1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#DC2626", color: "#fff", cursor: "pointer", fontSize: 11 }}>−</button>
                           <button onClick={() => { setAdjustId(null); setAdjustDelta(""); }} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 12 }}>✕</button>
                         </div>
                       ) : (
                         <>
                           <button onClick={() => setAdjustId(entry.id)} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 12, textDecoration: "underline", marginRight: 8 }}>Adjust</button>
-                          <button onClick={() => handleDelete(entry.id, entry.category)} style={{ background: "none", border: "none", color: "#EF4444", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
+                          <button onClick={() => handleDelete(entry.id, entry.category)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
                         </>
                       )}
                     </td>

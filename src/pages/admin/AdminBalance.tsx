@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   BalanceAccount, BalanceCategoryKey,
   getAccounts, addAccount, updateAccount, deleteAccount,
@@ -7,22 +7,22 @@ import {
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:           "#EEF0F7",
+  bg:           "#F4F4F5",
   surface:      "#FFFFFF",
-  surface2:     "#F5F6FF",
-  ink:          "#16213E",
-  ink2:         "#2C3E62",
-  ink3:         "#4A5578",
-  muted:        "#8892A4",
+  surface2:     "#FAFAFA",
+  ink:          "#09090B",
+  ink2:         "#18181B",
+  ink3:         "#3F3F46",
+  muted:        "#71717A",
   hair:         "rgba(0,0,0,0.07)",
-  accent:       "#6C5CE7",
-  accentTint:   "#EDE9FE",
-  positive:     "#10B981",
-  positiveTint: "#D1FAE5",
-  warning:      "#F59E0B",
+  accent:       "#2563EB",
+  accentTint:   "rgba(37,99,235,0.10)",
+  positive:     "#16A34A",
+  positiveTint: "rgba(22,163,74,0.10)",
+  warning:      "#D97706",
   info:         "#3B82F6",
-  danger:       "#EF4444",
-  dangerTint:   "#FEE2E2",
+  danger:       "#DC2626",
+  dangerTint:   "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -75,10 +75,10 @@ interface CatConfig {
 
 const CATS: CatConfig[] = [
   { key: "assets", label: "Assets",  Icon: CatIcon.assets, color: "#3B82F6", tint: "#EFF6FF", border: "rgba(59,130,246,0.20)"  },
-  { key: "liquid", label: "Liquid",  Icon: CatIcon.liquid, color: "#10B981", tint: "#ECFDF5", border: "rgba(16,185,129,0.20)"  },
-  { key: "stocks", label: "Stocks",  Icon: CatIcon.stocks, color: "#F59E0B", tint: "#FFFBEB", border: "rgba(245,158,11,0.20)"  },
-  { key: "bank",   label: "Bank",    Icon: CatIcon.bank,   color: "#6C5CE7", tint: "#EDE9FE", border: "rgba(108,92,231,0.20)"  },
-  { key: "other",  label: "Other",   Icon: CatIcon.other,  color: "#8892A4", tint: "#F5F6FF", border: "rgba(136,146,164,0.20)" },
+  { key: "liquid", label: "Liquid",  Icon: CatIcon.liquid, color: "#16A34A", tint: "#ECFDF5", border: "rgba(16,185,129,0.20)"  },
+  { key: "stocks", label: "Stocks",  Icon: CatIcon.stocks, color: "#D97706", tint: "#FFFBEB", border: "rgba(245,158,11,0.20)"  },
+  { key: "bank",   label: "Bank",    Icon: CatIcon.bank,   color: "#2563EB", tint: "rgba(37,99,235,0.10)", border: "rgba(37,99,235,0.20)"  },
+  { key: "other",  label: "Other",   Icon: CatIcon.other,  color: "#71717A", tint: "#FAFAFA", border: "rgba(136,146,164,0.20)" },
 ];
 
 const inputStyle: React.CSSProperties = {
@@ -249,7 +249,7 @@ export default function AdminBalance() {
       {/* ── Grand total ── */}
       <div style={{
         background: C.surface, borderRadius: 14, padding: "22px 26px", marginBottom: 20,
-        boxShadow: "0 4px 20px rgba(108,92,231,0.10)",
+        boxShadow: "0 4px 20px rgba(37,99,235,0.10)",
         borderTop: `4px solid ${C.accent}`,
         display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>

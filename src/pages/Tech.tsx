@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SeoHead from "@/components/SeoHead";
 import {
   createServiceRequest,
@@ -11,12 +11,11 @@ import {
   type TechProject,
 } from "@/lib/supabaseApi";
 import {
-  ArrowRight,
+  ChevronDown,
   Cloud,
   Code2,
   Database,
   ExternalLink,
-  Menu,
   Phone,
   Mail,
   ShieldCheck,
@@ -91,6 +90,11 @@ const stackCards = [
   { name: "+ More", icon: "" },
 ];
 
+const MARQUEE_LOGOS = ['React', 'Node.js', 'Next.js', 'TypeScript', 'PostgreSQL', 'AWS'];
+
+const HERO_VIDEO =
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_065045_c44942da-53c6-4804-b734-f9e07fc22e08.mp4';
+
 const faqs = [
   {
     q: "How fast can Kayrosco Tech start?",
@@ -118,12 +122,15 @@ function scrollToId(id: string) {
 function GlassCard({
   children,
   style,
+  className,
 }: {
   children: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 }) {
   return (
     <div
+      className={className}
       style={{
         background: C.cardDark,
         border: `1px solid ${C.borderSoft}`,
@@ -147,14 +154,14 @@ function SectionTitle({
   text?: string;
 }) {
   return (
-    <div style={{ maxWidth: 760, marginBottom: 34 }}>
+    <div style={{ maxWidth: 760, marginBottom: 28 }}>
       <div
         style={{
           color: C.blueLight,
           fontSize: 13,
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          marginBottom: 12,
+          marginBottom: 10,
         }}
       >
         {eyebrow}
@@ -164,8 +171,8 @@ function SectionTitle({
           margin: 0,
           color: C.textMain,
           fontFamily: "'Orbitron', 'Rostex', Inter, sans-serif",
-          fontSize: "clamp(32px, 4vw, 54px)",
-          lineHeight: 0.96,
+          fontSize: "clamp(26px, 5vw, 54px)",
+          lineHeight: 1.05,
           fontWeight: 800,
           letterSpacing: "-0.03em",
         }}
@@ -175,9 +182,9 @@ function SectionTitle({
       {text && (
         <p
           style={{
-            margin: "16px 0 0",
+            margin: "14px 0 0",
             color: C.textSoft,
-            fontSize: 16,
+            fontSize: "clamp(14px, 3.5vw, 16px)",
             lineHeight: 1.7,
             maxWidth: 620,
           }}
@@ -267,7 +274,7 @@ function CodeCard() {
 }
 
 function TechPage() {
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [showAllServices, setShowAllServices] = useState(false);
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<TechProject[]>([]);
@@ -289,6 +296,42 @@ function TechPage() {
   });
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let raf: number;
+    const tick = () => {
+      const t = video.currentTime;
+      const d = video.duration || 0;
+      if (d > 0) {
+        if (t < 0.5) {
+          video.style.opacity = String(t / 0.5);
+        } else if (t > d - 0.5) {
+          video.style.opacity = String(Math.max(0, (d - t) / 0.5));
+        } else {
+          video.style.opacity = '1';
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    const onEnded = () => {
+      video.style.opacity = '0';
+      cancelAnimationFrame(raf);
+      setTimeout(() => { video.currentTime = 0; video.play().catch(() => {}); }, 100);
+    };
+    const onPlay = () => { raf = requestAnimationFrame(tick); };
+    const onPause = () => cancelAnimationFrame(raf);
+    video.addEventListener('ended', onEnded);
+    video.addEventListener('play', onPlay);
+    video.addEventListener('pause', onPause);
+    return () => {
+      cancelAnimationFrame(raf);
+      video.removeEventListener('ended', onEnded);
+      video.removeEventListener('play', onPlay);
+      video.removeEventListener('pause', onPause);
+    };
+  }, []);
+
+  useEffect(() => {
     const fontId = "kayrosco-tech-premium-fonts";
     if (!document.getElementById(fontId)) {
       const link = document.createElement("link");
@@ -297,6 +340,14 @@ function TechPage() {
       link.href =
         "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@600;700;800&display=swap";
       document.head.appendChild(link);
+    }
+    const gsId = "general-sans-font";
+    if (!document.getElementById(gsId)) {
+      const gsLink = document.createElement("link");
+      gsLink.id = gsId;
+      gsLink.rel = "stylesheet";
+      gsLink.href = "https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap";
+      document.head.appendChild(gsLink);
     }
   }, []);
 
@@ -364,6 +415,7 @@ function TechPage() {
 
   return (
     <div
+      className="tk-page-root"
       style={{
         minHeight: "100vh",
         backgroundColor: C.bgDark,
@@ -591,10 +643,15 @@ function TechPage() {
           87% { opacity: 0; transform: translate(0); }
         }
         @media (max-width: 1024px) {
-          .tk-feature-grid, .tk-process-grid, .tk-why-grid, .tk-stack-grid, .tk-project-grid, .tk-contact-grid { grid-template-columns: 1fr !important; }
+          .tk-feature-grid, .tk-process-grid, .tk-stack-grid, .tk-project-grid, .tk-contact-grid { grid-template-columns: 1fr !important; }
+          .tk-why-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .tk-hero { min-height: auto !important; padding-bottom: 72px; }
           .tk-header-bar { border-radius: 20px; }
           .tk-nav-center { gap: 22px; }
+        }
+        @media (max-width: 640px) {
+          .tk-why-grid { grid-template-columns: 1fr !important; }
+          .tk-project-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 780px) {
           .tk-nav-desktop { display: none !important; }
@@ -614,10 +671,90 @@ function TechPage() {
           .tk-form-row,
           .tk-company-strip { grid-template-columns: 1fr !important; }
           .tk-company-logo { font-size: 28px !important; }
+          .tk-page-root { padding-bottom: 80px; }
+          .vg-hero-nav { padding: 14px 16px !important; }
+          .vg-hero-content { padding: 32px 16px !important; }
+          .vg-marquee-row { padding: 0 16px !important; gap: 20px !important; }
+          .vg-marquee-label { display: none !important; }
+          section.tk-wrap { padding-bottom: 56px !important; }
+          section.tk-wrap[style*="padding: \\"42px"] { padding: 32px 0 56px !important; }
+          .tk-contact-grid { gap: 16px !important; }
         }
         @media (max-width: 520px) {
           .tk-wrap { padding: 0 14px; }
           .tk-company-logo { font-size: 24px !important; }
+          .vg-hero-btns { flex-direction: column !important; gap: 12px !important; align-items: stretch !important; }
+          .vg-hero-btns > button { text-align: center !important; width: 100% !important; justify-content: center !important; }
+          .vg-headline { font-size: clamp(30px, 11vw, 60px) !important; }
+          .tk-feature-icon { width: 46px !important; height: 46px !important; }
+          .tk-feature-title { font-size: 15px !important; }
+          .tk-feature-text { font-size: 14px !important; }
+        }
+        /* ── Hero video hero ───────────────────────────── */
+        @keyframes vg-marquee {
+          from { transform: translateX(0%); }
+          to   { transform: translateX(-50%); }
+        }
+        .vg-marquee-track {
+          animation: vg-marquee 20s linear infinite;
+          display: flex;
+          gap: 64px;
+          width: max-content;
+        }
+        .liquid-glass {
+          background: rgba(255,255,255,0.01);
+          background-blend-mode: luminosity;
+          backdrop-filter: blur(4px);
+          border: none;
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+          position: relative;
+          overflow: hidden;
+        }
+        .liquid-glass::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 1.4px;
+          background: linear-gradient(180deg,
+            rgba(255,255,255,0.45) 0%,
+            rgba(255,255,255,0.15) 20%,
+            rgba(255,255,255,0)   40%,
+            rgba(255,255,255,0)   60%,
+            rgba(255,255,255,0.15) 80%,
+            rgba(255,255,255,0.45) 100%
+          );
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        .vg-nav-btn {
+          background: none; border: none; cursor: pointer;
+          display: inline-flex; align-items: center; gap: 4px;
+          color: rgba(243,241,238,0.9);
+          font-size: 14px; font-family: 'Geist', ui-sans-serif, sans-serif;
+          padding: 4px 2px;
+          transition: color 0.18s ease;
+        }
+        .vg-nav-btn:hover { color: hsl(40,6%,95%); }
+        .vg-cta-btn {
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.2);
+          color: hsl(40,6%,95%);
+          border-radius: 9999px;
+          cursor: pointer;
+          font-family: 'Geist', ui-sans-serif, sans-serif;
+          transition: background 0.18s ease, border-color 0.18s ease;
+        }
+        .vg-cta-btn:hover {
+          background: rgba(255,255,255,0.14);
+          border-color: rgba(255,255,255,0.35);
+        }
+        @media (max-width: 768px) {
+          .vg-nav-center { display: none !important; }
+          .vg-nav-signup { display: none !important; }
+          .vg-headline { font-size: clamp(36px, 10vw, 100px) !important; }
         }
       `}</style>
 
@@ -644,218 +781,174 @@ function TechPage() {
         />
       ))}
 
-      <header className="tk-header-shell">
-        <div className="tk-header-bar">
-          <a className="tk-brand" href="/tech">
-            <span className="tk-brand-text" data-text="KAYROSCO">KAYROSCO</span>
-          </a>
+      {/* ══════════════════ FULL-SCREEN HERO ══════════════════ */}
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'hsl(260,87%,3%)' }}>
 
-          <nav className="tk-nav-desktop tk-nav-center">
-            <a className="tk-nav-link tk-nav-link-active" href="/tech">Home</a>
-            <button className="tk-nav-link" onClick={() => scrollToId("services")} style={{ background: "none", border: "none", cursor: "pointer" }}>Services</button>
-            <button className="tk-nav-link" onClick={() => scrollToId("process")} style={{ background: "none", border: "none", cursor: "pointer" }}>Process</button>
-            <button className="tk-nav-link" onClick={() => scrollToId("why-us")} style={{ background: "none", border: "none", cursor: "pointer" }}>About Us</button>
-            <button className="tk-nav-link" onClick={() => scrollToId("projects")} style={{ background: "none", border: "none", cursor: "pointer" }}>Case Studies</button>
-            <a className="tk-nav-link" href="/insights">Blog</a>
-          </nav>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <a
-              className="tk-secondary tk-nav-desktop"
-              href="/"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textDecoration: "none",
-              }}
-            >
-              Kayrosco Group
-            </a>
-            <button className="tk-primary tk-nav-desktop" onClick={() => scrollToId("contact")}>Let's Talk</button>
-          </div>
-
-          <button
-            className="tk-mobile-toggle"
-            onClick={() => setMobileMenu((current) => !current)}
-            style={{
-              display: "none",
-              width: 46,
-              height: 46,
-              borderRadius: 12,
-              border: `1px solid ${C.borderSoft}`,
-              background: C.cardDark,
-              color: C.textMain,
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-          >
-            {mobileMenu ? <X size={20} /> : <Menu size={20} />}
-          </button>
+        {/* Background video (overflow-hidden wrapper so video stays clipped) */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
+          <video
+            ref={videoRef}
+            src={HERO_VIDEO}
+            autoPlay
+            muted
+            playsInline
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0 }}
+          />
         </div>
-      </header>
 
-      {mobileMenu && (
-        <div className="tk-wrap" style={{ paddingTop: 12 }}>
-          <GlassCard style={{ padding: 14 }}>
-            <div style={{ display: "grid", gap: 8 }}>
-              {[
-                ["Home", "top"],
-                ["Services", "services"],
-                ["Process", "process"],
-                ["About Us", "why-us"],
-                ["Case Studies", "projects"],
-                ["FAQ", "faq"],
-              ].map(([label, id]) => (
+        {/* Blurred overlay shape (centred, overflow-visible so it bleeds) */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 984, height: 527, opacity: 0.9,
+          background: '#030712', filter: 'blur(82px)',
+          pointerEvents: 'none', zIndex: 1,
+        }} />
+
+        {/* Content layer */}
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', flex: 1 }}>
+
+          {/* ── Navbar ── */}
+          <nav className="vg-hero-nav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 32px' }}>
+            {/* Logo */}
+            <img
+              src="/logo_kc_finall-removebg-preview.png"
+              alt="Kayrosco Tech"
+              style={{ height: 32, objectFit: 'contain' }}
+            />
+
+            {/* Center nav */}
+            <div className="vg-nav-center" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+              {([
+                ['Services', true,   'services'],
+                ['Process',  false,  'process' ],
+                ['Case Studies', false, 'projects'],
+                ['Blog',     false,  'blog'    ],
+              ] as [string, boolean, string][]).map(([label, chevron, target]) => (
                 <button
-                  key={id}
-                  onClick={() => {
-                    setMobileMenu(false);
-                    scrollToId(id);
-                  }}
-                  style={{
-                    padding: "14px 12px",
-                    borderRadius: 12,
-                    background: "rgba(255,255,255,0.03)",
-                    border: `1px solid ${C.borderSoft}`,
-                    color: C.textMain,
-                    textAlign: "left",
-                    cursor: "pointer",
-                  }}
+                  key={label}
+                  className="vg-nav-btn"
+                  onClick={() => target === 'blog' ? (window.location.href = '/insights') : scrollToId(target)}
                 >
                   {label}
+                  {chevron && <ChevronDown size={13} />}
                 </button>
               ))}
-              <a
-                href="/"
-                style={{
-                  padding: "14px 12px",
-                  borderRadius: 12,
-                  background: "rgba(255,255,255,0.03)",
-                  border: `1px solid ${C.borderSoft}`,
-                  color: C.textMain,
-                  textAlign: "left",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-              >
-                Kayrosco Group
-              </a>
-              <a
-                href="/insights"
-                style={{
-                  padding: "14px 12px",
-                  borderRadius: 12,
-                  background: "rgba(255,255,255,0.03)",
-                  border: `1px solid ${C.borderSoft}`,
-                  color: C.textMain,
-                  textAlign: "left",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-              >
-                Blog
-              </a>
             </div>
-          </GlassCard>
-        </div>
-      )}
 
-      <section
-        className="tk-hero"
-        style={{
-          minHeight: 920,
-          display: "flex",
-          alignItems: "center",
-          paddingTop: 56,
-          paddingBottom: 120,
-          position: "relative",
-          overflow: "hidden",
-          backgroundImage:
-            "linear-gradient(90deg, rgba(2,6,23,0.82) 0%, rgba(2,6,23,0.68) 35%, rgba(2,6,23,0.34) 56%, rgba(2,6,23,0.56) 100%), url('/kt background.png')",
-          backgroundPosition: "right 12px center",
-          backgroundSize: "76% auto",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {[
-          { left: "56%", top: "18%", width: 56, height: 56, delay: "0s", duration: "12s", opacity: 0.38 },
-          { left: "71%", top: "24%", width: 18, height: 18, delay: "1.4s", duration: "9s", opacity: 0.42 },
-          { left: "66%", top: "42%", width: 24, height: 24, delay: "2.1s", duration: "11s", opacity: 0.34 },
-          { left: "81%", top: "34%", width: 12, height: 12, delay: "0.8s", duration: "10s", opacity: 0.46 },
-          { left: "60%", top: "60%", width: 20, height: 20, delay: "1.9s", duration: "13s", opacity: 0.32 },
-          { left: "77%", top: "64%", width: 30, height: 30, delay: "3s", duration: "12s", opacity: 0.36 },
-        ].map((block, index) => (
-          <div
-            key={index}
-            className="tk-float-block"
-            style={{
-              left: block.left,
-              top: block.top,
-              width: block.width,
-              height: block.height,
-              animationDelay: block.delay,
-              animationDuration: block.duration,
-              opacity: block.opacity,
-            }}
-          />
-        ))}
-        <div className="tk-wrap tk-hero-shell" id="top" style={{ width: "100%" }}>
-        <div className="tk-hero-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 0.95fr) minmax(300px, 1.05fr)", gap: 48, alignItems: "center", width: "100%" }}>
-          <div className="tk-hero-copy" style={{ paddingLeft: 0 }}>
-            <h1
-              className="tk-hero-title"
-              style={{
-                margin: 0,
-                fontFamily: "'Orbitron', 'Rostex', Inter, sans-serif",
-                fontSize: "clamp(66px, 6.4vw, 96px)",
-                lineHeight: 0.92,
-                fontWeight: 800,
-                letterSpacing: "-0.04em",
-                maxWidth: 760,
-              }}
+            {/* Let's Talk */}
+            <button
+              className="vg-cta-btn vg-nav-signup"
+              style={{ padding: '8px 16px', fontSize: 13 }}
+              onClick={() => scrollToId('contact')}
             >
-              Your Ideas
-              <br />
-              into Tech
-              <br />
-              <span
+              Let's Talk
+            </button>
+          </nav>
+
+          {/* Divider */}
+          <div style={{ height: 1, marginTop: 3, background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent)' }} />
+
+          {/* ── Hero content ── */}
+          <div className="vg-hero-content" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 32px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <h1
+                className="vg-headline"
                 style={{
-                  background: "linear-gradient(180deg, #60A5FA, #2563EB)",
-                  WebkitBackgroundClip: "text",
-                  color: "transparent",
+                  margin: 0,
+                  fontFamily: '"General Sans", ui-sans-serif, sans-serif',
+                  fontSize: 100,
+                  fontWeight: 400,
+                  lineHeight: 1.02,
+                  letterSpacing: '-0.024em',
+                  color: 'hsl(40,6%,95%)',
                 }}
               >
-                Reality.
-              </span>
-            </h1>
-            <p style={{ margin: "30px 0 0", color: C.textMuted, fontFamily: "'Orbitron', Inter, sans-serif", fontSize: 16, maxWidth: 620, lineHeight: 1.8, letterSpacing: "0.01em" }}>
-              We help startups and businesses transform ideas into custom software delivered by senior engineers in weeks, not months.
-            </p>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 34 }}>
-              <button className="tk-primary tk-glitch" data-text="Start Your Project" onClick={() => scrollToId("contact")} style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap", padding: "14px 22px" }}>
-                Start Your Project <ArrowRight size={16} style={{ marginLeft: 8, verticalAlign: "middle" }} />
-              </button>
-              <button className="tk-secondary tk-glitch" data-text="Explore Services" onClick={() => scrollToId("services")} style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap", padding: "14px 22px" }}>
-                Explore Services
-              </button>
-            </div>
-            <div className="tk-hero-trusted">
-              <div className="tk-hero-trusted-label">innovative companies</div>
-              <div className="tk-hero-trusted-row">
-                <span>loop</span>
-                <span>wave</span>
-                <span>Cloudly</span>
-                <span>agile</span>
-                <span>luminous</span>
+                Powered by{' '}
+                <span style={{
+                  backgroundImage: 'linear-gradient(to left, #60A5FA, #2563EB, #818cf8)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}>
+                  Kyro
+                </span>
+              </h1>
+
+              <p style={{
+                color: 'hsl(40,6%,82%)',
+                fontSize: 18, lineHeight: '32px',
+                maxWidth: 520, margin: '9px auto 0', opacity: 0.8,
+                fontFamily: 'Geist, ui-sans-serif, sans-serif',
+              }}>
+                Senior-built software. Shipped in weeks.
+              </p>
+
+              <div className="vg-hero-btns" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 25, flexWrap: 'wrap' }}>
+                <button
+                  className="vg-cta-btn"
+                  style={{ padding: '16px 29px', fontSize: 15 }}
+                  onClick={() => scrollToId('contact')}
+                >
+                  Start Your Project
+                </button>
+                <button
+                  className="vg-nav-btn"
+                  style={{ padding: '16px 22px', fontSize: 15, border: '1px solid rgba(255,255,255,0.15)', borderRadius: 9999 }}
+                  onClick={() => scrollToId('services')}
+                >
+                  Explore Services
+                </button>
               </div>
             </div>
           </div>
-          <div aria-hidden="true" />
-        </div>
-        </div>
+
+          {/* ── Logo marquee ── */}
+          <div style={{ paddingBottom: 40 }}>
+            <div className="vg-marquee-row" style={{ maxWidth: 1024, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 48, padding: '0 32px', overflow: 'hidden' }}>
+              {/* Static label */}
+              <p className="vg-marquee-label" style={{
+                flexShrink: 0,
+                color: 'rgba(255,255,255,0.5)',
+                fontSize: 14, lineHeight: 1.5,
+                fontFamily: 'Geist, ui-sans-serif, sans-serif',
+                margin: 0,
+              }}>
+                Built with the<br />best in the stack
+              </p>
+
+              {/* Scrolling track */}
+              <div style={{ flex: 1, overflow: 'hidden' }}>
+                <div className="vg-marquee-track">
+                  {[...MARQUEE_LOGOS, ...MARQUEE_LOGOS].map((name, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                      <div className="liquid-glass" style={{
+                        width: 24, height: 24, borderRadius: 8,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 700, color: 'white',
+                      }}>
+                        {name[0]}
+                      </div>
+                      <span style={{
+                        fontSize: 16, fontWeight: 600,
+                        color: 'hsl(40,6%,95%)',
+                        fontFamily: 'Geist, ui-sans-serif, sans-serif',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>{/* /content layer */}
       </section>
+      {/* ════════════════ END FULL-SCREEN HERO ════════════════ */}
+
+      <div id="top" />
 
       <section className="tk-wrap" style={{ paddingBottom: 44, marginTop: -48, position: "relative", zIndex: 4 }}>
         <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
@@ -863,6 +956,7 @@ function TechPage() {
             <GlassCard key={item.title} className="tk-feature-card" style={{ padding: 26 }} >
               <div className="tk-glass-hover tk-feature-card-body" style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
                 <div
+                  className="tk-feature-icon"
                   style={{
                     width: 66,
                     height: 66,
@@ -878,8 +972,8 @@ function TechPage() {
                   <item.icon size={28} color={C.blueMain} strokeWidth={1.8} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</div>
-                  <div style={{ color: C.textSoft, fontSize: 16, lineHeight: 1.6 }}>{item.text}</div>
+                  <div className="tk-feature-title" style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>{item.title}</div>
+                  <div className="tk-feature-text" style={{ color: C.textSoft, fontSize: 16, lineHeight: 1.6 }}>{item.text}</div>
                 </div>
               </div>
             </GlassCard>
@@ -1184,18 +1278,20 @@ function TechPage() {
                   background: "transparent",
                   border: "none",
                   color: C.textMain,
-                  padding: "20px 22px",
+                  padding: "18px 20px",
                   textAlign: "left",
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   justifyContent: "space-between",
+                  gap: 12,
                   cursor: "pointer",
-                  fontSize: 18,
+                  fontSize: "clamp(14px, 3.5vw, 18px)",
                   fontWeight: 600,
+                  lineHeight: 1.4,
                 }}
               >
-                <span>{item.q}</span>
-                <span style={{ color: C.blueLight }}>{faqOpen === index ? "−" : "+"}</span>
+                <span style={{ flex: 1 }}>{item.q}</span>
+                <span style={{ color: C.blueLight, flexShrink: 0, fontSize: 20, lineHeight: 1 }}>{faqOpen === index ? "−" : "+"}</span>
               </button>
               {faqOpen === index && (
                 <div style={{ padding: "0 22px 20px", color: C.textSoft, fontSize: 15, lineHeight: 1.7 }}>
@@ -1213,7 +1309,7 @@ function TechPage() {
             <div style={{ color: C.blueLight, fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>
               Get Started
             </div>
-            <h2 style={{ margin: 0, fontSize: "clamp(34px, 4vw, 54px)", lineHeight: 1, fontWeight: 800, letterSpacing: "-0.04em" }}>
+            <h2 style={{ margin: 0, fontSize: "clamp(24px, 5vw, 54px)", lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.04em" }}>
               Start your next tech project with a cleaner process.
             </h2>
             <p style={{ margin: "18px 0 0", color: C.textSoft, fontSize: 16, lineHeight: 1.7 }}>

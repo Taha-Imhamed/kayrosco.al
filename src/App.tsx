@@ -21,6 +21,7 @@ import SeoArticlePage from "./pages/SeoArticlePage";
 import SeoToolPage from "./pages/SeoToolPage";
 import SeoDirectoryPage from "./pages/SeoDirectoryPage";
 import PartnersPage from "./pages/PartnersPage";
+import Threedmt from "./pages/Threedmt";
 
 // Admin pages
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
@@ -73,6 +74,7 @@ const App = () => (
             <Route path="/tools" element={<SeoDirectoryPage />} />
             <Route path="/tools/:slug" element={<SeoToolPage />} />
             <Route path="/partners" element={<PartnersPage />} />
+            <Route path="/3dmt" element={<Threedmt />} />
             <Route path="/:category/:slug" element={<SeoLandingPage />} />
             <Route path="/client/login" element={<ClientPortalLogin />} />
             <Route path="/client/dashboard" element={<ClientPortalDashboard />} />

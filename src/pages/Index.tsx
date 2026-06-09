@@ -34,7 +34,7 @@ const GlobalStyles = () => (
         --background-med: #1A1A1A;
         --text-light: #EAEAEA;
         --text-muted: #B0BEC5;
-        --accent-purple: #668dbc;
+        --accent-purple: #C0C0C0;
         --accent-blue: #03DAC6;
         --travel-seafoam: #7ec8bf;
         --travel-seafoam-soft: #c7d8cf;
@@ -163,15 +163,17 @@ const GlobalStyles = () => (
         position: sticky;
         top: 0;
         z-index: 1000;
-        background-color: var(--background-dark); 
-        border-bottom: 1px solid var(--border-light);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        background-color: transparent;
+        border-bottom: none;
+        box-shadow: none;
         transition: transform 0.24s ease, opacity 0.24s ease;
     }
 
     .navbar-wrapper.home-header {
-        position: static;
-        top: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
         transform: none;
         opacity: 1;
         pointer-events: auto;
@@ -188,9 +190,9 @@ const GlobalStyles = () => (
         justify-content: center;
         align-items: center;
         position: relative;
-        max-width: 1300px; 
-        margin: 0 auto; 
-        padding: 15px 50px; 
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 8px 50px;
     }
 
     .navbar .logo {
@@ -233,55 +235,151 @@ const GlobalStyles = () => (
          padding-bottom: 6px;
     }
     
-    /* Dropdown specific styles */
+    /* ── Dropdown ── */
     .dropdown {
         position: relative;
         display: inline-block;
     }
 
+    @keyframes dropdown-in {
+        from { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.97); }
+        to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1);    }
+    }
+
     .dropdown-menu {
         position: absolute;
-        top: 100%; 
-        left: 50%; 
-        transform: translateX(-50%) translateY(10px);
-        min-width: 200px;
-        z-index: 1001; 
-        background-color: var(--background-med); 
-        border-radius: var(--border-radius-smooth);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
-        border: 1px solid var(--border-light);
-        padding: 10px 0;
-        transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s;
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 520px;
+        z-index: 1001;
+        background: rgba(10, 10, 12, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 18px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07) inset;
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
     }
-    
+
+    /* Arrow notch */
+    .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 12px;
+        background: rgba(10, 10, 12, 0.92);
+        border-left: 1px solid rgba(255,255,255,0.08);
+        border-top: 1px solid rgba(255,255,255,0.08);
+        rotate: 45deg;
+    }
+
     .dropdown-menu.hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateX(-50%) translateY(10px);
+        transform: translateX(-50%) translateY(14px) scale(0.97);
     }
     .dropdown-menu.visible {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0) scale(1);
+        animation: dropdown-in 0.22s ease forwards;
     }
-    
+
     .dropdown-menu a {
-        padding: 10px 20px;
-        display: block; 
-        margin: 0;
-        text-align: left;
-        background-color: transparent;
-        text-transform: none;
-        font-size: 0.95rem;
-        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 14px 14px;
+        border-radius: 12px;
         text-decoration: none;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+        text-transform: none;
+        position: relative;
+        overflow: hidden;
     }
     .dropdown-menu a:hover {
-        background-color: var(--accent-purple);
-        color: var(--background-dark); 
-        border-bottom: none;
+        background: rgba(255,255,255,0.07);
+        border-color: rgba(255,255,255,0.10);
+        transform: translateY(-2px);
+        border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+    .dropdown-menu a .dm-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2px;
+        flex-shrink: 0;
+    }
+    .dropdown-menu a .dm-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #FFFFFF;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+    }
+    .dropdown-menu a .dm-desc {
+        font-size: 11px;
+        color: rgba(255,255,255,0.45);
+        line-height: 1.4;
+    }
+    .dropdown-menu a .dm-arrow {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: opacity 0.18s, transform 0.18s;
+        color: rgba(255,255,255,0.5);
+        font-size: 14px;
+    }
+    .dropdown-menu a:hover .dm-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* ── Dropdown toggle chevron animation ── */
+    .dropdown-toggle .chevron {
+        display: inline-block;
+        margin-left: 4px;
+        transition: transform 0.2s ease;
+        font-size: 10px;
+        opacity: 0.6;
+    }
+    .dropdown-open .chevron {
+        transform: rotate(180deg);
+    }
+
+    /* ── Global page fade-in ── */
+    @keyframes page-fade-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0);    }
+    }
+    .page-view {
+        animation: page-fade-in 0.35s ease forwards;
+    }
+
+    /* ── Mobile nav tap animation ── */
+    @keyframes tab-pop {
+        0%   { transform: scale(1);    }
+        40%  { transform: scale(0.88); }
+        70%  { transform: scale(1.05); }
+        100% { transform: scale(1);    }
     }
 
 
@@ -296,7 +394,7 @@ const GlobalStyles = () => (
     }
     
     .view-content-padding {
-        padding: 4rem 3rem; 
+        padding: 4rem 3rem;
         max-width: 100%;
         margin: 0 auto;
     }
@@ -486,7 +584,7 @@ const GlobalStyles = () => (
         font-size: clamp(0.95rem, 1.4vw, 1.1rem);
         line-height: 1.5;
         letter-spacing: 0.04em;
-        background: linear-gradient(90deg, #111111 0%, #8fd3ff 52%, #ffffff 100%);
+        background: linear-gradient(90deg, #111111 0%, #C0C0C0 52%, #ffffff 100%);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -800,8 +898,10 @@ const GlobalStyles = () => (
     /* Responsive Adjustments */
     @media (max-width: 768px) {
         .navbar-wrapper.home-header {
-            position: static;
-            top: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             transform: none;
             opacity: 1;
             pointer-events: auto;
@@ -815,11 +915,11 @@ const GlobalStyles = () => (
 
         .navbar {
             flex-direction: column;
-            align-items: center; 
+            align-items: center;
             justify-content: flex-start;
             position: static;
-            padding: 10px 20px 12px; 
-            gap: 6px; 
+            padding: 6px 20px 8px;
+            gap: 4px;
         }
 
         .navbar .logo {
@@ -1446,7 +1546,7 @@ const App: React.FC = () => {
             script.src = 'https://unpkg.com/@splinetool/viewer/build/spline-viewer.js';
             document.head.appendChild(script);
         }
-        
+
         // Listener for browser history changes (back/forward buttons)
         const handlePopState = () => {
             setCurrentPath(window.location.pathname as Page);
@@ -1621,33 +1721,61 @@ const App: React.FC = () => {
             <div className={`navbar-wrapper ${currentPageName === 'home' ? `home-header ${headerVisible ? '' : 'is-hidden'}` : ''}`}>
                 <nav className="navbar">
                     <a href="/" className="logo">KAYROSCO</a>
-                    
+
                     <div className="nav-links-container">
-                        
+
                         <a className={`nav-link ${getLinkClass('/')}`} href="/">Home</a>
-                        
+
                         {/* Dropdown Menu */}
-                        <div 
-                            className="dropdown" 
+                        <div
+                            className={`dropdown ${isDropdownOpen ? 'dropdown-open' : ''}`}
                             onMouseEnter={() => setIsDropdownOpen(true)}
                             onMouseLeave={() => setIsDropdownOpen(false)}
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
                         >
-                            <a 
+                            <a
                                 className={`nav-link dropdown-toggle ${getLinkClass('solutions')}`}
                                 href="#"
                                 onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
                             >
-                                Our Companies
+                                Our Companies <span className="chevron">▾</span>
                             </a>
-                            
+
                             <div className={`dropdown-menu ${isDropdownOpen ? 'visible' : 'hidden'}`}>
-                                <a href="/travel">Travel Services</a>
-                                <a href="/consulting">Consulting & Legal</a>
-                                <a href="/tech">Tech Solutions</a>
+                                <a href="/travel">
+                                    <div className="dm-icon" style={{ background: 'rgba(20,184,166,0.15)', color: '#2dd4bf' }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                        </svg>
+                                    </div>
+                                    <span className="dm-title">Travel Services</span>
+                                    <span className="dm-desc">Visas, stays & transport across Albania</span>
+                                    <span className="dm-arrow">→</span>
+                                </a>
+                                <a href="/consulting">
+                                    <div className="dm-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#c084fc' }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <span className="dm-title">Consulting & Legal</span>
+                                    <span className="dm-desc">Company formation & compliance</span>
+                                    <span className="dm-arrow">→</span>
+                                </a>
+                                <a href="/tech">
+                                    <div className="dm-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa' }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                            <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                        </svg>
+                                    </div>
+                                    <span className="dm-title">Tech Solutions</span>
+                                    <span className="dm-desc">Software & cloud systems</span>
+                                    <span className="dm-arrow">→</span>
+                                </a>
                             </div>
                         </div>
-                        
+
                         <a className={`nav-link ${getLinkClass('/about')}`} href="/about">About Us</a>
                         <a className={`nav-link button-style primary-button ${getLinkClass('/contact')}`} href="/contact">Contact</a>
                     </div>
@@ -1656,7 +1784,7 @@ const App: React.FC = () => {
 
             {/* Render the currently active page view */}
             {renderPage()}
-            {currentPageName === 'home' && isMobileViewport && (
+            {isMobileViewport && (
                 <>
                     <div style={{ height: 68 }}></div>
                     <nav
@@ -1682,18 +1810,21 @@ const App: React.FC = () => {
                             className={getLinkClass('/')}
                             href="/"
                             style={{
-                                minHeight: 42,
-                                borderRadius: 10,
+                                minHeight: 46,
+                                borderRadius: 12,
                                 textDecoration: 'none',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: 2,
+                                gap: 3,
                                 color: '#FFFFFF',
-                                background: currentPath === '/' ? 'linear-gradient(180deg, rgba(102, 141, 188, 0.2) 0%, rgba(102, 141, 188, 0.1) 100%)' : 'transparent',
-                                border: currentPath === '/' ? '1px solid rgba(102, 141, 188, 0.28)' : '1px solid transparent',
+                                background: currentPath === '/' ? 'linear-gradient(160deg, rgba(192,192,192,0.18) 0%, rgba(192,192,192,0.08) 100%)' : 'transparent',
+                                border: currentPath === '/' ? '1px solid rgba(192,192,192,0.25)' : '1px solid transparent',
+                                transition: 'background 0.2s ease, border-color 0.2s ease, transform 0.15s ease',
                             }}
+                            onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = 'tab-pop 0.28s ease'; }}
+                            onAnimationEnd={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = ''; }}
                         >
                             <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
                                 <path d="M4 10.5 12 4l8 6.5" />
@@ -1703,20 +1834,17 @@ const App: React.FC = () => {
                             <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>Home</span>
                         </a>
                         <a
-                            href="#integrated-expertise"
+                            href="/travel"
                             style={{
-                                minHeight: 42,
-                                borderRadius: 10,
-                                textDecoration: 'none',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 2,
+                                minHeight: 46, borderRadius: 12, textDecoration: 'none',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
                                 color: '#FFFFFF',
-                                background: 'transparent',
-                                border: '1px solid transparent',
+                                background: ['/travel','/consulting','/tech'].includes(currentPath) ? 'linear-gradient(160deg, rgba(192,192,192,0.18) 0%, rgba(192,192,192,0.08) 100%)' : 'transparent',
+                                border: ['/travel','/consulting','/tech'].includes(currentPath) ? '1px solid rgba(192,192,192,0.25)' : '1px solid transparent',
+                                transition: 'background 0.2s ease, border-color 0.2s ease',
                             }}
+                            onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = 'tab-pop 0.28s ease'; }}
+                            onAnimationEnd={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = ''; }}
                         >
                             <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
                                 <rect x="4.5" y="5" width="6" height="6" rx="1.2" />
@@ -1730,18 +1858,15 @@ const App: React.FC = () => {
                             className={getLinkClass('/about')}
                             href="/about"
                             style={{
-                                minHeight: 42,
-                                borderRadius: 10,
-                                textDecoration: 'none',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 2,
+                                minHeight: 46, borderRadius: 12, textDecoration: 'none',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
                                 color: '#FFFFFF',
-                                background: currentPath === '/about' ? 'linear-gradient(180deg, rgba(102, 141, 188, 0.2) 0%, rgba(102, 141, 188, 0.1) 100%)' : 'transparent',
-                                border: currentPath === '/about' ? '1px solid rgba(102, 141, 188, 0.28)' : '1px solid transparent',
+                                background: currentPath === '/about' ? 'linear-gradient(160deg, rgba(192,192,192,0.18) 0%, rgba(192,192,192,0.08) 100%)' : 'transparent',
+                                border: currentPath === '/about' ? '1px solid rgba(192,192,192,0.25)' : '1px solid transparent',
+                                transition: 'background 0.2s ease, border-color 0.2s ease',
                             }}
+                            onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = 'tab-pop 0.28s ease'; }}
+                            onAnimationEnd={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = ''; }}
                         >
                             <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
                                 <circle cx="12" cy="8" r="3" />
@@ -1753,18 +1878,15 @@ const App: React.FC = () => {
                             className={getLinkClass('/contact')}
                             href="/contact"
                             style={{
-                                minHeight: 42,
-                                borderRadius: 10,
-                                textDecoration: 'none',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 2,
+                                minHeight: 46, borderRadius: 12, textDecoration: 'none',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
                                 color: '#FFFFFF',
-                                background: currentPath === '/contact' ? 'linear-gradient(180deg, rgba(102, 141, 188, 0.2) 0%, rgba(102, 141, 188, 0.1) 100%)' : 'transparent',
-                                border: currentPath === '/contact' ? '1px solid rgba(102, 141, 188, 0.28)' : '1px solid transparent',
+                                background: currentPath === '/contact' ? 'linear-gradient(160deg, rgba(192,192,192,0.18) 0%, rgba(192,192,192,0.08) 100%)' : 'transparent',
+                                border: currentPath === '/contact' ? '1px solid rgba(192,192,192,0.25)' : '1px solid transparent',
+                                transition: 'background 0.2s ease, border-color 0.2s ease',
                             }}
+                            onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = 'tab-pop 0.28s ease'; }}
+                            onAnimationEnd={(e) => { (e.currentTarget as HTMLAnchorElement).style.animation = ''; }}
                         >
                             <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
                                 <path d="M6.6 4.8h2.6l1.2 3.1-1.6 1.6a14 14 0 0 0 5.3 5.3l1.6-1.6 3.1 1.2v2.6a1.6 1.6 0 0 1-1.7 1.6A15.5 15.5 0 0 1 5 6.5 1.6 1.6 0 0 1 6.6 4.8Z" />
@@ -1789,7 +1911,7 @@ const App: React.FC = () => {
                         <a href="/partners" className="text-sm text-muted hover:text-accent-purple">Partners</a>
                     </div>
                 </div>
-                <p className="copyright" style={{marginTop: '20px'}}>© 2024 Kayrosco. All rights reserved. | Global Bridge to Albania.</p>
+                <p className="copyright" style={{marginTop: '20px'}}>© 2026 Kayrosco. All rights reserved. | Global Bridge to Albania.</p>
             </footer>
         </>
     );

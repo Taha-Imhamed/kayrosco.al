@@ -21,9 +21,11 @@ CREATE TABLE IF NOT EXISTS tech_projects (
 -- Allow anyone to read (public portfolio)
 ALTER TABLE tech_projects ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "public_read_tech_projects" ON tech_projects;
 CREATE POLICY "public_read_tech_projects"
   ON tech_projects FOR SELECT USING (true);
 
 -- Allow all for service role / admin (Supabase uses service role for admin)
+DROP POLICY IF EXISTS "admin_all_tech_projects" ON tech_projects;
 CREATE POLICY "admin_all_tech_projects"
   ON tech_projects FOR ALL USING (true);

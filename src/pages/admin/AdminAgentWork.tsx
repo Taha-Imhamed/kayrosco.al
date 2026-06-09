@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Calendar, FileText, MessageSquarePlus, UserPlus } from "lucide-react";
 import { assignAgentWork, createAgentNote, getAgentWork, updateAgentWorkStatus } from "@/lib/agentApi";
 import type { AgentInternalNote, AgentWorkItem, AgentWorkStatus } from "@/lib/agentTypes";
@@ -6,18 +6,18 @@ import { getAdminUsers } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg: "#EEF0F7",
+  bg: "#F4F4F5",
   surface: "#FFFFFF",
-  surface2: "#F5F6FF",
-  ink: "#16213E",
-  ink2: "#2C3E62",
-  muted: "#8892A4",
+  surface2: "#FAFAFA",
+  ink: "#09090B",
+  ink2: "#18181B",
+  muted: "#71717A",
   hair: "rgba(0,0,0,0.07)",
-  accent: "#6C5CE7",
-  accentSoft: "#EDE9FE",
-  positive: "#10B981",
-  warning: "#F59E0B",
-  danger: "#EF4444",
+  accent: "#2563EB",
+  accentSoft: "rgba(37,99,235,0.10)",
+  positive: "#16A34A",
+  warning: "#D97706",
+  danger: "#DC2626",
 };
 
 const statuses: AgentWorkStatus[] = [
@@ -190,7 +190,7 @@ export default function AdminAgentWork() {
       </section>
 
       {error && (
-        <div style={{ padding: "12px 14px", borderRadius: 12, background: "#FEE2E2", color: C.danger }}>
+        <div style={{ padding: "12px 14px", borderRadius: 12, background: "rgba(220,38,38,0.10)", color: C.danger }}>
           {error}
         </div>
       )}

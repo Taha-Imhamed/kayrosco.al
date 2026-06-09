@@ -4,22 +4,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#EEF0F7",
+  bg:          "#F4F4F5",
   surface:     "#FFFFFF",
-  surface2:    "#F5F6FF",
-  ink:         "#16213E",
-  ink2:        "#2C3E62",
-  ink3:        "#4A5578",
-  muted:       "#8892A4",
+  surface2:    "#FAFAFA",
+  ink:         "#09090B",
+  ink2:        "#18181B",
+  ink3:        "#3F3F46",
+  muted:       "#71717A",
   hair:        "rgba(0,0,0,0.07)",
-  accent:      "#6C5CE7",
-  accentTint:  "#EDE9FE",
-  positive:    "#10B981",
-  positiveTint:"#D1FAE5",
-  warning:     "#F59E0B",
+  accent:      "#2563EB",
+  accentTint:  "rgba(37,99,235,0.10)",
+  positive:    "#16A34A",
+  positiveTint:"rgba(22,163,74,0.10)",
+  warning:     "#D97706",
   info:        "#3B82F6",
-  danger:      "#EF4444",
-  dangerTint:  "#FEE2E2",
+  danger:      "#DC2626",
+  dangerTint:  "rgba(220,38,38,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -29,11 +29,11 @@ type PipelineStatus = "draft" | "review" | "signed" | "active" | "expired";
 const STAGES: PipelineStatus[] = ["draft", "review", "signed", "active", "expired"];
 
 const STAGE_CONFIG: Record<PipelineStatus, { label: string; color: string; bg: string }> = {
-  draft:   { label: "Draft",   color: "#8892A4", bg: "rgba(0,0,0,0.04)" },
-  review:  { label: "Review",  color: "#F59E0B", bg: "rgba(245,158,11,0.08)" },
+  draft:   { label: "Draft",   color: "#71717A", bg: "rgba(0,0,0,0.04)" },
+  review:  { label: "Review",  color: "#D97706", bg: "rgba(245,158,11,0.08)" },
   signed:  { label: "Signed",  color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
-  active:  { label: "Active",  color: "#10B981", bg: "rgba(16,185,129,0.10)" },
-  expired: { label: "Expired", color: "#EF4444", bg: "rgba(239,68,68,0.10)" },
+  active:  { label: "Active",  color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
+  expired: { label: "Expired", color: "#DC2626", bg: "rgba(239,68,68,0.10)" },
 };
 
 const CAT_COLORS: Record<string, string> = { tech: C.info, consulting: C.accent, travel: C.positive };
@@ -99,8 +99,8 @@ export default function AdminPipeline() {
         </select>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#EF4444", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#10B981", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
