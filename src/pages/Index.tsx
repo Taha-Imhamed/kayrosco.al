@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowRight } from 'lucide-react';
 import SeoHead from "@/components/SeoHead";
 import { SITE_URL } from "@/data/seoPages";
+import ShinyText from "@/components/ShinyText";
 
 // --- Type Definition for Page State ---
 type Page = '/' | '/travel' | '/consulting' | '/tech' | '/about' | '/contact';
@@ -23,10 +25,13 @@ const mapPathToPageName = (path: string): DisplayPage => {
     }
 };
 
+// --- Hero video background ---
+const HERO_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4';
+
 // --- Global Styles Component ---
 const GlobalStyles = () => (
-  <style jsx="true">{`
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap');
+    <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap');
 
     /* --- Custom Properties (Black Mode) --- */
     :root {
@@ -36,6 +41,10 @@ const GlobalStyles = () => (
         --text-muted: #B0BEC5;
         --accent-purple: #C0C0C0;
         --accent-blue: #03DAC6;
+        --hero-deep: #050913;
+        --hero-mid: #09142a;
+        --hero-blue: #38bdf8;
+        --hero-violet: #7c5cff;
         --travel-seafoam: #7ec8bf;
         --travel-seafoam-soft: #c7d8cf;
         --travel-ink: #0b0b0d;
@@ -214,7 +223,7 @@ const GlobalStyles = () => (
         border: none;
         background-color: transparent;
         margin: 0;
-        color: var(--text-light);
+        color: rgba(232, 242, 255, 0.84);
         text-transform: none; 
         font-weight: 500;
         font-size: 1rem;
@@ -225,13 +234,13 @@ const GlobalStyles = () => (
     }
 
     .nav-link:hover:not(.button-style) {
-        color: var(--accent-purple);
-        border-bottom: 2px solid var(--accent-purple);
+           color: #8fd2ff;
+           border-bottom: 2px solid rgba(143, 210, 255, 0.95);
         padding-bottom: 6px;
     }
     
     .nav-link.active {
-         border-bottom: 2px solid var(--accent-purple);
+            border-bottom: 2px solid rgba(143, 210, 255, 0.95);
          padding-bottom: 6px;
     }
     
@@ -241,9 +250,31 @@ const GlobalStyles = () => (
         display: inline-block;
     }
 
+    .dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .chevron {
+        display: inline-block;
+        transition: transform 0.22s ease;
+        font-size: 0.82em;
+        opacity: 0.9;
+    }
+
+    .dropdown.dropdown-open .chevron {
+        transform: rotate(180deg) translateY(-1px);
+    }
+
     @keyframes dropdown-in {
-        from { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.97); }
-        to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1);    }
+        from { opacity: 0; transform: translateX(-50%) translateY(18px) scale(0.94); filter: blur(10px); }
+        to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1);    filter: blur(0); }
+    }
+
+    @keyframes dropdown-item-in {
+        from { opacity: 0; transform: translateY(10px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .dropdown-menu {
@@ -253,17 +284,18 @@ const GlobalStyles = () => (
         transform: translateX(-50%);
         width: 520px;
         z-index: 1001;
-        background: rgba(10, 10, 12, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 18px;
-        box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07) inset;
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 10px;
+        background: linear-gradient(180deg, rgba(6, 13, 29, 0.96) 0%, rgba(9, 16, 35, 0.96) 100%);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 20px;
+        box-shadow: 0 26px 70px rgba(2, 8, 20, 0.62), 0 0 0 1px rgba(109, 165, 255, 0.14) inset;
+        border: 1px solid rgba(109, 165, 255, 0.16);
+        padding: 12px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
         transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+        transform-origin: top center;
     }
 
     /* Arrow notch */
@@ -275,9 +307,9 @@ const GlobalStyles = () => (
         transform: translateX(-50%);
         width: 12px;
         height: 12px;
-        background: rgba(10, 10, 12, 0.92);
-        border-left: 1px solid rgba(255,255,255,0.08);
-        border-top: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(135deg, rgba(6, 13, 29, 0.96) 0%, rgba(9, 16, 35, 0.96) 100%);
+        border-left: 1px solid rgba(109,165,255,0.14);
+        border-top: 1px solid rgba(109,165,255,0.14);
         rotate: 45deg;
     }
 
@@ -309,13 +341,16 @@ const GlobalStyles = () => (
         text-transform: none;
         position: relative;
         overflow: hidden;
+        animation: dropdown-item-in 0.32s ease both;
     }
     .dropdown-menu a:hover {
-        background: rgba(255,255,255,0.07);
-        border-color: rgba(255,255,255,0.10);
-        transform: translateY(-2px);
-        border-bottom: 1px solid rgba(255,255,255,0.10);
+        background: linear-gradient(135deg, rgba(41, 87, 160, 0.20) 0%, rgba(15, 28, 54, 0.35) 100%);
+        border-color: rgba(124, 175, 255, 0.22);
+        transform: translateY(-3px);
     }
+    .dropdown-menu a:nth-child(1) { animation-delay: 0.02s; }
+    .dropdown-menu a:nth-child(2) { animation-delay: 0.06s; }
+    .dropdown-menu a:nth-child(3) { animation-delay: 0.10s; }
     .dropdown-menu a .dm-icon {
         width: 36px;
         height: 36px;
@@ -351,6 +386,7 @@ const GlobalStyles = () => (
     .dropdown-menu a:hover .dm-arrow {
         opacity: 1;
         transform: translateX(0);
+        color: #8fd2ff;
     }
 
     /* ── Dropdown toggle chevron animation ── */
@@ -405,41 +441,117 @@ const GlobalStyles = () => (
         text-align: center;
     }
 
-    /* --- Hero Section (3D Model) - Fully Maximized --- */
+    /* The Sonner toast viewport renders as an empty <section>, which the
+       rule above turns into a 120px in-flow block, pushing the hero down. */
+    section[aria-label="Notifications alt+T"] {
+        position: fixed;
+        padding: 0;
+        margin: 0;
+        height: 0;
+    }
+
+    /* --- Hero Section - Full-screen Video - Fully Maximized --- */
     .hero-section {
         position: relative;
         height: 100vh;
         width: 100vw;
         /* Pulls the section to the very edge of the viewport */
-        margin-left: calc(50% - 50vw); 
+        margin-left: calc(50% - 50vw);
         display: block;
-        background-color: var(--background-dark);
-        z-index: 1; 
+        background-color: #000;
+        /* Above .dropdown-backdrop (1299) / mobile .dropdown-menu (1300) so the
+           navbar nested inside the hero still stacks correctly on mobile */
+        z-index: 1400;
         overflow: hidden;
+        background:
+            radial-gradient(circle at 78% 42%, rgba(66, 124, 255, 0.18), transparent 26%),
+            radial-gradient(circle at 88% 60%, rgba(124, 92, 255, 0.22), transparent 20%),
+            linear-gradient(135deg, var(--hero-deep) 0%, #02040b 44%, var(--hero-mid) 100%);
     }
 
-    spline-viewer {
+    .hero-video {
         position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 5;
-        opacity: 1;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    .hero-video-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, rgba(2, 4, 11, 0.86) 0%, rgba(2, 4, 11, 0.62) 42%, rgba(5, 10, 24, 0.34) 100%),
+            radial-gradient(circle at 76% 45%, rgba(56, 189, 248, 0.12), transparent 26%);
+        z-index: 1;
         pointer-events: none;
     }
-    
-    /* Overlay to hide 'Built with Spline' badge */
-    .spline-overlay {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background-color: var(--background-dark); 
-        width: 180px; 
-        height: 60px; 
-        z-index: 9; 
+
+    .hero-shell {
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: clamp(4.75rem, 10vh, 6.5rem);
+        padding-bottom: clamp(1.5rem, 4vh, 3rem);
     }
-    
+
+    .hero-copy {
+        max-width: 38rem;
+        text-align: left;
+        align-items: flex-start;
+        margin-right: auto;
+    }
+
+    .hero-heading {
+        font-family: 'Inter', sans-serif;
+        font-weight: 750;
+        letter-spacing: -0.065em;
+        line-height: 0.86;
+        font-size: clamp(2.55rem, 5vw, 4.65rem);
+    }
+
+    .hero-heading-line {
+        display: block;
+    }
+
+    .hero-gradient-line {
+        display: block;
+        margin-top: 0.08em;
+    }
+
+    .hero-lede {
+        max-width: 28rem;
+        margin-top: 1.15rem;
+        font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+        color: rgba(244, 247, 255, 0.88);
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-cta {
+        margin-top: 1.35rem;
+        border: 1px solid rgba(122, 205, 255, 0.85);
+        background: linear-gradient(135deg, rgba(20, 54, 110, 0.98) 0%, rgba(11, 23, 50, 0.98) 52%, rgba(30, 33, 80, 0.98) 100%);
+        box-shadow: 0 18px 40px rgba(5, 16, 40, 0.45), inset 0 0 0 1px rgba(170, 206, 255, 0.16);
+    }
+
+    .hero-cta:hover {
+        background: linear-gradient(135deg, rgba(30, 74, 145, 1) 0%, rgba(14, 31, 67, 1) 52%, rgba(42, 47, 108, 1) 100%);
+        border-color: rgba(165, 225, 255, 1);
+        box-shadow: 0 22px 50px rgba(20, 58, 120, 0.38), inset 0 0 0 1px rgba(190, 226, 255, 0.2);
+    }
+
+    .section-cta {
+        background: linear-gradient(135deg, rgba(22, 61, 122, 0.98) 0%, rgba(12, 24, 54, 0.98) 55%, rgba(34, 38, 96, 0.98) 100%);
+        border: 1px solid rgba(122, 205, 255, 0.75);
+        color: #f4f9ff;
+    }
+
+    .section-cta:hover {
+        background: linear-gradient(135deg, rgba(32, 84, 161, 1) 0%, rgba(16, 32, 71, 1) 55%, rgba(46, 52, 124, 1) 100%);
+        border-color: rgba(165, 225, 255, 0.95);
+        color: #ffffff;
+    }
+
     /* --- Card Style --- */
     .section-card {
         background-color: var(--background-med); 
@@ -662,26 +774,34 @@ const GlobalStyles = () => (
         padding: 44px 20px;
         text-align: center;
         border-right: 1px solid var(--border-light);
-        background: var(--background-med);
-        transition: background 0.2s;
+        background: linear-gradient(180deg, rgba(13, 20, 36, 0.96) 0%, rgba(10, 16, 31, 0.96) 100%);
+        transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
     }
     .stat-item:last-child { border-right: none; }
-    .stat-item:hover { background: #222; }
+    .stat-item:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(180deg, rgba(19, 31, 54, 0.98) 0%, rgba(11, 18, 36, 0.98) 100%);
+        box-shadow: inset 0 0 0 1px rgba(118, 175, 255, 0.12);
+    }
     .stat-number {
         font-size: 2.8rem;
         font-weight: 800;
-        color: var(--accent-purple);
+        color: #7ccfff;
         font-family: 'Poppins', sans-serif;
         letter-spacing: -1px;
         line-height: 1;
     }
     .stat-label {
         font-size: 0.78rem;
-        color: var(--text-muted);
+        color: rgba(214, 231, 255, 0.72);
         text-transform: uppercase;
         letter-spacing: 1.2px;
         margin-top: 8px;
     }
+
+    .stat-item:nth-child(2) .stat-number { color: #a78bfa; }
+    .stat-item:nth-child(3) .stat-number { color: #60a5fa; }
+    .stat-item:nth-child(4) .stat-number { color: #93c5fd; }
 
     /* ── How We Work Steps ───────────────────────────────────────────────── */
     .steps-grid {
@@ -944,9 +1064,26 @@ const GlobalStyles = () => (
         }
 
         .hero-section {
-            height: 80vh;
+            height: 100dvh;
             width: 100%;
             margin-left: 0;
+        }
+
+        .hero-shell {
+            padding-top: 5.5rem;
+        }
+
+        .hero-copy {
+            max-width: 30rem;
+        }
+
+        .hero-heading {
+            font-size: clamp(2.4rem, 10.5vw, 3.95rem);
+        }
+
+        .hero-lede {
+            max-width: 26rem;
+            font-size: 0.98rem;
         }
 
         .mobile-bottom-nav {
@@ -1019,6 +1156,38 @@ const GlobalStyles = () => (
         .platform-item img {
             max-width: 104px;
             max-height: 32px;
+        }
+
+        /* ── Mobile dropdown: bottom sheet above the nav bar ── */
+        .dropdown-menu {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 86px !important;
+            left: 14px !important;
+            right: 14px !important;
+            width: auto !important;
+            transform: none !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            z-index: 1300 !important;
+            border-radius: 16px !important;
+        }
+        .dropdown-menu::before { display: none !important; }
+        .dropdown-menu.hidden {
+            transform: translateY(10px) !important;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .dropdown-menu.visible {
+            transform: none !important;
+        }
+        /* Overlay backdrop when dropdown is open on mobile */
+        .dropdown-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 1299;
+            background: rgba(0,0,0,0.40);
         }
     }
   `}</style>
@@ -1199,8 +1368,7 @@ const ContactView: React.FC = () => (
 );
 
 // --- Home View (Container for Hero and Main Sections) ---
-const HomeView: React.FC = () => {
-    const SplineViewer = 'spline-viewer';
+const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
     const [showQuickContact, setShowQuickContact] = useState(false);
     const [showMoreExpertise, setShowMoreExpertise] = useState(false);
     const [ctaPointer, setCtaPointer] = useState({ x: '50%', y: '50%', active: false });
@@ -1254,9 +1422,78 @@ const HomeView: React.FC = () => {
         <>
             {/* ── Hero Section ─────────────────────────────────────────────────── */}
             <header className="hero-section">
-                <SplineViewer url="https://prod.spline.design/LXf1X0FWeQcVWk8c/scene.splinecode" />
-                {/* Badge hider */}
-                <div className="spline-overlay"></div>
+                {/* Full-screen looping video background */}
+                <video
+                    className="hero-video"
+                    src={HERO_VIDEO_URL}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                />
+                <div className="hero-video-overlay" />
+
+                {navbar}
+
+                {/* Intro text, aligned with the nav row on desktop */}
+                    <p
+                        className="hero-anim hero-fade absolute left-4 top-6 z-10 hidden max-w-xs text-sm text-white/80 sm:left-6 lg:left-8 lg:top-7 lg:block lg:max-w-sm lg:text-base"
+                        style={{ animationDelay: '0.3s' }}
+                    >
+                    All you need in one place.
+                    </p>
+
+                {/* "50+ Projects" badge, aligned with the nav row on desktop */}
+                <p
+                    className="hero-anim hero-fade absolute right-4 top-6 z-10 hidden text-sm text-white/80 sm:right-6 lg:right-8 lg:top-7 lg:block lg:text-base"
+                    style={{ animationDelay: '0.3s' }}
+                >
+                    50+ Projects Delivered Across Albania!
+                </p>
+
+                <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-4 pb-10 pt-24 sm:px-6 lg:px-8 lg:pt-28">
+                    {/* Top section, below nav (mobile only) */}
+                    <div className="hero-anim hero-fade grid grid-cols-1 gap-4 lg:hidden" style={{ animationDelay: '0.3s' }}>
+                        <p className="max-w-md text-sm text-white/80 md:text-base">
+                            All you need in one place.
+                        </p>
+                        <p className="text-sm text-white/80 md:text-base">
+                            50+ Projects Delivered Across Albania!
+                        </p>
+                    </div>
+
+                    {/* Hero center content */}
+                    <div className="hero-shell flex flex-1 flex-col">
+                        <div className="hero-copy flex flex-col">
+                        <h1
+                            className="hero-heading"
+                        >
+                            <span className="hero-heading-line hero-anim hero-reveal text-white" style={{ animationDelay: '0.2s' }}>
+                                Building the future
+                            </span>
+                            <ShinyText
+                                text="Delivering real impact."
+                                className="hero-gradient-line hero-anim hero-reveal"
+                                baseColor="#44bafc"
+                                shineColor="#a78bfa"
+                                speed={4}
+                                spread={110}
+                            />
+                        </h1>
+                        <p className="hero-lede hero-anim hero-fade" style={{ animationDelay: '0.45s' }}>
+                            We combine technology, strategic consulting, and travel expertise to build companies that create value and drive progress.
+                        </p>
+                        <a
+                            href="#integrated-expertise"
+                            className="hero-cta hero-anim hero-fade group inline-flex items-center gap-2 rounded-full px-6 py-3 text-white transition-all duration-300 md:px-8 md:py-4"
+                            style={{ animationDelay: '0.8s' }}
+                        >
+                            Explore Our Companies
+                            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                        </div>
+                    </div>
+                </div>
             </header>
 
             {/* ── Main Content ─────────────────────────────────────────────────── */}
@@ -1268,8 +1505,8 @@ const HomeView: React.FC = () => {
                         <div className="section-header">
                             <h2>Built as a Group. Driven by Vision.</h2>
                             <p>Kayrosco Group brings multiple companies together under one name, delivering projects across industries and across borders. <strong>Bold structure. Real reach.</strong></p>
-                            <a className="button-style primary-button" href="#integrated-expertise">
-                                Take a Closer Look &rarr;
+                            <a className="button-style primary-button section-cta" href="#integrated-expertise">
+                                Take a Closer Look →
                             </a>
                         </div>
                     </section>
@@ -1536,17 +1773,7 @@ const App: React.FC = () => {
     const [footerClicks, setFooterClicks] = useState(0);
     const [headerVisible, setHeaderVisible] = useState(true);
 
-    // Effect to handle the dynamic loading of the Spline viewer script (if on home page)
     useEffect(() => {
-        const scriptId = 'spline-viewer-script';
-        if (currentPageName === 'home' && !document.getElementById(scriptId)) {
-            const script = document.createElement('script');
-            script.id = scriptId;
-            script.type = 'module';
-            script.src = 'https://unpkg.com/@splinetool/viewer/build/spline-viewer.js';
-            document.head.appendChild(script);
-        }
-
         // Listener for browser history changes (back/forward buttons)
         const handlePopState = () => {
             setCurrentPath(window.location.pathname as Page);
@@ -1626,6 +1853,71 @@ const App: React.FC = () => {
         return currentPath === page ? 'active' : '';
     };
 
+    /* --- Shared Navbar (transparent; lives inside the hero on the home page) --- */
+    const navbarElement = (
+        <div className={`navbar-wrapper ${currentPageName === 'home' ? `home-header ${headerVisible ? '' : 'is-hidden'}` : ''}`}>
+            <nav className="navbar">
+                <div className="nav-links-container">
+
+                    <a className={`nav-link ${getLinkClass('/')}`} href="/">Home</a>
+
+                    {/* Dropdown Menu */}
+                    <div
+                        className={`dropdown ${isDropdownOpen ? 'dropdown-open' : ''}`}
+                        onMouseEnter={() => !isMobileViewport && setIsDropdownOpen(true)}
+                        onMouseLeave={() => !isMobileViewport && setIsDropdownOpen(false)}
+                    >
+                        <a
+                            className={`nav-link dropdown-toggle ${getLinkClass('solutions')}`}
+                            href="#"
+                            onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
+                        >
+                            Our Companies <span className="chevron">▾</span>
+                        </a>
+
+                        <div className={`dropdown-menu ${isDropdownOpen ? 'visible' : 'hidden'}`}>
+                            <a href="/travel">
+                                <div className="dm-icon" style={{ background: 'rgba(20,184,166,0.15)', color: '#2dd4bf' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                </div>
+                                <span className="dm-title">Travel Services</span>
+                                <span className="dm-desc">Visas, stays & transport across Albania</span>
+                                <span className="dm-arrow">→</span>
+                            </a>
+                            <a href="/consulting">
+                                <div className="dm-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#c084fc' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <span className="dm-title">Consulting & Legal</span>
+                                <span className="dm-desc">Company formation & compliance</span>
+                                <span className="dm-arrow">→</span>
+                            </a>
+                            <a href="/tech">
+                                <div className="dm-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                        <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                </div>
+                                <span className="dm-title">Tech Solutions</span>
+                                <span className="dm-desc">Software & cloud systems</span>
+                                <span className="dm-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a className={`nav-link ${getLinkClass('/about')}`} href="/about">About Us</a>
+                    <a className={`nav-link button-style primary-button ${getLinkClass('/contact')}`} href="/contact">Contact</a>
+                </div>
+            </nav>
+        </div>
+    );
+
     /**
      * Renders the corresponding page view based on the current URL path.
      */
@@ -1637,7 +1929,7 @@ const App: React.FC = () => {
             case 'about': return <AboutView />;
             case 'contact': return <ContactView />;
             case 'home':
-            default: return <HomeView />;
+            default: return <HomeView navbar={navbarElement} />;
         }
     };
 
@@ -1717,70 +2009,11 @@ const App: React.FC = () => {
             {/* Inject Global Styles */}
             <GlobalStyles />
             
-            {/* Navbar Wrapper */}
-            <div className={`navbar-wrapper ${currentPageName === 'home' ? `home-header ${headerVisible ? '' : 'is-hidden'}` : ''}`}>
-                <nav className="navbar">
-                    <a href="/" className="logo">KAYROSCO</a>
-
-                    <div className="nav-links-container">
-
-                        <a className={`nav-link ${getLinkClass('/')}`} href="/">Home</a>
-
-                        {/* Dropdown Menu */}
-                        <div
-                            className={`dropdown ${isDropdownOpen ? 'dropdown-open' : ''}`}
-                            onMouseEnter={() => setIsDropdownOpen(true)}
-                            onMouseLeave={() => setIsDropdownOpen(false)}
-                        >
-                            <a
-                                className={`nav-link dropdown-toggle ${getLinkClass('solutions')}`}
-                                href="#"
-                                onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
-                            >
-                                Our Companies <span className="chevron">▾</span>
-                            </a>
-
-                            <div className={`dropdown-menu ${isDropdownOpen ? 'visible' : 'hidden'}`}>
-                                <a href="/travel">
-                                    <div className="dm-icon" style={{ background: 'rgba(20,184,166,0.15)', color: '#2dd4bf' }}>
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                                        </svg>
-                                    </div>
-                                    <span className="dm-title">Travel Services</span>
-                                    <span className="dm-desc">Visas, stays & transport across Albania</span>
-                                    <span className="dm-arrow">→</span>
-                                </a>
-                                <a href="/consulting">
-                                    <div className="dm-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#c084fc' }}>
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                        </svg>
-                                    </div>
-                                    <span className="dm-title">Consulting & Legal</span>
-                                    <span className="dm-desc">Company formation & compliance</span>
-                                    <span className="dm-arrow">→</span>
-                                </a>
-                                <a href="/tech">
-                                    <div className="dm-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa' }}>
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                            <rect x="2" y="3" width="20" height="14" rx="2"/>
-                                            <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                                        </svg>
-                                    </div>
-                                    <span className="dm-title">Tech Solutions</span>
-                                    <span className="dm-desc">Software & cloud systems</span>
-                                    <span className="dm-arrow">→</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <a className={`nav-link ${getLinkClass('/about')}`} href="/about">About Us</a>
-                        <a className={`nav-link button-style primary-button ${getLinkClass('/contact')}`} href="/contact">Contact</a>
-                    </div>
-                </nav>
-            </div>
+            {/* Navbar (transparent, lives inside the hero on the home page) */}
+            {isMobileViewport && isDropdownOpen && (
+                <div className="dropdown-backdrop" onClick={() => setIsDropdownOpen(false)} />
+            )}
+            {currentPageName !== 'home' && navbarElement}
 
             {/* Render the currently active page view */}
             {renderPage()}
@@ -1834,7 +2067,15 @@ const App: React.FC = () => {
                             <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>Home</span>
                         </a>
                         <a
-                            href="/travel"
+                            href="/#integrated-expertise"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (currentPageName === 'home') {
+                                    document.getElementById('integrated-expertise')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                } else {
+                                    window.location.href = '/#integrated-expertise';
+                                }
+                            }}
                             style={{
                                 minHeight: 46, borderRadius: 12, textDecoration: 'none',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,

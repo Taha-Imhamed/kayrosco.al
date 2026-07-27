@@ -37,6 +37,7 @@ const inputStyle: React.CSSProperties = {
 
 export default function PublicAgentWidget() {
   const { pathname } = useLocation();
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth <= 768);
   const [isOpen, setIsOpen] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -81,6 +82,12 @@ export default function PublicAgentWidget() {
     () => ["/", "/travel", "/consulting", "/tech"].includes(pathname),
     [pathname]
   );
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
   useEffect(() => {
     if (!logRef.current) return;
@@ -391,7 +398,7 @@ export default function PublicAgentWidget() {
         style={{
           position: "fixed",
           right: 20,
-          bottom: 20,
+          bottom: isMobile ? 100 : 20,
           width: 60,
           height: 60,
           borderRadius: "50%",
@@ -415,7 +422,7 @@ export default function PublicAgentWidget() {
           style={{
             position: "fixed",
             right: 20,
-            bottom: 92,
+            bottom: isMobile ? 172 : 92,
             width: "min(380px, calc(100vw - 20px))",
             height: "min(720px, calc(100vh - 112px))",
             display: "flex",

@@ -154,7 +154,7 @@ function SectionTitle({
   text?: string;
 }) {
   return (
-    <div style={{ maxWidth: 760, marginBottom: 28 }}>
+    <div className="tk-section-title" style={{ maxWidth: 760, marginBottom: 28 }}>
       <div
         style={{
           color: C.blueLight,
@@ -323,6 +323,16 @@ function TechPage() {
     video.addEventListener('ended', onEnded);
     video.addEventListener('play', onPlay);
     video.addEventListener('pause', onPause);
+    // If already playing (autoplay fired before listeners attached), start tick immediately
+    if (!video.paused && !video.ended) {
+      raf = requestAnimationFrame(tick);
+    } else {
+      // Explicitly trigger play for mobile browsers that block autoplay
+      video.play().catch(() => {
+        // Autoplay blocked — show the video at a low opacity as static background
+        video.style.opacity = '0.6';
+      });
+    }
     return () => {
       cancelAnimationFrame(raf);
       video.removeEventListener('ended', onEnded);
@@ -421,6 +431,7 @@ function TechPage() {
         backgroundColor: C.bgDark,
         color: C.textMain,
         fontFamily: FONT_STACK,
+        overflowX: "hidden",
       }}
     >
       <SeoHead
@@ -552,6 +563,28 @@ function TechPage() {
         .tk-company-strip {
           width: 100%;
         }
+        .tk-logo-stripe { display: none; }
+        @keyframes tk-logo-scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .tk-logo-stripe-track {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          animation: tk-logo-scroll 22s linear infinite;
+          width: max-content;
+        }
+        .tk-logo-chip {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 18px;
+          border-radius: 40px;
+          border: 1px solid rgba(255,255,255,0.09);
+          background: rgba(255,255,255,0.04);
+          flex-shrink: 0;
+        }
         .tk-glass { background: ${C.cardDark}; border: 1px solid ${C.borderSoft}; backdrop-filter: blur(20px); border-radius: 18px; }
         .tk-feature-grid { align-items: stretch; }
         .tk-feature-card { min-height: 168px; }
@@ -652,6 +685,9 @@ function TechPage() {
         @media (max-width: 640px) {
           .tk-why-grid { grid-template-columns: 1fr !important; }
           .tk-project-grid { grid-template-columns: 1fr !important; }
+          .tk-why-text { font-size: 14px !important; line-height: 1.55 !important; }
+          .tk-section-title { text-align: center !important; max-width: 100% !important; }
+          .tk-section-title p { max-width: 100% !important; }
         }
         @media (max-width: 780px) {
           .tk-nav-desktop { display: none !important; }
@@ -667,9 +703,11 @@ function TechPage() {
           .tk-hero-trusted-row { gap: 12px 18px; font-size: 14px; }
           .tk-hero { min-height: auto !important; padding: 42px 0 88px !important; background-size: cover !important; background-position: center right !important; }
           .tk-hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .tk-stack-mini-grid,
           .tk-form-row,
           .tk-company-strip { grid-template-columns: 1fr !important; }
+          .tk-stack-grid { display: none !important; }
+          .tk-logo-stripe { display: block !important; overflow: hidden; }
+          .vg-marquee-track { animation-play-state: paused !important; }
           .tk-company-logo { font-size: 28px !important; }
           .tk-page-root { padding-bottom: 80px; }
           .vg-hero-nav { padding: 14px 16px !important; }
@@ -782,7 +820,7 @@ function TechPage() {
       ))}
 
       {/* ══════════════════ FULL-SCREEN HERO ══════════════════ */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'hsl(260,87%,3%)' }}>
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'hsl(260,87%,3%)', overflow: 'hidden' }}>
 
         {/* Background video (overflow-hidden wrapper so video stays clipped) */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
@@ -796,11 +834,11 @@ function TechPage() {
           />
         </div>
 
-        {/* Blurred overlay shape (centred, overflow-visible so it bleeds) */}
+        {/* Blurred overlay shape (centred) */}
         <div style={{
           position: 'absolute', top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 984, height: 527, opacity: 0.9,
+          width: 'min(984px, 100vw)', height: 527, opacity: 0.9,
           background: '#030712', filter: 'blur(82px)',
           pointerEvents: 'none', zIndex: 1,
         }} />
@@ -950,8 +988,8 @@ function TechPage() {
 
       <div id="top" />
 
-      <section className="tk-wrap" style={{ paddingBottom: 44, marginTop: -48, position: "relative", zIndex: 4 }}>
-        <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+      <section className="tk-wrap" style={{ padding: "72px 0 72px", marginTop: -32, position: "relative", zIndex: 4 }}>
+        <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {whyUs.map((item) => (
             <GlassCard key={item.title} className="tk-feature-card" style={{ padding: 26 }} >
               <div className="tk-glass-hover tk-feature-card-body" style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
@@ -981,8 +1019,9 @@ function TechPage() {
         </div>
       </section>
 
-      <section className="tk-wrap" style={{ padding: "42px 0 96px" }}>
-        <div className="tk-stack-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 18 }}>
+      <section className="tk-wrap" style={{ padding: "80px 0 100px" }}>
+        {/* Desktop: code card + mini grid */}
+        <div className="tk-stack-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24 }}>
           <CodeCard />
           <div className="tk-stack-mini-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {stackCards.map((item) => (
@@ -1006,23 +1045,38 @@ function TechPage() {
                       +
                     </div>
                   )}
-                  <div style={{ fontSize: 20, fontWeight: 600 }}>{item.name}</div>
+                  <div className="tk-stack-mini-name" style={{ fontSize: 20, fontWeight: 600 }}>{item.name}</div>
                 </div>
               </GlassCard>
             ))}
           </div>
         </div>
+        {/* Mobile: scrolling logo stripe */}
+        <div className="tk-logo-stripe">
+          <div className="tk-logo-stripe-track">
+            {[...stackCards, ...stackCards].map((item, i) => (
+              <div key={i} className="tk-logo-chip">
+                {item.icon ? (
+                  <img src={item.icon} alt={item.name} style={{ width: 26, height: 26, objectFit: "contain", flexShrink: 0 }} />
+                ) : (
+                  <span style={{ color: C.blueMain, fontWeight: 700, fontSize: 14 }}>+</span>
+                )}
+                <span style={{ fontSize: 15, fontWeight: 600, color: C.textMain, whiteSpace: "nowrap" }}>{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section id="services" className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section id="services" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
           eyebrow="Services"
           title="Custom software, shipped fast."
           text="Core delivery areas for product, engineering, and launch."
         />
-        <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+        <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {visibleServiceCards.map((item) => (
-            <GlassCard key={item.title} style={{ padding: 26 }} >
+            <GlassCard key={item.title} style={{ padding: 32 }} >
               <div className="tk-glass-hover">
                 <item.icon size={28} color={C.blueMain} strokeWidth={1.8} />
                 <h3 style={{ margin: "18px 0 10px", fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em" }}>{item.title}</h3>
@@ -1062,13 +1116,13 @@ function TechPage() {
         )}
       </section>
 
-      <section id="process" className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section id="process" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
           eyebrow="Process"
           title="How we work"
           text="A simple delivery flow with clear ownership from planning to launch."
         />
-        <div className="tk-process-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+        <div className="tk-process-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {processSteps.map((step, index) => (
             <GlassCard key={step.title} style={{ padding: 28 }} >
               <div className="tk-glass-hover" style={{ display: "grid", gap: 14 }}>
@@ -1102,7 +1156,7 @@ function TechPage() {
             eyebrow="Projects"
             title="Projects available"
           />
-          <div className="tk-project-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+          <div className="tk-project-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {projects.slice(0, 6).map((project) => {
               const isOpen = openProjectId === project.id;
               const hasDetails = Boolean(project.description || project.tags?.length || project.link);
@@ -1217,13 +1271,13 @@ function TechPage() {
         </section>
       )}
 
-      <section id="why-us" className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section id="why-us" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
           eyebrow="Why Us"
           title="Built for quality, speed, and ownership."
           text="Direct communication and accountable delivery."
         />
-        <div className="tk-why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
+        <div className="tk-why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
           {[
             "Direct collaboration with senior technical people",
             "Premium execution without bloated process overhead",
@@ -1233,14 +1287,14 @@ function TechPage() {
             <GlassCard key={line} style={{ padding: 24 }} >
               <div className="tk-glass-hover" style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
                 <ShieldCheck size={22} color={C.blueMain} strokeWidth={1.8} />
-                <div style={{ color: C.textMuted, fontSize: 16, lineHeight: 1.7 }}>{line}</div>
+                <div className="tk-why-text" style={{ color: C.textMuted, fontSize: 16, lineHeight: 1.7 }}>{line}</div>
               </div>
             </GlassCard>
           ))}
         </div>
       </section>
 
-      <section className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <div
           style={{
             padding: "28px 0 22px",
@@ -1262,7 +1316,7 @@ function TechPage() {
         </div>
       </section>
 
-      <section id="faq" className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section id="faq" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
           eyebrow="FAQ"
           title="Common questions, answered clearly."
@@ -1303,7 +1357,7 @@ function TechPage() {
         </div>
       </section>
 
-      <section id="contact" className="tk-wrap" style={{ paddingBottom: 96 }}>
+      <section id="contact" className="tk-wrap" style={{ padding: "80px 0 100px" }}>
         <div className="tk-contact-grid" style={{ display: "grid", gridTemplateColumns: "0.92fr 1.08fr", gap: 20 }}>
           <GlassCard style={{ padding: 28 }}>
             <div style={{ color: C.blueLight, fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>

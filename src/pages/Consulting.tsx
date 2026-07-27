@@ -845,6 +845,7 @@ export default function ConsultingPage() {
   const [showForm, setShowForm] = useState(false);
   const [showAboutMore, setShowAboutMore] = useState(false);
   const [expandedCatalogId, setExpandedCatalogId] = useState<string | null>(null);
+  const [showAllCatalog, setShowAllCatalog] = useState(false);
   const [submissionComplete, setSubmissionComplete] = useState(false);
   const [submittedReferenceCode, setSubmittedReferenceCode] = useState("");
   const [formValues, setFormValues] = useState({
@@ -1177,6 +1178,45 @@ export default function ConsultingPage() {
                 <p style={{ margin: "10px 0 0", color: COLORS.textSoft, fontSize: 13 }}>
                   {text.searchHint}
                 </p>
+
+                {/* Quick Access chips */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 16 }}>
+                  {[
+                    { id: "visa-services", label: "✈ Visa" },
+                    { id: "residency-permits", label: "🏠 Residency" },
+                    { id: "business-employment", label: "💼 Business" },
+                    { id: "personal-civil", label: "🪪 ID & Civil" },
+                    { id: "taxes-payments", label: "💳 Taxes" },
+                    { id: "transport-vehicles", label: "🚗 Transport" },
+                  ].map((chip) => (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(chip.id);
+                        const full = serviceGroups.find((g) => g.id === chip.id) ?? null;
+                        setDetailsGroup(full);
+                        setShowDetails(true);
+                        setShowForm(false);
+                        setSubmissionComplete(false);
+                      }}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: 999,
+                        border: `1px solid ${selectedCategory === chip.id ? COLORS.terracotta : COLORS.line}`,
+                        background: selectedCategory === chip.id ? "rgba(213,138,88,0.12)" : "rgba(255,255,255,0.68)",
+                        color: selectedCategory === chip.id ? COLORS.terracottaDark : COLORS.navy,
+                        fontSize: 13,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        transition: "all 0.16s ease",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div
@@ -1296,7 +1336,7 @@ export default function ConsultingPage() {
                 }}
                 className="kc-catalog-grid"
               >
-                {serviceGroups.map((group) => {
+                {(showAllCatalog ? serviceGroups : serviceGroups.slice(0, 6)).map((group) => {
                   const Icon = group.icon;
                   const active = selectedCategory === group.id;
 
@@ -1374,6 +1414,20 @@ export default function ConsultingPage() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Show all / collapse toggle */}
+              <div style={{ textAlign: "center", marginTop: 18 }}>
+                <button
+                  type="button"
+                  className="kc-outline-btn"
+                  onClick={() => setShowAllCatalog((v) => !v)}
+                  style={{ minWidth: 200 }}
+                >
+                  {showAllCatalog
+                    ? `↑ ${text.showLess}`
+                    : `↓ Show all ${serviceGroups.length} services`}
+                </button>
               </div>
 
               <div
@@ -1877,7 +1931,7 @@ export default function ConsultingPage() {
 
         @media (max-width: 640px) {
           .kc-shell {
-            padding: 14px 12px 110px !important;
+            padding: 14px 12px 120px !important;
           }
 
           .kc-page section.kc-glass {
