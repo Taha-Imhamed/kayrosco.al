@@ -116,11 +116,11 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://unpkg.com https://prod.spline.design; worker-src 'self' blob:; child-src 'self' blob: https://my.spline.design; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://db.onlinewebfonts.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://db.onlinewebfonts.com https://cdn.fontshare.com data:; img-src 'self' data: blob: https: https://www.google-analytics.com https://stats.g.doubleclick.net https://prod.spline.design; media-src 'self' blob: https://d8j0ntlcm91z4.cloudfront.net; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://*.supabase.co wss://*.supabase.co https://prod.spline.design https://*.spline.design https://fonts.gstatic.com https://fonts.googleapis.com; frame-src 'self' https://my.spline.design; form-action 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://unpkg.com https://prod.spline.design; worker-src 'self' blob:; child-src 'self' blob: https://my.spline.design; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://db.onlinewebfonts.com https://api.fontshare.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://db.onlinewebfonts.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://db.onlinewebfonts.com https://cdn.fontshare.com data:; img-src 'self' data: blob: https: https://www.google-analytics.com https://stats.g.doubleclick.net https://prod.spline.design; media-src 'self' blob: https://d8j0ntlcm91z4.cloudfront.net; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://*.supabase.co wss://*.supabase.co https://prod.spline.design https://*.spline.design https://fonts.gstatic.com https://fonts.googleapis.com; frame-src 'self' https://my.spline.design; form-action 'self'; upgrade-insecure-requests"
         }
       ]
     }

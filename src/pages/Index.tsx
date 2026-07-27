@@ -250,6 +250,20 @@ const GlobalStyles = () => (
         display: inline-block;
     }
 
+    .dropdown::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: -24px;
+        right: -24px;
+        height: 18px;
+        display: none;
+    }
+
+    .dropdown.dropdown-open::after {
+        display: block;
+    }
+
     .dropdown-toggle {
         display: inline-flex;
         align-items: center;
@@ -1180,6 +1194,9 @@ const GlobalStyles = () => (
         }
         .dropdown-menu.visible {
             transform: none !important;
+        }
+        .dropdown.dropdown-open::after {
+            display: none;
         }
         /* Overlay backdrop when dropdown is open on mobile */
         .dropdown-backdrop {
