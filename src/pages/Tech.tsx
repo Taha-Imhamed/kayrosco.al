@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SeoHead from "@/components/SeoHead";
+import CompanySwitcher from "@/components/CompanySwitcher";
 import {
   createServiceRequest,
   getServicesByArea,
@@ -875,13 +876,16 @@ function TechPage() {
             </div>
 
             {/* Let's Talk */}
-            <button
-              className="vg-cta-btn vg-nav-signup"
-              style={{ padding: '8px 16px', fontSize: 13 }}
-              onClick={() => scrollToId('contact')}
-            >
-              Let's Talk
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <CompanySwitcher current="tech" variant="dark" />
+              <button
+                className="vg-cta-btn vg-nav-signup"
+                style={{ padding: '8px 16px', fontSize: 13 }}
+                onClick={() => scrollToId('contact')}
+              >
+                Let's Talk
+              </button>
+            </div>
           </nav>
 
           {/* Divider */}

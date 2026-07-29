@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import SeoHead from "@/components/SeoHead";
+import CompanySwitcher from "@/components/CompanySwitcher";
 import { addLocalRequest, formatReferenceCode, getRequestByTrackingId, type LocalRequest } from "@/lib/localStore";
 import {
   ArrowRight,
@@ -670,8 +671,20 @@ const pageText = {
     secureTrustedText: "Your data is protected with top-tier security and encryption.",
     learnMore: "Learn More",
     about: "About",
-    aboutShort: "Kayrosco Consulting helps citizens access Albanian public services through a guided digital experience.",
-    aboutMore: "We provide clear steps, reference codes, and staff follow-up so requests are easier to understand and track.",
+    aboutShort: "Kayrosco Consulting's main purpose is helping students from abroad come and study in Albania — completely worry-free, from choosing a school to settling in.",
+    aboutMore: "We take care of finding the right school, helping you choose a major, getting you accepted, getting you here, and handling your residence permit and every paper you need. We also help citizens and residents access Albanian public services, with clear steps, reference codes, and staff follow-up so everything is easy to understand and track.",
+    studyEyebrow: "Our Core Mission",
+    studyTitle: "Study in Albania — We Handle Everything",
+    studyIntro: "The main purpose of Kayrosco Consulting is to bring students from abroad to study in Albania without having to worry about anything. From choosing where to study to settling in, we take care of the entire journey.",
+    studyPoints: [
+      { title: "Find the right school", text: "We help you find and choose the university or school that fits you." },
+      { title: "Pick your major", text: "Guidance on choosing the right major or program for your goals." },
+      { title: "Get accepted", text: "We help you apply and get accepted." },
+      { title: "Get you there", text: "We arrange your travel and arrival in Albania." },
+      { title: "Residence & permits", text: "We handle your residence permit and every paper needed to live in Albania." },
+      { title: "Full support, start to finish", text: "Anything else you need to arrive and settle in — we take care of it." },
+    ],
+    studyCta: "Talk to us about studying in Albania",
     checkApplication: "Check Application",
     checkApplicationText: "Use your reference code to check the status of a request at any time.",
     fastLookup: "Fast lookup",
@@ -735,8 +748,20 @@ const pageText = {
     secureTrustedText: "بياناتك محمية بأمان وتشفير قوي.",
     learnMore: "اعرف المزيد",
     about: "حول",
-    aboutShort: "تساعد كاي روسكو للاستشارات المواطنين في الوصول إلى الخدمات العامة الألبانية بطريقة رقمية مبسطة.",
-    aboutMore: "نوفر خطوات واضحة وأكواد مرجعية ومتابعة من الفريق لتسهيل فهم الطلبات وتتبعها.",
+    aboutShort: "الهدف الرئيسي لكاي روسكو للاستشارات هو مساعدة الطلاب القادمين من الخارج على الدراسة في ألبانيا دون أي قلق، من اختيار المدرسة إلى الاستقرار هناك.",
+    aboutMore: "نتكفّل بإيجاد المدرسة المناسبة، ومساعدتك في اختيار التخصص، والحصول على القبول، والوصول إلى ألبانيا، وتصريح الإقامة وكل الأوراق التي تحتاجها. كما نساعد المواطنين والمقيمين في الوصول إلى الخدمات العامة الألبانية بخطوات واضحة وأكواد مرجعية ومتابعة من الفريق.",
+    studyEyebrow: "مهمتنا الأساسية",
+    studyTitle: "الدراسة في ألبانيا — نتكفّل بكل شيء",
+    studyIntro: "الهدف الرئيسي لكاي روسكو للاستشارات هو استقبال الطلاب القادمين من الخارج للدراسة في ألبانيا دون أي قلق. من اختيار مكان الدراسة إلى الاستقرار هناك، نحن نهتم بالرحلة كاملة.",
+    studyPoints: [
+      { title: "إيجاد المدرسة المناسبة", text: "نساعدك في إيجاد واختيار الجامعة أو المدرسة المناسبة لك." },
+      { title: "اختيار التخصص", text: "إرشادك لاختيار التخصص أو البرنامج المناسب لأهدافك." },
+      { title: "الحصول على القبول", text: "نساعدك في التقديم والحصول على القبول." },
+      { title: "الوصول إلى ألبانيا", text: "نرتب لك السفر والوصول إلى ألبانيا." },
+      { title: "الإقامة والتصاريح", text: "نتكفّل بتصريح الإقامة وكل الأوراق اللازمة للعيش في ألبانيا." },
+      { title: "دعم كامل من البداية للنهاية", text: "أي شيء آخر تحتاجه للوصول والاستقرار، نحن نهتم به." },
+    ],
+    studyCta: "تواصل معنا بخصوص الدراسة في ألبانيا",
     checkApplication: "فحص الطلب",
     checkApplicationText: "استخدم الرمز المرجعي للتحقق من حالة طلبك في أي وقت.",
     fastLookup: "بحث سريع",
@@ -800,8 +825,20 @@ const pageText = {
     secureTrustedText: "Verileriniz güçlü güvenlik ve şifreleme ile korunur.",
     learnMore: "Daha Fazla Bilgi",
     about: "Hakkında",
-    aboutShort: "Kayrosco Danışmanlık, vatandaşların Arnavutluk kamu hizmetlerine rehberli bir dijital deneyimle erişmesine yardımcı olur.",
-    aboutMore: "Başvuruları anlamayı ve takip etmeyi kolaylaştırmak için net adımlar, referans kodları ve ekip takibi sunuyoruz.",
+    aboutShort: "Kayrosco Danışmanlık'ın temel amacı, yurt dışından gelen öğrencilerin hiçbir şeyi dert etmeden Arnavutluk'ta eğitim almasına yardımcı olmaktır — okul seçiminden yerleşmeye kadar.",
+    aboutMore: "Doğru okulu bulmak, bölüm seçiminde yardımcı olmak, kabul almanızı sağlamak, sizi buraya ulaştırmak ve oturum izniniz ile ihtiyacınız olan tüm evraklarla biz ilgileniyoruz. Ayrıca vatandaşların ve ikamet sahiplerinin Arnavutluk kamu hizmetlerine net adımlar, referans kodları ve ekip takibiyle erişmesine yardımcı oluyoruz.",
+    studyEyebrow: "Ana Misyonumuz",
+    studyTitle: "Arnavutluk'ta Eğitim — Her Şeyle Biz İlgileniyoruz",
+    studyIntro: "Kayrosco Danışmanlık'ın temel amacı, yurt dışından gelen öğrencilerin hiçbir şeyi dert etmeden Arnavutluk'ta eğitim almasını sağlamaktır. Nerede okuyacağınızı seçmekten yerleşmeye kadar tüm süreçle biz ilgileniyoruz.",
+    studyPoints: [
+      { title: "Doğru okulu bulma", text: "Size uygun üniversite veya okulu bulup seçmenize yardımcı oluyoruz." },
+      { title: "Bölüm seçimi", text: "Hedeflerinize uygun bölüm veya programı seçmenizde rehberlik ediyoruz." },
+      { title: "Kabul almak", text: "Başvuru yapmanıza ve kabul almanıza yardımcı oluyoruz." },
+      { title: "Sizi oraya ulaştırmak", text: "Arnavutluk'a seyahat ve varış düzenlemelerinde yardımcı oluyoruz." },
+      { title: "Oturum ve izinler", text: "Oturum izninizi ve Arnavutluk'ta yaşamak için gereken tüm evrakları biz hallediyoruz." },
+      { title: "Baştan sona tam destek", text: "Varış ve yerleşme için ihtiyacınız olan her şeyle ilgileniyoruz." },
+    ],
+    studyCta: "Arnavutluk'ta eğitim hakkında bizimle konuşun",
     checkApplication: "Başvuruyu Kontrol Et",
     checkApplicationText: "Başvurunuzun durumunu istediğiniz zaman referans koduyla kontrol edin.",
     fastLookup: "Hızlı sorgu",
@@ -1025,6 +1062,7 @@ export default function ConsultingPage() {
               </nav>
 
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <CompanySwitcher current="consulting" variant="light" />
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
                   {([
                     ["en", text.english],
@@ -1131,6 +1169,71 @@ export default function ConsultingPage() {
               >
               </div>
             </div>
+          </section>
+
+          <section
+            id="study-in-albania"
+            className="kc-glass"
+            style={{ marginTop: 16, borderRadius: 24, padding: 28 }}
+          >
+            <p
+              style={{
+                margin: "0 0 8px",
+                color: COLORS.terracottaDark,
+                fontSize: 12,
+                fontWeight: 800,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+              }}
+            >
+              {text.studyEyebrow}
+            </p>
+            <h2 className="kc-heading" style={{ margin: "0 0 12px", fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}>
+              {text.studyTitle}
+            </h2>
+            <p style={{ margin: "0 0 22px", maxWidth: 720, color: COLORS.textSoft, fontSize: "1.05rem", lineHeight: 1.7 }}>
+              {text.studyIntro}
+            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 14,
+              }}
+              className="kc-portal-grid"
+            >
+              {text.studyPoints.map((point, index) => {
+                const Icon = [GraduationCap, BadgeCheck, Landmark, Plane, LockKeyhole, HelpingHand][index] ?? HelpingHand;
+                return (
+                  <div
+                    key={point.title}
+                    style={{
+                      padding: 18,
+                      borderRadius: 18,
+                      background: "rgba(255,255,255,0.55)",
+                      border: `1px solid ${COLORS.line}`,
+                    }}
+                  >
+                    <div className="kc-icon-box" style={{ marginBottom: 12 }}>
+                      <Icon size={22} />
+                    </div>
+                    <div style={{ fontWeight: 800, color: COLORS.navy, fontSize: "1rem", marginBottom: 6 }}>
+                      {point.title}
+                    </div>
+                    <div style={{ color: COLORS.textSoft, fontSize: 13.5, lineHeight: 1.55 }}>{point.text}</div>
+                  </div>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              className="kc-primary-btn"
+              style={{ marginTop: 22 }}
+              onClick={() => document.getElementById("support")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              <span>{text.studyCta}</span>
+              <ArrowRight size={18} />
+            </button>
           </section>
 
           <div

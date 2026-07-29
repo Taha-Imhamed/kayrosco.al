@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import SeoHead from "@/components/SeoHead";
+import CompanySwitcher from "@/components/CompanySwitcher";
 import {
   Plane, Car, Hotel, FileText, Globe, Home, Search, Loader,
   AlertTriangle, Phone, Users, MapPin, ShieldCheck, CheckCircle,
@@ -1612,6 +1613,7 @@ const App = () => {
             KAYROSCO <span style={{ color: C.accent }}>TRAVEL</span>
           </button>
           <div style={{ display: "flex", alignItems: "center", gap: mob ? 6 : 10 }}>
+            <CompanySwitcher current="travel" variant="light" />
             <LangSwitcher lang={lang} setLang={setLang} />
             {!mob && (
               <>
