@@ -1387,7 +1387,6 @@ const ContactView: React.FC = () => (
 // --- Home View (Container for Hero and Main Sections) ---
 const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
     const [showQuickContact, setShowQuickContact] = useState(false);
-    const [showMoreExpertise, setShowMoreExpertise] = useState(false);
     const [ctaPointer, setCtaPointer] = useState({ x: '50%', y: '50%', active: false });
     const platformRows = [
         [
@@ -1498,14 +1497,14 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             />
                         </h1>
                         <p className="hero-lede hero-anim hero-fade" style={{ animationDelay: '0.45s' }}>
-                            We combine technology, strategic consulting, and travel expertise to build companies that create value and drive progress.
+                            We build technology that creates value and drives progress.
                         </p>
                         <a
-                            href="#integrated-expertise"
+                            href="/tech"
                             className="hero-cta hero-anim hero-fade group inline-flex items-center gap-2 rounded-full px-6 py-3 text-white transition-all duration-300 md:px-8 md:py-4"
                             style={{ animationDelay: '0.8s' }}
                         >
-                            Explore Our Companies
+                            Explore Kayrosco Tech
                             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                         </a>
                         </div>
@@ -1520,9 +1519,9 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                     {/* Gateway intro */}
                     <section>
                         <div className="section-header">
-                            <h2>Built as a Group. Driven by Vision.</h2>
-                            <p>Kayrosco Group brings multiple companies together under one name, delivering projects across industries and across borders. <strong>Bold structure. Real reach.</strong></p>
-                            <a className="button-style primary-button section-cta" href="#integrated-expertise">
+                            <h2>Technology. Driven by Vision.</h2>
+                            <p>Kayrosco Tech delivers technology projects across industries and borders. <strong>Bold solutions. Real impact.</strong></p>
+                            <a className="button-style primary-button section-cta" href="/tech">
                                 Take a Closer Look →
                             </a>
                         </div>
@@ -1532,8 +1531,8 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                     <section style={{ padding: '10px 0 70px' }}>
                         <div className="stats-grid">
                             <div className="stat-item">
-                                <div className="stat-number">3+</div>
-                                <div className="stat-label">Owned Companies</div>
+                                <div className="stat-number">1</div>
+                                <div className="stat-label">Technology Team</div>
                             </div>
                             <div className="stat-item">
                                 <div className="stat-number">4+</div>
@@ -1553,35 +1552,11 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                     {/* ── Integrated Expertise — bigger cards with image ── */}
                     <section id="integrated-expertise">
                         <div className="section-header">
-                            <h2>Integrated Expertise</h2>
-                            <p>Three specialized companies, one unified mission: simplifying your ventures in Albania.</p>
+                            <h2>Kayrosco Tech</h2>
+                            <p>Technology solutions designed to help your business move forward.</p>
                         </div>
 
                         <div className="solutions-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', marginTop: 40 }}>
-                            {/* Travel */}
-                            <div className="expertise-card travel-card">
-                                <div className="card-image travel-logo-frame">
-                                    <img className="travel-logo-image" src="/logo 11 (final travel ).png" alt="Kayrosco Travel logo" />
-                                </div>
-                                <div className="card-content">
-                                    <h3 className="travel-card-title">Kayrosco <span>Travel</span></h3>
-                                    <p>Experience Albania with premium rentals, expert multi-lingual guides, and complete end-to-end logistics support tailored to every journey.</p>
-                                    <a className="button-style" href="/travel">Discover More &rarr;</a>
-                                </div>
-                            </div>
-
-                            {/* Consulting */}
-                            <div className="expertise-card">
-                                <div className="card-image consulting-logo-frame">
-                                    <img className="consulting-logo-image" src="/logo kc finall.png" alt="Kayrosco Consulting logo" />
-                                </div>
-                                <div className="card-content">
-                                    <h3 className="consulting-card-title">Kayrosco <span>Consulting</span></h3>
-                                    <p>Navigate the Albanian regulatory environment with expert guidance on company formation, residency permits, and full legal compliance.</p>
-                                    <a className="button-style" href="/consulting">Get Started &rarr;</a>
-                                </div>
-                            </div>
-
                             {/* Tech */}
                             <div className="expertise-card">
                                 <div className="card-image tech-logo-frame">
@@ -1595,33 +1570,6 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
-                            <button
-                                type="button"
-                                className="button-style"
-                                onClick={() => setShowMoreExpertise((current) => !current)}
-                            >
-                                {showMoreExpertise ? 'Show less' : 'Show more'}
-                            </button>
-                        </div>
-
-                        {showMoreExpertise && (
-                            <div className="solutions-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', marginTop: 24 }}>
-                                {[1, 2, 3].map((item) => (
-                                    <div key={`soon-company-${item}`} className="expertise-card">
-                                        <div className="card-image" style={{ background: 'linear-gradient(180deg, rgba(102, 141, 188, 0.12), rgba(255,255,255,0.03))' }}>
-                                            <img
-                                                src="/soon.png"
-                                                alt={`Coming soon company ${item}`}
-                                            />
-                                        </div>
-                                        <div className="card-content" style={{ textAlign: 'center' }}>
-                                            <h3 style={{ marginBottom: 0 }}>Coming Soon</h3>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
                     </section>
 
                     {/* ── Why Kayrosco ── */}
@@ -1889,31 +1837,10 @@ const App: React.FC = () => {
                             href="#"
                             onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
                         >
-                            Our Companies <span className="chevron">▾</span>
+                            Kayrosco Tech <span className="chevron">▾</span>
                         </a>
 
                         <div className={`dropdown-menu ${isDropdownOpen ? 'visible' : 'hidden'}`}>
-                            <a href="/travel">
-                                <div className="dm-icon" style={{ background: 'rgba(20,184,166,0.15)', color: '#2dd4bf' }}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                                    </svg>
-                                </div>
-                                <span className="dm-title">Travel Services</span>
-                                <span className="dm-desc">Visas, stays & transport across Albania</span>
-                                <span className="dm-arrow">→</span>
-                            </a>
-                            <a href="/consulting">
-                                <div className="dm-icon" style={{ background: 'rgba(168,85,247,0.15)', color: '#c084fc' }}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                    </svg>
-                                </div>
-                                <span className="dm-title">Consulting & Legal</span>
-                                <span className="dm-desc">Company formation & compliance</span>
-                                <span className="dm-arrow">→</span>
-                            </a>
                             <a href="/tech">
                                 <div className="dm-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa' }}>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">

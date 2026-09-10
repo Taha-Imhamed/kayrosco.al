@@ -641,12 +641,15 @@ const portalGroups = serviceGroups.map((group) => ({
 
 const pageText = {
   en: {
-    nav: { home: "Home", services: "Services", about: "About", help: "Help", track: "Track" },
+    nav: { home: "Home", study: "Study in Albania", services: "Other Services", about: "About", help: "Help", track: "Track" },
     brand: "Consulting",
-    heroEyebrow: "Kayrosco Consulting",
-    heroTitle: "Access to Albanian Public Services",
-    heroText: "Securely access over 1,200 services digitally, from ID renewals to tax payments. Start your application below.",
-    startService: "START NEW SERVICE",
+    heroEyebrow: "Study in Albania",
+    heroTitle: "We Bring Students From Around The World To Study In Albania",
+    heroText: "Choosing a school, getting accepted, your visa, your arrival, your residence permit — we handle your entire journey to study in Albania, completely worry-free. We also help citizens and residents access 1,200+ Albanian public services.",
+    startService: "START YOUR STUDENT APPLICATION",
+    exploreServices: "Explore our other services",
+    portalEyebrow: "Also Available",
+    portalIntro: "Alongside helping students study in Albania, we also help citizens and residents access the Albanian public services below.",
     portalTitle: "Service Request Portal",
     step1: "Step 1:",
     chooseCategory: "Choose a Service Category",
@@ -718,12 +721,15 @@ const pageText = {
     turkish: "TR",
   },
   ar: {
-    nav: { home: "الرئيسية", services: "الخدمات", about: "حول", help: "مساعدة", track: "تتبع" },
+    nav: { home: "الرئيسية", study: "الدراسة في ألبانيا", services: "خدمات أخرى", about: "حول", help: "مساعدة", track: "تتبع" },
     brand: "الاستشارات",
-    heroEyebrow: "كاي روسكو للاستشارات",
-    heroTitle: "الوصول إلى الخدمات العامة في ألبانيا",
-    heroText: "يمكنك الوصول إلى أكثر من 1200 خدمة رقميا، من تجديد الهوية إلى الضرائب. ابدأ طلبك من الأسفل.",
-    startService: "ابدأ خدمة جديدة",
+    heroEyebrow: "الدراسة في ألبانيا",
+    heroTitle: "نستقبل الطلاب من مختلف أنحاء العالم للدراسة في ألبانيا",
+    heroText: "اختيار المدرسة، الحصول على القبول، تأشيرتك، وصولك، وتصريح إقامتك — نتكفّل برحلتك كاملة للدراسة في ألبانيا دون أي قلق. كما نساعد المواطنين والمقيمين في الوصول إلى أكثر من 1200 خدمة عامة ألبانية.",
+    startService: "ابدأ طلب الالتحاق كطالب",
+    exploreServices: "استكشف خدماتنا الأخرى",
+    portalEyebrow: "متوفر أيضا",
+    portalIntro: "إلى جانب مساعدة الطلاب على الدراسة في ألبانيا، نساعد أيضا المواطنين والمقيمين في الوصول إلى الخدمات العامة الألبانية أدناه.",
     portalTitle: "بوابة طلب الخدمات",
     step1: "الخطوة 1:",
     chooseCategory: "اختر فئة الخدمة",
@@ -795,12 +801,15 @@ const pageText = {
     turkish: "TR",
   },
   tr: {
-    nav: { home: "Ana Sayfa", services: "Hizmetler", about: "Hakkında", help: "Yardım", track: "Takip" },
+    nav: { home: "Ana Sayfa", study: "Arnavutluk'ta Eğitim", services: "Diğer Hizmetler", about: "Hakkında", help: "Yardım", track: "Takip" },
     brand: "Danışmanlık",
-    heroEyebrow: "Kayrosco Danışmanlık",
-    heroTitle: "Arnavutluk Kamu Hizmetlerine Erişim",
-    heroText: "Kimlik yenilemeden vergi ödemelerine kadar 1.200'den fazla hizmete dijital olarak erişin. Başvurunuzu aşağıdan başlatın.",
-    startService: "YENI HIZMET BAŞLAT",
+    heroEyebrow: "Arnavutluk'ta Eğitim",
+    heroTitle: "Dünyanın Her Yerinden Öğrencileri Arnavutluk'ta Eğitime Kavuşturuyoruz",
+    heroText: "Okul seçiminden kabul almaya, vizenize, varışınıza ve oturum izninize kadar — Arnavutluk'ta eğitim yolculuğunuzun tamamıyla hiçbir şeyi dert etmeden biz ilgileniyoruz. Ayrıca vatandaşların ve ikamet sahiplerinin 1.200'den fazla Arnavutluk kamu hizmetine erişmesine yardımcı oluyoruz.",
+    startService: "ÖĞRENCİ BAŞVURUNU BAŞLAT",
+    exploreServices: "Diğer hizmetlerimizi keşfedin",
+    portalEyebrow: "Ayrıca Sunuyoruz",
+    portalIntro: "Öğrencilerin Arnavutluk'ta eğitim almasına yardımcı olmanın yanı sıra, vatandaşların ve ikamet sahiplerinin aşağıdaki Arnavutluk kamu hizmetlerine erişmesine de yardımcı oluyoruz.",
     portalTitle: "Hizmet Başvuru Portalı",
     step1: "Adım 1:",
     chooseCategory: "Hizmet Kategorisi Seçin",
@@ -899,9 +908,9 @@ export default function ConsultingPage() {
   const [referenceMessage, setReferenceMessage] = useState(pageText.en.referenceHelp);
   const text = pageText[language];
   const localizedPortalSteps = [
-    { title: language === "ar" ? "اختر الخدمة" : language === "tr" ? "Hizmet seç" : "Choose a service", text: language === "ar" ? "اختر الفئة المناسبة لطلبك." : language === "tr" ? "Talebinize uygun kategoriyi seçin." : "Pick the category that matches your request." },
-    { title: language === "ar" ? "راجع المتطلبات" : language === "tr" ? "Gereksinimleri incele" : "Review requirements", text: language === "ar" ? "اطلع على المستندات والمدة والرسوم المتوقعة قبل الإرسال." : language === "tr" ? "Göndermeden önce belge, süre ve ücretleri görün." : "See documents, timing, and expected fees before you submit." },
-    { title: language === "ar" ? "أرسل الطلب" : language === "tr" ? "Talebi gönder" : "Send your request", text: language === "ar" ? "احصل على رمز مرجعي وتتبع الطلب في أي وقت." : language === "tr" ? "Referans kodu alın ve istediğiniz zaman takip edin." : "Get a reference code and track progress anytime." },
+    { title: language === "ar" ? "أخبرنا بأهدافك" : language === "tr" ? "Hedeflerinizi bize anlatın" : "Tell us your goals", text: language === "ar" ? "شاركنا خطتك الدراسية وخلفيتك الأكاديمية." : language === "tr" ? "Eğitim planınızı ve akademik geçmişinizi bizimle paylaşın." : "Share your study plans and academic background." },
+    { title: language === "ar" ? "نجد المدرسة ونقدّم لك" : language === "tr" ? "Okulu buluyor, başvuruyoruz" : "We match & apply for you", text: language === "ar" ? "نختار لك المدرسة والتخصص المناسبين ونتولى التقديم والقبول." : language === "tr" ? "Size uygun okulu ve bölümü seçip başvuru ve kabul sürecini yürütüyoruz." : "We find the right school and program, and handle your application and admission." },
+    { title: language === "ar" ? "نتكفّل بالباقي" : language === "tr" ? "Gerisiyle biz ilgileniyoruz" : "We handle the rest", text: language === "ar" ? "التأشيرة والسفر وتصريح الإقامة — كل شيء منظم لك." : language === "tr" ? "Vize, seyahat ve oturum izni — her şeyi sizin için hallediyoruz." : "Visa, travel, and residence permit — all sorted for you." },
   ];
 
   useEffect(() => {
@@ -912,6 +921,7 @@ export default function ConsultingPage() {
 
   const navLinks = [
     { label: text.nav.home, href: "#home" },
+    { label: text.nav.study, href: "#study-in-albania" },
     { label: text.nav.services, href: "#portal" },
     { label: text.nav.about, href: "#about" },
     { label: text.nav.help, href: "#support" },
@@ -919,6 +929,7 @@ export default function ConsultingPage() {
 
   const mobileNavLinks = [
     { label: text.nav.home, href: "#home", icon: Home },
+    { label: text.nav.study, href: "#study-in-albania", icon: GraduationCap },
     { label: text.nav.services, href: "#portal", icon: Briefcase },
     { label: text.nav.about, href: "#about", icon: BadgeCheck },
     { label: text.nav.track, href: "#reference-tracker", icon: Search },
@@ -984,10 +995,10 @@ export default function ConsultingPage() {
   return (
     <>
       <SeoHead
-        title="Company Registration & Residency Services in Albania | Kayrosco Consulting"
-        description="Get support with company registration, residency permits, work permits, business licenses, tax registration and public document assistance in Albania."
+        title="Study in Albania — International Student Registration | Kayrosco Consulting"
+        description="Kayrosco Consulting helps students from around the world register and study in Albania — school selection, admission, visas, travel, and residence permits handled worry-free. We also support company registration, residency permits, work permits, business licenses, tax registration and public document assistance in Albania."
         canonicalPath="/consulting"
-        keywords={["company registration in Albania", "residency permit support", "work permit Albania", "business license Albania", "Kayrosco Consulting"]}
+        keywords={["study in Albania", "international student registration Albania", "study abroad Albania", "student visa Albania", "university admission Albania", "company registration in Albania", "residency permit support", "work permit Albania", "business license Albania", "Kayrosco Consulting"]}
       />
       <style dangerouslySetInnerHTML={{ __html: FONT_STYLES }} />
       <div className="kc-page" dir={language === "ar" ? "rtl" : "ltr"}>
@@ -1139,10 +1150,15 @@ export default function ConsultingPage() {
                 >
                   {text.heroText}
                 </p>
-                <button type="button" className="kc-primary-btn" onClick={() => document.getElementById("portal")?.scrollIntoView({ behavior: "smooth" })}>
-                  <span>{text.startService}</span>
-                  <ArrowRight size={18} />
-                </button>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                  <button type="button" className="kc-primary-btn" onClick={() => document.getElementById("study-in-albania")?.scrollIntoView({ behavior: "smooth" })}>
+                    <span>{text.startService}</span>
+                    <ArrowRight size={18} />
+                  </button>
+                  <button type="button" className="kc-outline-btn" onClick={() => document.getElementById("portal")?.scrollIntoView({ behavior: "smooth" })}>
+                    <span>{text.exploreServices}</span>
+                  </button>
+                </div>
                 <div className="kc-step-grid">
                   {localizedPortalSteps.map((step, index) => (
                     <div key={step.title} className="kc-step-card">
@@ -1256,9 +1272,24 @@ export default function ConsultingPage() {
               }}
             >
               <div style={{ textAlign: "center", marginBottom: 28, paddingTop: 6 }}>
+                <p
+                  style={{
+                    margin: "0 0 8px",
+                    color: COLORS.sageDark,
+                    fontSize: 12,
+                    fontWeight: 800,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {text.portalEyebrow}
+                </p>
                 <h2 className="kc-heading" style={{ margin: "0", fontSize: "clamp(2.2rem, 3vw, 3rem)" }}>
                   {text.portalTitle}
                 </h2>
+                <p style={{ margin: "10px 0 0", color: COLORS.textSoft, fontSize: "0.98rem", maxWidth: 640, marginLeft: "auto", marginRight: "auto" }}>
+                  {text.portalIntro}
+                </p>
                 <p style={{ margin: "10px 0 0", color: COLORS.terracotta, fontWeight: 700, fontSize: "1rem" }}>
                   {text.step1} <span style={{ color: COLORS.textSoft, fontWeight: 600 }}>{text.chooseCategory}</span>
                 </p>
