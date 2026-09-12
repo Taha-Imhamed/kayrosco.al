@@ -4,22 +4,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -29,11 +29,11 @@ type PipelineStatus = "draft" | "review" | "signed" | "active" | "expired";
 const STAGES: PipelineStatus[] = ["draft", "review", "signed", "active", "expired"];
 
 const STAGE_CONFIG: Record<PipelineStatus, { label: string; color: string; bg: string }> = {
-  draft:   { label: "Draft",   color: "#71717A", bg: "rgba(0,0,0,0.04)" },
-  review:  { label: "Review",  color: "#D97706", bg: "rgba(245,158,11,0.08)" },
-  signed:  { label: "Signed",  color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
-  active:  { label: "Active",  color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
-  expired: { label: "Expired", color: "#DC2626", bg: "rgba(239,68,68,0.10)" },
+  draft:   { label: "Draft",   color: "#8A84A8", bg: "rgba(255,255,255,0.05)" },
+  review:  { label: "Review",  color: "#FBBF24", bg: "rgba(251,191,36,0.08)" },
+  signed:  { label: "Signed",  color: "#60A5FA", bg: "rgba(96,165,250,0.10)" },
+  active:  { label: "Active",  color: "#34D399", bg: "rgba(52,211,153,0.10)" },
+  expired: { label: "Expired", color: "#FB7185", bg: "rgba(239,68,68,0.10)" },
 };
 
 const CAT_COLORS: Record<string, string> = { tech: C.info, consulting: C.accent, travel: C.positive };
@@ -86,7 +86,7 @@ export default function AdminPipeline() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif", fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Contract Pipeline</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Kanban view — drag cards to move between stages (admin only)</p>
@@ -99,11 +99,11 @@ export default function AdminPipeline() {
         </select>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: "#34D399", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
         {[
           { label: "Total Contracts", value: String(contracts.length) },
           { label: "Total Pipeline Value", value: `$${totalValue.toLocaleString()}` },
@@ -120,7 +120,7 @@ export default function AdminPipeline() {
         <div style={{ padding: 40, textAlign: "center", color: C.muted }}>Loading…</div>
       ) : (
         /* Kanban board */
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, alignItems: "start" }}>
           {STAGES.map(stage => {
             const stageContracts = byStatus(stage);
             const stageValue = stageContracts.reduce((s, c) => s + valueOf(c), 0);

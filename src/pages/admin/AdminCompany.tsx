@@ -8,22 +8,22 @@ import { supabase } from "@/lib/supabaseClient";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:           "#F4F4F5",
-  surface:      "#FFFFFF",
-  surface2:     "#FAFAFA",
-  ink:          "#09090B",
-  ink2:         "#18181B",
-  ink3:         "#3F3F46",
-  muted:        "#71717A",
-  hair:         "rgba(0,0,0,0.07)",
-  accent:       "#2563EB",
-  accentTint:   "rgba(37,99,235,0.10)",
-  positive:     "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning:      "#D97706",
-  info:         "#3B82F6",
-  danger:       "#DC2626",
-  dangerTint:   "rgba(220,38,38,0.10)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  ink:          "#F4F2FF",
+  ink2:         "#E3DFFA",
+  ink3:         "#B7B0D6",
+  muted:        "#8A84A8",
+  hair:         "rgba(255,255,255,0.08)",
+  accent:       "#8B7CFF",
+  accentTint:   "rgba(139,124,255,0.10)",
+  positive:     "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning:      "#FBBF24",
+  info:         "#60A5FA",
+  danger:       "#FB7185",
+  dangerTint:   "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -188,10 +188,10 @@ export default function AdminCompany() {
       </div>
 
       {error   && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.dangerTint, border: "1px solid #f5c6c2", color: C.danger, fontSize: 13, marginBottom: 16 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 16 }}>{success}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 16 }}>{success}</div>}
 
       <form onSubmit={handleSave}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 24 }}>
 
           {/* ── Left column ── */}
           <div>
@@ -235,14 +235,14 @@ export default function AdminCompany() {
             <div style={{ background: C.surface2, borderRadius: 14, padding: "24px", border: `1px solid ${C.hair}`, marginBottom: 20 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <h3 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, color: C.ink, margin: 0 }}>Contacts</h3>
-                <button type="button" onClick={() => setShowAddContact(v => !v)} style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: C.ink, color: C.bg, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>
+                <button type="button" onClick={() => setShowAddContact(v => !v)} style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>
                   + Add
                 </button>
               </div>
 
               {showAddContact && (
                 <div style={{ background: C.bg, borderRadius: 10, padding: 16, marginBottom: 14, border: `1px solid ${C.accent}30` }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 10 }}>
                     <div>
                       <label style={labelStyle}>Name *</label>
                       <input style={inputStyle} value={contactForm.name} onChange={e => setContactForm(f => ({ ...f, name: e.target.value }))} placeholder="John Doe" />
@@ -294,7 +294,7 @@ export default function AdminCompany() {
             <div style={{ background: C.surface2, borderRadius: 14, padding: "24px", border: `1px solid ${C.hair}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <h3 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 14, color: C.ink, margin: 0 }}>Documents</h3>
-                <button type="button" onClick={() => docFileRef.current?.click()} style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: C.ink, color: C.bg, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>
+                <button type="button" onClick={() => docFileRef.current?.click()} style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>
                   {uploadingDoc ? "Uploading…" : "+ Upload"}
                 </button>
                 <input ref={docFileRef} type="file" style={{ display: "none" }} accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.txt" onChange={handleDocUpload} />

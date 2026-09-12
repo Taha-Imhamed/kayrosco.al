@@ -8,22 +8,22 @@ import { applyTx, getAccounts, addAccount } from "@/lib/balanceStore";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:           "#F4F4F5",
-  surface:      "#FFFFFF",
-  surface2:     "#FAFAFA",
-  ink:          "#09090B",
-  ink2:         "#18181B",
-  ink3:         "#3F3F46",
-  muted:        "#71717A",
-  hair:         "rgba(0,0,0,0.07)",
-  accent:       "#2563EB",
-  accentTint:   "rgba(37,99,235,0.10)",
-  positive:     "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning:      "#D97706",
-  info:         "#3B82F6",
-  danger:       "#DC2626",
-  dangerTint:   "rgba(220,38,38,0.10)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  ink:          "#F4F2FF",
+  ink2:         "#E3DFFA",
+  ink3:         "#B7B0D6",
+  muted:        "#8A84A8",
+  hair:         "rgba(255,255,255,0.08)",
+  accent:       "#8B7CFF",
+  accentTint:   "rgba(139,124,255,0.10)",
+  positive:     "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning:      "#FBBF24",
+  info:         "#60A5FA",
+  danger:       "#FB7185",
+  dangerTint:   "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -75,7 +75,7 @@ function moveToBalance(deal: Deal, byUsername: string) {
 function DueBadge({ dueDate }: { dueDate: string | null }) {
   if (!dueDate) return <span style={{ color: C.muted, fontSize: 11 }}>No due date</span>;
   const days = Math.ceil((new Date(dueDate).getTime() - Date.now()) / 86400000);
-  const color = days < 0 ? C.danger : days <= 7 ? "#D97706" : days <= 30 ? C.info : C.positive;
+  const color = days < 0 ? C.danger : days <= 7 ? "#FBBF24" : days <= 30 ? C.info : C.positive;
   const label = days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? "Today" : `${days}d left`;
   return (
     <span style={{
@@ -91,7 +91,7 @@ function DueBadge({ dueDate }: { dueDate: string | null }) {
 function Modal({ title, onClose, children, wide }: { title: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
   return (
     <div
-      style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+      style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: wide ? 560 : 440, boxShadow: "0 12px 48px rgba(26,26,26,0.18)", maxHeight: "90vh", overflowY: "auto" }}>
@@ -266,27 +266,27 @@ export default function AdminContractValue() {
   return (
     <div>
       {/* ── Header ── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Contract Deals</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Track deals, payments, and revenue</p>
         </div>
         {admin?.role === "admin" && (
-          <button onClick={() => setShowNew(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          <button onClick={() => setShowNew(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             + New Deal
           </button>
         )}
       </div>
 
       {error   && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: C.danger, fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* ── Summary cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
         {[
           { label: "Total Expected",   value: `$${totalExpected.toLocaleString()}`, color: C.ink,     bg: C.surface2 },
-          { label: "Total Received",   value: `$${totalReceived.toLocaleString()}`, color: C.positive, bg: "rgba(16,185,129,0.08)" },
-          { label: "Pending Deals",    value: String(pendingCount),                 color: C.warning,  bg: "rgba(245,158,11,0.08)" },
+          { label: "Total Received",   value: `$${totalReceived.toLocaleString()}`, color: C.positive, bg: "rgba(52,211,153,0.08)" },
+          { label: "Pending Deals",    value: String(pendingCount),                 color: C.warning,  bg: "rgba(251,191,36,0.08)" },
         ].map((card) => (
           <div key={card.label} style={{ background: card.bg, borderRadius: 10, padding: "16px 18px", border: `1px solid ${C.hair}`, borderTop: `3px solid ${card.color}` }}>
             <p style={{ fontSize: 10, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 6 }}>{card.label}</p>
@@ -333,7 +333,7 @@ export default function AdminContractValue() {
                   background: C.surface, borderRadius: 12,
                   border: `1px solid ${expanded ? C.accent : C.hair}`,
                   overflow: "hidden",
-                  boxShadow: expanded ? `0 0 0 3px ${C.accentTint}` : "0 2px 8px rgba(0,0,0,0.04)",
+                  boxShadow: expanded ? `0 0 0 3px ${C.accentTint}` : "0 2px 8px rgba(255,255,255,0.05)",
                   transition: "border 0.15s, box-shadow 0.15s",
                 }}
               >
@@ -377,7 +377,7 @@ export default function AdminContractValue() {
                       <span style={{ padding: "2px 8px", borderRadius: 100, fontSize: 10, fontFamily: MONO, fontWeight: 600, background: C.positiveTint, color: C.positive }}>Done</span>
                     )}
                     {deal.payment_received && (
-                      <span style={{ padding: "2px 8px", borderRadius: 100, fontSize: 10, fontFamily: MONO, fontWeight: 600, background: "rgba(59,130,246,0.10)", color: C.info }}>Paid</span>
+                      <span style={{ padding: "2px 8px", borderRadius: 100, fontSize: 10, fontFamily: MONO, fontWeight: 600, background: "rgba(96,165,250,0.10)", color: C.info }}>Paid</span>
                     )}
                     {deal.payment_added_to_balance && (
                       <span style={{ padding: "2px 8px", borderRadius: 100, fontSize: 10, fontFamily: MONO, fontWeight: 600, background: C.accentTint, color: C.accent }}>In Balance</span>
@@ -394,7 +394,7 @@ export default function AdminContractValue() {
                 {/* Expanded panel */}
                 {expanded && (
                   <div style={{ padding: "0 18px 18px", borderTop: `1px solid ${C.hair}` }}>
-                    <div style={{ paddingTop: 14, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div style={{ paddingTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
 
                       {/* Description */}
                       {deal.description && (
@@ -445,7 +445,7 @@ export default function AdminContractValue() {
                         {!deal.payment_received && (
                           <button
                             onClick={() => { setPayDeal(deal); setPayAmount(String(deal.expected_value)); setPayToBalance(true); }}
-                            style={{ padding: "7px 14px", borderRadius: 7, border: `1px solid ${C.info}`, background: "rgba(59,130,246,0.08)", color: C.info, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}
+                            style={{ padding: "7px 14px", borderRadius: 7, border: `1px solid ${C.info}`, background: "rgba(96,165,250,0.08)", color: C.info, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}
                           >
                             $ Payment Received
                           </button>
@@ -483,7 +483,7 @@ export default function AdminContractValue() {
               <label style={labelStyle}>Description</label>
               <textarea style={{ ...inputStyle, minHeight: 70, resize: "vertical" }} value={newForm.description} onChange={(e) => setNewForm({ ...newForm, description: e.target.value })} placeholder="What is this contract about?" />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
               <div>
                 <label style={labelStyle}>Client</label>
                 <select style={inputStyle} value={newForm.client_id} onChange={(e) => setNewForm({ ...newForm, client_id: e.target.value })}>
@@ -498,7 +498,7 @@ export default function AdminContractValue() {
                 </select>
               </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 20 }}>
               <div>
                 <label style={labelStyle}>Expected Value ($) *</label>
                 <input required type="number" min={0} step="0.01" style={inputStyle} value={newForm.expected_value} onChange={(e) => setNewForm({ ...newForm, expected_value: e.target.value })} placeholder="0.00" />
@@ -555,7 +555,7 @@ export default function AdminContractValue() {
               <label style={labelStyle}>Description</label>
               <textarea style={{ ...inputStyle, minHeight: 70, resize: "vertical" }} value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
               <div>
                 <label style={labelStyle}>Department</label>
                 <select style={inputStyle} value={editForm.department} onChange={(e) => setEditForm({ ...editForm, department: e.target.value as DeptKey })}>

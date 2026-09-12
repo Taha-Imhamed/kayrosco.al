@@ -11,22 +11,22 @@ import { logActivity, uploadTechProjectImage } from "@/lib/adminApi";
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 const C = {
-  bg:           "#F4F4F5",
-  surface:      "#FFFFFF",
-  surface2:     "#FAFAFA",
-  ink:          "#09090B",
-  ink2:         "#18181B",
-  ink3:         "#3F3F46",
-  muted:        "#71717A",
-  hair:         "rgba(0,0,0,0.07)",
-  accent:       "#2563EB",
-  accentTint:   "rgba(37,99,235,0.10)",
-  positive:     "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning:      "#D97706",
-  info:         "#3B82F6",
-  danger:       "#DC2626",
-  dangerTint:   "rgba(220,38,38,0.10)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  ink:          "#F4F2FF",
+  ink2:         "#E3DFFA",
+  ink3:         "#B7B0D6",
+  muted:        "#8A84A8",
+  hair:         "rgba(255,255,255,0.08)",
+  accent:       "#8B7CFF",
+  accentTint:   "rgba(139,124,255,0.10)",
+  positive:     "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning:      "#FBBF24",
+  info:         "#60A5FA",
+  danger:       "#FB7185",
+  dangerTint:   "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -36,25 +36,25 @@ type ServiceArea = "tech" | "ealbana" | "travel";
 // ─── Department config ─────────────────────────────────────────────────────────
 const DEPT_INFO: Record<string, { label: string; color: string; area: ServiceArea }> = {
   tech:       { label: "Tech",       color: C.info,     area: "tech"    },
-  consulting: { label: "Consulting", color: "#7C3AED",  area: "ealbana" },
+  consulting: { label: "Consulting", color: "#A78BFA",  area: "ealbana" },
   travel:     { label: "Travel",     color: C.positive, area: "travel"  },
 };
 
 // ─── Status & priority configs ─────────────────────────────────────────────────
 const STATUS_ORDER: RequestStatus[] = ["new","in_review","awaiting_docs","in_progress","completed"];
 const STATUS_CFG: Record<RequestStatus, { label: string; color: string; bg: string }> = {
-  new:           { label: "New",           color: "#D97706", bg: "rgba(245,158,11,0.10)"  },
-  in_review:     { label: "In Review",     color: "#3B82F6", bg: "rgba(59,130,246,0.10)"  },
+  new:           { label: "New",           color: "#FBBF24", bg: "rgba(251,191,36,0.10)"  },
+  in_review:     { label: "In Review",     color: "#60A5FA", bg: "rgba(96,165,250,0.10)"  },
   awaiting_docs: { label: "Awaiting Docs", color: "#F97316", bg: "rgba(249,115,22,0.10)"  },
   in_progress:   { label: "In Progress",   color: "#8B5CF6", bg: "rgba(139,92,246,0.10)"  },
-  completed:     { label: "Completed",     color: "#16A34A", bg: "rgba(16,185,129,0.10)"  },
+  completed:     { label: "Completed",     color: "#34D399", bg: "rgba(52,211,153,0.10)"  },
 };
 const PRIORITY_ORDER: RequestPriority[] = ["low","medium","high","urgent"];
 const PRIORITY_CFG: Record<RequestPriority, { label: string; color: string; bg: string }> = {
-  low:    { label: "Low",    color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
-  medium: { label: "Medium", color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
-  high:   { label: "High",   color: "#D97706", bg: "rgba(245,158,11,0.10)" },
-  urgent: { label: "Urgent", color: "#DC2626", bg: "rgba(239,68,68,0.10)"  },
+  low:    { label: "Low",    color: "#34D399", bg: "rgba(52,211,153,0.10)" },
+  medium: { label: "Medium", color: "#60A5FA", bg: "rgba(96,165,250,0.10)" },
+  high:   { label: "High",   color: "#FBBF24", bg: "rgba(251,191,36,0.10)" },
+  urgent: { label: "Urgent", color: "#FB7185", bg: "rgba(239,68,68,0.10)"  },
 };
 
 // ─── Department-specific link types ───────────────────────────────────────────
@@ -63,30 +63,30 @@ type LinkTypeDef = { key: RequestLinkType; label: string; color: string; icon: s
 const DEPT_LINK_TYPES: Record<string, LinkTypeDef[]> = {
   tech: [
     { key: "demo",    label: "Demo",        color: "#8B5CF6", icon: "▶"  },
-    { key: "repo",    label: "Repository",  color: "#09090B", icon: "</>" },
+    { key: "repo",    label: "Repository",  color: "#120E29", icon: "</>" },
     { key: "figma",   label: "Figma",       color: "#F24E1E", icon: "✦"  },
-    { key: "staging", label: "Staging",     color: "#3B82F6", icon: "↗"  },
-    { key: "doc",     label: "Docs",        color: "#2563EB", icon: "≡"  },
-    { key: "meet",    label: "Meeting",     color: "#16A34A", icon: "◎"  },
-    { key: "other",   label: "Other",       color: "#71717A", icon: "◈"  },
+    { key: "staging", label: "Staging",     color: "#60A5FA", icon: "↗"  },
+    { key: "doc",     label: "Docs",        color: "#8B7CFF", icon: "≡"  },
+    { key: "meet",    label: "Meeting",     color: "#34D399", icon: "◎"  },
+    { key: "other",   label: "Other",       color: "#8A84A8", icon: "◈"  },
   ],
   travel: [
     { key: "staging", label: "Booking Ref",    color: "#8B5CF6", icon: "✈"  },
-    { key: "demo",    label: "Hotel Link",     color: "#16A34A", icon: "🏨" },
-    { key: "repo",    label: "Flight Info",    color: "#3B82F6", icon: "🛫" },
+    { key: "demo",    label: "Hotel Link",     color: "#34D399", icon: "🏨" },
+    { key: "repo",    label: "Flight Info",    color: "#60A5FA", icon: "🛫" },
     { key: "figma",   label: "Visa Appt",      color: "#F97316", icon: "📋" },
-    { key: "doc",     label: "Document",       color: "#2563EB", icon: "📄" },
-    { key: "meet",    label: "Meeting",        color: "#16A34A", icon: "◎"  },
-    { key: "other",   label: "Other",          color: "#71717A", icon: "◈"  },
+    { key: "doc",     label: "Document",       color: "#8B7CFF", icon: "📄" },
+    { key: "meet",    label: "Meeting",        color: "#34D399", icon: "◎"  },
+    { key: "other",   label: "Other",          color: "#8A84A8", icon: "◈"  },
   ],
   consulting: [
-    { key: "doc",     label: "Proposal",       color: "#7C3AED", icon: "📄" },
-    { key: "meet",    label: "Meeting",        color: "#16A34A", icon: "◎"  },
-    { key: "staging", label: "Report",         color: "#3B82F6", icon: "📊" },
-    { key: "demo",    label: "Presentation",   color: "#D97706", icon: "🎯" },
-    { key: "figma",   label: "Contract",       color: "#DC2626", icon: "📝" },
-    { key: "repo",    label: "Client Site",    color: "#2563EB", icon: "🌐" },
-    { key: "other",   label: "Other",          color: "#71717A", icon: "◈"  },
+    { key: "doc",     label: "Proposal",       color: "#A78BFA", icon: "📄" },
+    { key: "meet",    label: "Meeting",        color: "#34D399", icon: "◎"  },
+    { key: "staging", label: "Report",         color: "#60A5FA", icon: "📊" },
+    { key: "demo",    label: "Presentation",   color: "#FBBF24", icon: "🎯" },
+    { key: "figma",   label: "Contract",       color: "#FB7185", icon: "📝" },
+    { key: "repo",    label: "Client Site",    color: "#8B7CFF", icon: "🌐" },
+    { key: "other",   label: "Other",          color: "#8A84A8", icon: "◈"  },
   ],
 };
 
@@ -143,16 +143,16 @@ const TRAVEL_SERVICES: Record<string, string> = {
 };
 
 const BUDGET_TIERS = [
-  { key: "Budget",   label: "Budget",   color: "#16A34A", sub: "Under $800 · ~$40 hotel + $40 food/day" },
-  { key: "Standard", label: "Standard", color: "#3B82F6", sub: "$1,000 – $2,000" },
+  { key: "Budget",   label: "Budget",   color: "#34D399", sub: "Under $800 · ~$40 hotel + $40 food/day" },
+  { key: "Standard", label: "Standard", color: "#60A5FA", sub: "$1,000 – $2,000" },
   { key: "Comfort",  label: "Comfort",  color: "#8B5CF6", sub: "$3,000 – $4,000" },
-  { key: "Luxury",   label: "Luxury",   color: "#D97706", sub: "Open budget" },
+  { key: "Luxury",   label: "Luxury",   color: "#FBBF24", sub: "Open budget" },
 ];
 
 // ─── Tech Project status config ────────────────────────────────────────────────
 const PROJECT_STATUS_CFG: Record<TechProjectStatus, { label: string; color: string; bg: string }> = {
-  done:        { label: "Done",        color: "#16A34A", bg: "rgba(16,185,129,0.10)" },
-  available:   { label: "Available",   color: "#3B82F6", bg: "rgba(59,130,246,0.10)" },
+  done:        { label: "Done",        color: "#34D399", bg: "rgba(52,211,153,0.10)" },
+  available:   { label: "Available",   color: "#60A5FA", bg: "rgba(96,165,250,0.10)" },
   in_progress: { label: "In Progress", color: "#8B5CF6", bg: "rgba(139,92,246,0.10)" },
 };
 
@@ -282,7 +282,7 @@ function TravelDetails({ req }: { req: ServiceRequest }) {
           <SectionHead label="Services Requested" />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
             {selectedInterests.map(s => (
-              <span key={s} style={{ padding: "3px 9px", borderRadius: 100, fontSize: 11, fontFamily: SANS, fontWeight: 600, background: "rgba(16,185,129,0.10)", color: C.positive, border: `1px solid rgba(16,185,129,0.25)` }}>
+              <span key={s} style={{ padding: "3px 9px", borderRadius: 100, fontSize: 11, fontFamily: SANS, fontWeight: 600, background: "rgba(52,211,153,0.10)", color: C.positive, border: `1px solid rgba(52,211,153,0.25)` }}>
                 ✓ {s}
               </span>
             ))}
@@ -799,7 +799,7 @@ export default function AdminDept() {
       {/* ── Requests tab ──────────────────────────────────────────────────────── */}
       {pageTab === "requests" && (<>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>
             <span style={{ color: info.color, marginRight: 8 }}>◆</span>{info.label} Requests
@@ -815,7 +815,7 @@ export default function AdminDept() {
       {success && <div style={{ ...alertBase, background: C.positiveTint, border: "1px solid #a9dfbf", color: C.positive }}>{success}</div>}
 
       {/* Status cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 20 }}>
         {STATUS_ORDER.map(s => {
           const cfg = STATUS_CFG[s];
           const active = filterStatus === s;
@@ -835,8 +835,8 @@ export default function AdminDept() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["ID", "Name", "Contact", "Service", "Priority", "Status", "Links", "Tasks", "Due", "Date", ""].map(h => (
@@ -932,7 +932,7 @@ export default function AdminDept() {
       {pageTab === "projects" && dept === "tech" && (
         <div>
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
             <div>
               <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>
                 <span style={{ color: C.info, marginRight: 8 }}>◆</span>Tech Projects
@@ -1334,7 +1334,7 @@ export default function AdminDept() {
                   {/* ── PROCESS TAB ── */}
                   {activeTab === "process" && (
                     <div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 14 }}>
                         <div>
                           <label style={labelStyle}>Status</label>
                           <select style={inputStyle} value={editStatus} onChange={e => setEditStatus(e.target.value as RequestStatus)}>
@@ -1357,7 +1357,7 @@ export default function AdminDept() {
                         </button>
                       )}
 
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 14 }}>
                         <div>
                           <label style={labelStyle}>Assign To</label>
                           <select style={inputStyle} value={editWorker} onChange={e => setEditWorker(e.target.value)}>
@@ -1438,7 +1438,7 @@ export default function AdminDept() {
                       <div style={{ background: C.surface, borderRadius: 12, padding: "18px", border: `1.5px solid ${C.hair}` }}>
                         <p style={{ fontSize: 11, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 14px" }}>Add Link</p>
 
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 10 }}>
                           <div>
                             <label style={labelStyle}>Label</label>
                             <input style={inputStyle} value={newLinkLabel} onChange={e => setNewLinkLabel(e.target.value)}
@@ -1547,7 +1547,7 @@ export default function AdminDept() {
                       {/* ── Route & Entry ── */}
                       <div style={{ background: C.surface, borderRadius: 12, padding: "16px 18px", border: `1px solid ${C.hair}` }}>
                         <p style={{ fontSize: 11, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>Route & Entry</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
                           <div>
                             <label style={labelStyle}>Departure Country</label>
                             <input style={inputStyle} value={String(customData.departureCountry ?? "")}
@@ -1643,11 +1643,11 @@ export default function AdminDept() {
                       {/* ── Services ── */}
                       <div style={{ background: C.surface, borderRadius: 12, padding: "16px 18px", border: `1px solid ${C.hair}` }}>
                         <p style={{ fontSize: 11, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>Services</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 6 }}>
                           {Object.entries(TRAVEL_SERVICES).map(([key, label]) => {
                             const checked = customData[key] === true;
                             return (
-                              <label key={key} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 10px", borderRadius: 8, border: `1.5px solid ${checked ? C.positive : C.hair}`, background: checked ? "rgba(16,185,129,0.06)" : C.surface2, transition: "all 0.15s" }}>
+                              <label key={key} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 10px", borderRadius: 8, border: `1.5px solid ${checked ? C.positive : C.hair}`, background: checked ? "rgba(52,211,153,0.06)" : C.surface2, transition: "all 0.15s" }}>
                                 <input type="checkbox" checked={checked}
                                   onChange={e => setCustomField(key, e.target.checked)}
                                   style={{ accentColor: C.positive, cursor: "pointer", width: 15, height: 15 }} />
@@ -1678,7 +1678,7 @@ export default function AdminDept() {
                       {/* ── Trip Settings ── */}
                       <div style={{ background: C.surface, borderRadius: 12, padding: "16px 18px", border: `1px solid ${C.hair}` }}>
                         <p style={{ fontSize: 11, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 12px" }}>Trip Settings</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
                           <div>
                             <label style={labelStyle}>Arrival Date</label>
                             <input type="date" style={inputStyle} value={String(customData.dateOfArrival ?? "")}

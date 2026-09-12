@@ -8,33 +8,33 @@ import {
 } from "@/lib/adminApi";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
 
 const ACTION_COLORS: Record<ActionType, string> = {
-  login: "#16A34A",
-  logout: "#71717A",
-  create: "#3B82F6",
-  edit: "#D97706",
-  delete: "#DC2626",
-  download: "#7C3AED",
+  login: "#34D399",
+  logout: "#8A84A8",
+  create: "#60A5FA",
+  edit: "#FBBF24",
+  delete: "#FB7185",
+  download: "#A78BFA",
   upload: "#0D9488",
 };
 
@@ -122,7 +122,7 @@ export default function AdminLogs() {
         </p>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
@@ -148,7 +148,7 @@ export default function AdminLogs() {
         </div>
         <button
           onClick={load}
-          style={{ padding: "8px 18px", borderRadius: 7, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+          style={{ padding: "8px 18px", borderRadius: 7, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
         >
           Filter
         </button>
@@ -164,8 +164,8 @@ export default function AdminLogs() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["Timestamp", "User", "Action", "Type", "Department", "IP"].map((h) => (
@@ -184,12 +184,12 @@ export default function AdminLogs() {
                   <td style={{ padding: "10px 16px", fontSize: 11, fontFamily: "'Geist Mono', ui-monospace, monospace", color: C.muted, whiteSpace: "nowrap" }}>
                     {new Date(log.created_at).toLocaleString()}
                   </td>
-                  <td style={{ padding: "10px 16px", fontWeight: 600, color: C.ink }}>{log.username ?? "—"}</td>
-                  <td style={{ padding: "10px 16px", color: C.ink }}>{log.action}</td>
-                  <td style={{ padding: "10px 16px" }}>
+                  <td style={{ padding: "10px 16px", fontWeight: 600, color: C.ink, whiteSpace: "nowrap" }}>{log.username ?? "—"}</td>
+                  <td style={{ padding: "10px 16px", color: C.ink, whiteSpace: "nowrap" }}>{log.action}</td>
+                  <td style={{ padding: "10px 16px", whiteSpace: "nowrap" }}>
                     <Pill text={log.action_type} color={ACTION_COLORS[log.action_type] ?? C.muted} />
                   </td>
-                  <td style={{ padding: "10px 16px", color: C.muted }}>{log.department ?? "—"}</td>
+                  <td style={{ padding: "10px 16px", color: C.muted, whiteSpace: "nowrap" }}>{log.department ?? "—"}</td>
                   <td style={{ padding: "10px 16px", fontSize: 11, fontFamily: "'Geist Mono', ui-monospace, monospace", color: C.muted }}>{log.ip_address ?? "—"}</td>
                 </tr>
               ))

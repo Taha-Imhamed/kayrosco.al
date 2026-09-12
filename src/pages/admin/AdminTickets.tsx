@@ -9,43 +9,43 @@ import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 // ─── Design tokens (Fasto purple) ────────────────────────────────────────────
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  hair2:       "rgba(0,0,0,0.04)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  hair2:       "rgba(255,255,255,0.05)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
 const STATUS_C: Record<TicketStatus, { fg: string; bg: string; label: string }> = {
-  open:        { fg: C.info,     bg: "rgba(59,130,246,0.10)",  label: "Open" },
-  in_progress: { fg: C.warning,  bg: "rgba(245,158,11,0.12)",  label: "In Progress" },
-  done:        { fg: C.positive, bg: "rgba(16,185,129,0.12)",  label: "Done" },
+  open:        { fg: C.info,     bg: "rgba(96,165,250,0.10)",  label: "Open" },
+  in_progress: { fg: C.warning,  bg: "rgba(251,191,36,0.12)",  label: "In Progress" },
+  done:        { fg: C.positive, bg: "rgba(52,211,153,0.12)",  label: "Done" },
 };
 const PRIORITY_C: Record<TicketPriority, { fg: string; bg: string }> = {
   low:    { fg: C.muted,    bg: C.hair2 },
-  medium: { fg: C.warning,  bg: "rgba(245,158,11,0.10)" },
+  medium: { fg: C.warning,  bg: "rgba(251,191,36,0.10)" },
   high:   { fg: C.accent,   bg: C.accentTint },
   urgent: { fg: C.danger,   bg: C.dangerTint },
 };
 const DEPT_C: Record<string, { fg: string; bg: string }> = {
-  tech:       { fg: "#3B82F6", bg: "rgba(59,130,246,0.10)"  },
-  consulting: { fg: "#7C3AED", bg: "rgba(124,58,237,0.10)"  },
-  travel:     { fg: "#16A34A", bg: "rgba(16,185,129,0.10)"  },
+  tech:       { fg: "#60A5FA", bg: "rgba(96,165,250,0.10)"  },
+  consulting: { fg: "#A78BFA", bg: "rgba(167,139,250,0.10)"  },
+  travel:     { fg: "#34D399", bg: "rgba(52,211,153,0.10)"  },
   admin:      { fg: C.muted,   bg: C.hair2                  },
 };
 
@@ -103,8 +103,8 @@ function AttachPill({ att, onRemove }: { att: TicketAttachment; onRemove: () => 
     <div style={{
       display: "inline-flex", alignItems: "center", gap: 6,
       padding: "4px 10px 4px 8px", borderRadius: 8,
-      background: isLink ? "rgba(59,130,246,0.08)" : C.accentTint,
-      border: `1px solid ${isLink ? "rgba(59,130,246,0.20)" : "rgba(37,99,235,0.20)"}`,
+      background: isLink ? "rgba(96,165,250,0.08)" : C.accentTint,
+      border: `1px solid ${isLink ? "rgba(96,165,250,0.20)" : "rgba(139,124,255,0.20)"}`,
       maxWidth: "100%",
     }}>
       {isLink ? (
@@ -171,7 +171,7 @@ function ClientCard({ client, onClose }: { client: Client; onClose: () => void }
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", fontSize: 12, fontFamily: SANS }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "6px 14px", fontSize: 12, fontFamily: SANS }}>
         {client.contact_name  && <div><span style={{ color: C.muted }}>Contact: </span><span style={{ color: C.ink2 }}>{client.contact_name}</span></div>}
         {client.contact_email && <div><span style={{ color: C.muted }}>Email: </span><a href={`mailto:${client.contact_email}`} style={{ color: C.info }}>{client.contact_email}</a></div>}
         {client.contact_phone && <div><span style={{ color: C.muted }}>Phone: </span><span style={{ color: C.ink2 }}>{client.contact_phone}</span></div>}
@@ -200,8 +200,8 @@ function ClientCard({ client, onClose }: { client: Client; onClose: () => void }
             {client.passport_url && (
               <a href={client.passport_url} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px",
-                borderRadius: 6, background: "rgba(59,130,246,0.08)",
-                border: "1px solid rgba(59,130,246,0.20)",
+                borderRadius: 6, background: "rgba(96,165,250,0.08)",
+                border: "1px solid rgba(96,165,250,0.20)",
                 fontFamily: MONO, fontSize: 11, color: C.info, textDecoration: "none",
               }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -214,8 +214,8 @@ function ClientCard({ client, onClose }: { client: Client; onClose: () => void }
             {client.id_doc_url && (
               <a href={client.id_doc_url} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px",
-                borderRadius: 6, background: "rgba(59,130,246,0.08)",
-                border: "1px solid rgba(59,130,246,0.20)",
+                borderRadius: 6, background: "rgba(96,165,250,0.08)",
+                border: "1px solid rgba(96,165,250,0.20)",
                 fontFamily: MONO, fontSize: 11, color: C.info, textDecoration: "none",
               }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -229,7 +229,7 @@ function ClientCard({ client, onClose }: { client: Client; onClose: () => void }
               <a key={i} href={d.url} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px",
                 borderRadius: 6, background: C.accentTint,
-                border: "1px solid rgba(37,99,235,0.20)",
+                border: "1px solid rgba(139,124,255,0.20)",
                 fontFamily: MONO, fontSize: 11, color: C.accent, textDecoration: "none",
               }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -483,7 +483,7 @@ export default function AdminTickets() {
                 <label style={lbl}>Description</label>
                 <textarea style={{ ...inp, height: 72, resize: "vertical" }} value={newForm.description} onChange={(e) => setNewForm({ ...newForm, description: e.target.value })} placeholder="Optional details…" />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 20 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
                 <div>
                   <label style={lbl}>Priority</label>
                   <select style={inp} value={newForm.priority} onChange={(e) => setNewForm({ ...newForm, priority: e.target.value as TicketPriority })}>

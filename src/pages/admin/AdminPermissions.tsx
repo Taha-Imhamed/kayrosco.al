@@ -4,33 +4,33 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
 
 const ROLES = ["admin", "tech_staff", "consulting_staff", "travel_staff", "viewer"] as const;
 const ROLE_COLORS: Record<string, string> = {
-  admin: "#DC2626",
-  tech_staff: "#3B82F6",
-  consulting_staff: "#7C3AED",
-  travel_staff: "#16A34A",
-  viewer: "#71717A",
+  admin: "#FB7185",
+  tech_staff: "#60A5FA",
+  consulting_staff: "#A78BFA",
+  travel_staff: "#34D399",
+  viewer: "#8A84A8",
 };
 
 function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: () => void; disabled?: boolean }) {
@@ -103,7 +103,7 @@ export default function AdminPermissions() {
         <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Toggle what each role can view, create, edit, or delete across all modules</p>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
       <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>

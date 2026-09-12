@@ -6,29 +6,31 @@ import type { AdminRole } from "@/lib/adminApi";
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 export const C = {
-  bg:                "#F4F4F5",
-  surface:           "#FFFFFF",
-  surface2:          "#FAFAFA",
-  ink:               "#09090B",
-  ink2:              "#3F3F46",
-  muted:             "#71717A",
-  hair:              "rgba(0,0,0,0.07)",
-  border:            "#E4E4E7",
-  accent:            "#2563EB",
-  accentLight:       "rgba(37,99,235,0.10)",
-  success:           "#16A34A",
-  successLight:      "rgba(22,163,74,0.10)",
-  warning:           "#D97706",
-  warningLight:      "rgba(217,119,6,0.10)",
-  danger:            "#DC2626",
-  dangerLight:       "rgba(220,38,38,0.10)",
-  sidebarBg:         "#0F0F11",
-  sidebarBorder:     "rgba(255,255,255,0.06)",
-  sidebarText:       "rgba(255,255,255,0.45)",
-  sidebarTextHover:  "rgba(255,255,255,0.85)",
-  sidebarActive:     "rgba(255,255,255,0.09)",
+  bg:                "#0B0818",
+  surface:           "#161029",
+  surface2:          "#1F1840",
+  ink:               "#F4F2FF",
+  ink2:              "#B7B0D6",
+  muted:             "#8A84A8",
+  hair:              "rgba(255,255,255,0.08)",
+  border:            "rgba(255,255,255,0.10)",
+  accent:            "#8B7CFF",
+  accentLight:       "rgba(139,124,255,0.10)",
+  success:           "#34D399",
+  successLight:      "rgba(52,211,153,0.10)",
+  warning:           "#FBBF24",
+  warningLight:      "rgba(251,191,36,0.10)",
+  danger:            "#FB7185",
+  dangerLight:       "rgba(251,113,133,0.10)",
+  sidebarBg:         "#0C0920",
+  sidebarBg2:        "#150F33",
+  sidebarBorder:     "rgba(255,255,255,0.07)",
+  sidebarText:       "rgba(233,231,255,0.48)",
+  sidebarTextHover:  "rgba(255,255,255,0.92)",
+  sidebarActive:     "rgba(124,113,255,0.16)",
   sidebarActiveText: "#FFFFFF",
-  sidebarSection:    "rgba(255,255,255,0.18)",
+  sidebarSection:    "rgba(196,190,255,0.28)",
+  sidebarAccent:     "#8B7CFF",
 };
 
 export const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
@@ -304,6 +306,11 @@ export default function AdminLayout() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.add("no-site-zoom");
+    return () => document.documentElement.classList.remove("no-site-zoom");
+  }, []);
+
   useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
 
   const handleLogout = () => { logout(); navigate("/memo/login"); };
@@ -331,14 +338,16 @@ export default function AdminLayout() {
     display:        "flex",
     alignItems:     "center",
     gap:            9,
-    padding:        "6px 10px",
-    borderRadius:   7,
+    padding:        "7px 10px",
+    marginBottom:   1,
+    borderRadius:   8,
     textDecoration: "none",
     fontSize:       13,
     fontFamily:     SANS,
-    fontWeight:     isActive ? 500 : 400,
+    fontWeight:     isActive ? 600 : 400,
     color:          isActive ? C.sidebarActiveText : C.sidebarText,
     background:     isActive ? C.sidebarActive : "transparent",
+    boxShadow:      isActive ? `inset 2px 0 0 ${C.sidebarAccent}` : "none",
     transition:     "background 0.13s, color 0.13s",
     cursor:         "pointer",
     position:       "relative" as const,
@@ -381,7 +390,11 @@ export default function AdminLayout() {
                 }
               }}
             >
-              <span style={{ display: "flex", opacity: 0.7, flexShrink: 0 }}><item.Icon /></span>
+              <span style={{
+                display: "flex", flexShrink: 0,
+                color: location.pathname === item.to || location.pathname.startsWith(item.to + "/") ? C.sidebarAccent : "inherit",
+                opacity: location.pathname === item.to || location.pathname.startsWith(item.to + "/") ? 1 : 0.65,
+              }}><item.Icon /></span>
               {item.label}
             </NavLink>
           ))}
@@ -398,7 +411,7 @@ export default function AdminLayout() {
         <aside style={{
           width:         sidebarOpen ? 240 : 0,
           minWidth:      sidebarOpen ? 240 : 0,
-          background:    C.sidebarBg,
+          background:    `linear-gradient(190deg, ${C.sidebarBg2} 0%, ${C.sidebarBg} 60%)`,
           display:       "flex",
           flexDirection: "column",
           overflow:      "hidden",
@@ -414,23 +427,23 @@ export default function AdminLayout() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{
                 width: 32, height: 32, borderRadius: 9,
-                background: "linear-gradient(135deg, #1d1d1f, #2d2d30)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                background: `linear-gradient(135deg, ${C.sidebarAccent}, #4338CA)`,
+                boxShadow: "0 4px 14px -3px rgba(139,124,255,0.55)",
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
-                  <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.4)"/>
-                  <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.4)"/>
-                  <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.15)"/>
+                  <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.95)"/>
+                  <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
+                  <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
+                  <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.2)"/>
                 </svg>
               </div>
               <div>
                 <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 16, color: "#FFFFFF", letterSpacing: "-0.02em", display: "block", lineHeight: 1.1 }}>
                   Kayrosco
                 </span>
-                <span style={{ fontSize: 10, color: C.sidebarText, fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}>
-                  Admin
+                <span style={{ fontSize: 10, color: C.sidebarAccent, fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}>
+                  Staff OS
                 </span>
               </div>
             </div>
@@ -444,7 +457,7 @@ export default function AdminLayout() {
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 10 }}>
               <div style={{
                 width: 30, height: 30, borderRadius: "50%",
-                background: "linear-gradient(135deg, #3B82F6, #1d4ed8)",
+                background: "linear-gradient(135deg, #6D5EF0, #4338CA)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0,
               }}>
@@ -486,27 +499,29 @@ export default function AdminLayout() {
         {/* Desktop topbar */}
         {!isMobile && (
           <header style={{
-            height: 52, background: C.surface,
+            height: 56, background: C.surface,
             borderBottom: `1px solid ${C.border}`,
+            boxShadow: "0 1px 0 rgba(43,26,110,0.03), 0 2px 10px -6px rgba(43,26,110,0.10)",
             display: "flex", alignItems: "center",
             padding: "0 28px", gap: 14, flexShrink: 0, zIndex: 10,
           }}>
             <button
               onClick={() => setSidebarOpen((s) => !s)}
               style={{
-                width: 30, height: 30, background: "none", border: "none",
-                cursor: "pointer", color: C.muted, padding: 0, borderRadius: 7,
+                width: 32, height: 32, background: "none", border: "none",
+                cursor: "pointer", color: C.muted, padding: 0, borderRadius: 8,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 transition: "background 0.15s, color 0.15s",
               }}
               title="Toggle sidebar"
-              onMouseEnter={(e) => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.ink; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = C.accentLight; e.currentTarget.style.color = C.accent; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = C.muted; }}
             >
               <Ico.Menu />
             </button>
             <div style={{ width: 1, height: 18, background: C.border }} />
-            <span style={{ fontSize: 14, fontFamily: SANS, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, fontFamily: SANS, fontWeight: 650, color: C.ink, letterSpacing: "-0.01em" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.accent, flexShrink: 0 }} />
               {currentLabel}
             </span>
             {/* Spacer */}
@@ -514,18 +529,18 @@ export default function AdminLayout() {
             {/* User pill */}
             <div style={{
               display: "flex", alignItems: "center", gap: 8,
-              padding: "4px 10px 4px 6px", borderRadius: 20,
-              background: C.bg, border: `1px solid ${C.border}`,
+              padding: "4px 12px 4px 6px", borderRadius: 20,
+              background: C.surface2, border: `1px solid ${C.border}`,
             }}>
               <div style={{
                 width: 22, height: 22, borderRadius: "50%",
-                background: "linear-gradient(135deg, #3B82F6, #1d4ed8)",
+                background: "linear-gradient(135deg, #8B7CFF, #4338CA)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 10, fontWeight: 700, color: "#fff",
               }}>
                 {(admin?.username ?? "?").charAt(0).toUpperCase()}
               </div>
-              <span style={{ fontSize: 12, fontWeight: 500, color: C.ink2 }}>{admin?.username ?? "—"}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: C.ink2 }}>{admin?.username ?? "—"}</span>
             </div>
           </header>
         )}
@@ -533,7 +548,7 @@ export default function AdminLayout() {
         {/* Mobile topbar */}
         {isMobile && (
           <header style={{
-            height: 52, background: C.sidebarBg,
+            height: 52, background: `linear-gradient(120deg, ${C.sidebarBg2}, ${C.sidebarBg})`,
             borderBottom: `1px solid ${C.sidebarBorder}`,
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, position: "sticky", top: 0, zIndex: 50,
@@ -560,7 +575,7 @@ export default function AdminLayout() {
       {isMobile && (
         <nav className="bottom-bar-safe" style={{
           position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
-          minHeight: 64, background: C.sidebarBg,
+          minHeight: 64, background: `linear-gradient(120deg, ${C.sidebarBg2}, ${C.sidebarBg})`,
           borderTop: `1px solid ${C.sidebarBorder}`,
           display: "flex", alignItems: "stretch",
         }}>
@@ -590,7 +605,7 @@ export default function AdminLayout() {
           <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(3px)" }} />
           <div className="mobile-drawer-sheet" style={{
             position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-            background: C.sidebarBg, borderRadius: "18px 18px 0 0",
+            background: `linear-gradient(190deg, ${C.sidebarBg2}, ${C.sidebarBg})`, borderRadius: "18px 18px 0 0",
             maxHeight: "85vh", display: "flex", flexDirection: "column", overflow: "hidden",
           }}>
             <div style={{ display: "flex", justifyContent: "center", paddingTop: 10, paddingBottom: 4 }}>
@@ -608,7 +623,7 @@ export default function AdminLayout() {
             <div style={{ padding: "10px 16px", borderTop: `1px solid ${C.sidebarBorder}`, paddingBottom: "max(14px, env(safe-area-inset-bottom, 14px))" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #3B82F6, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #6D5EF0, #4338CA)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>
                     {(admin?.username ?? "?").charAt(0).toUpperCase()}
                   </div>
                   <div>

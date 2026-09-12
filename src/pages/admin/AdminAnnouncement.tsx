@@ -7,30 +7,30 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
 
 const LEVEL_STYLE: Record<AnnouncementLevel, { bg: string; border: string; color: string; label: string }> = {
-  info:    { bg: "rgba(59,130,246,0.10)", border: "rgba(59,130,246,0.30)", color: "#3B82F6", label: "INFO" },
-  warning: { bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.30)", color: "#D97706", label: "WARNING" },
-  urgent:  { bg: "rgba(239,68,68,0.10)", border: "rgba(239,68,68,0.30)", color: "#DC2626", label: "URGENT" },
+  info:    { bg: "rgba(96,165,250,0.10)", border: "rgba(96,165,250,0.30)", color: "#60A5FA", label: "INFO" },
+  warning: { bg: "rgba(251,191,36,0.08)", border: "rgba(251,191,36,0.30)", color: "#FBBF24", label: "WARNING" },
+  urgent:  { bg: "rgba(239,68,68,0.10)", border: "rgba(239,68,68,0.30)", color: "#FB7185", label: "URGENT" },
 };
 
 const inputStyle: React.CSSProperties = {
@@ -101,20 +101,20 @@ export default function AdminAnnouncement() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif", fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Announcements</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>{activeCount} active announcement{activeCount !== 1 ? "s" : ""} — shown at top of admin dashboard</p>
         </div>
         {admin?.role === "admin" && (
-          <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             + New Announcement
           </button>
         )}
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: "#34D399", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Active preview */}
       {activeCount > 0 && (
@@ -169,7 +169,7 @@ export default function AdminAnnouncement() {
                   <button onClick={() => handleToggle(a)} style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${C.hair}`, background: "transparent", color: C.muted, fontSize: 12, cursor: "pointer" }}>
                     {a.is_active ? "Deactivate" : "Activate"}
                   </button>
-                  <button onClick={() => handleDelete(a)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
+                  <button onClick={() => handleDelete(a)} style={{ background: "none", border: "none", color: "#FB7185", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
                 </div>
               )}
             </div>
@@ -179,7 +179,7 @@ export default function AdminAnnouncement() {
 
       {/* Create Modal */}
       {showAdd && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
           onClick={e => { if (e.target === e.currentTarget) setShowAdd(false); }}>
           <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 460, boxShadow: "0 12px 48px rgba(26,26,26,0.18)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -209,7 +209,7 @@ export default function AdminAnnouncement() {
                   <span style={{ fontSize: 13, color: C.ink }}>{form.content}</span>
                 </div>
               )}
-              <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
                 Publish Announcement
               </button>
             </form>

@@ -11,22 +11,22 @@ import { applyTx, getAccounts, addAccount, BalanceCategoryKey } from "@/lib/bala
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -203,7 +203,7 @@ export default function AdminRevenue() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif", fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Revenue</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Monthly revenue by department — {year}</p>
@@ -213,18 +213,18 @@ export default function AdminRevenue() {
             {years.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
           {admin?.role === "admin" && (
-            <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+            <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
               + Add Entry
             </button>
           )}
         </div>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: "#34D399", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Summary cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 20 }}>
         {[
           { label: "Grand Total", value: grandTotal, color: C.ink },
           { label: "Tech", value: totalByDept.tech, color: C.info },
@@ -255,8 +255,8 @@ export default function AdminRevenue() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["Month", "Year", "Department", "Amount", "Description", "Added By", ""].map(h => (
@@ -283,7 +283,7 @@ export default function AdminRevenue() {
                   {admin?.role === "admin" && (
                     <>
                       <button onClick={() => openEdit(entry)} style={{ background: "none", border: "none", color: C.info, cursor: "pointer", fontSize: 12, textDecoration: "underline", marginRight: 8 }}>Edit</button>
-                      <button onClick={() => handleDelete(entry)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
+                      <button onClick={() => handleDelete(entry)} style={{ background: "none", border: "none", color: "#FB7185", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
                     </>
                   )}
                 </td>
@@ -295,7 +295,7 @@ export default function AdminRevenue() {
 
       {/* Add/Edit Modal */}
       {(showAdd || editEntry) && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
           onClick={e => { if (e.target === e.currentTarget) { setShowAdd(false); setEditEntry(null); } }}>
           <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 420, boxShadow: "0 12px 48px rgba(26,26,26,0.18)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -304,7 +304,7 @@ export default function AdminRevenue() {
             </div>
             <form onSubmit={editEntry ? handleEdit : handleAdd}>
               {!editEntry && (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
                   <div>
                     <label style={labelStyle}>Month</label>
                     <select style={inputStyle} value={form.month} onChange={e => setForm({ ...form, month: Number(e.target.value) })}>
@@ -353,7 +353,7 @@ export default function AdminRevenue() {
                   )}
                 </div>
               )}
-              <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
                 {editEntry ? "Save Changes" : "Add Entry"}
               </button>
             </form>

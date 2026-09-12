@@ -10,23 +10,23 @@ import {
 } from "@/lib/partnersStore";
 
 const C = {
-  bg: "#F4F4F5",
-  surface: "#FFFFFF",
-  surface2: "#FAFAFA",
-  ink: "#09090B",
-  ink2: "#18181B",
-  muted: "#71717A",
-  hair: "rgba(0,0,0,0.07)",
-  accent: "#2563EB",
-  accentTint: "rgba(37,99,235,0.10)",
-  positive: "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning: "#D97706",
-  warningTint: "#FFF7E8",
-  danger: "#DC2626",
-  dangerTint: "rgba(220,38,38,0.10)",
-  info: "#3B82F6",
-  infoTint: "#EFF6FF",
+  bg: "#0B0818",
+  surface: "#161029",
+  surface2: "#1F1840",
+  ink: "#F4F2FF",
+  ink2: "#E3DFFA",
+  muted: "#8A84A8",
+  hair: "rgba(255,255,255,0.08)",
+  accent: "#8B7CFF",
+  accentTint: "rgba(139,124,255,0.10)",
+  positive: "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning: "#FBBF24",
+  warningTint: "rgba(251,191,36,0.10)",
+  danger: "#FB7185",
+  dangerTint: "rgba(251,113,133,0.10)",
+  info: "#60A5FA",
+  infoTint: "rgba(96,165,250,0.10)",
 };
 
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
@@ -302,8 +302,8 @@ export default function AdminPartners() {
             padding: "10px 18px",
             borderRadius: 9,
             border: "none",
-            background: C.ink,
-            color: C.bg,
+            background: "linear-gradient(135deg, #8B7CFF, #4F46E5)",
+            color: "#fff",
             fontFamily: SANS,
             fontSize: 13,
             fontWeight: 700,
@@ -315,9 +315,9 @@ export default function AdminPartners() {
       </div>
 
       {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.dangerTint, border: "1px solid #f5c6c2", color: C.danger, fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12, marginBottom: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 18 }}>
         {[
           { label: "Total Partners", value: String(partners.length) },
           { label: "Active Contracts", value: String(activeCount) },
@@ -366,7 +366,7 @@ export default function AdminPartners() {
                   background: C.surface,
                   borderRadius: 16,
                   border: `1px solid ${expanded ? C.accent : C.hair}`,
-                  boxShadow: expanded ? "0 12px 30px rgba(37,99,235,0.12)" : "0 4px 18px rgba(0,0,0,0.05)",
+                  boxShadow: expanded ? "0 12px 30px rgba(139,124,255,0.12)" : "0 4px 18px rgba(0,0,0,0.05)",
                   overflow: "hidden",
                 }}
               >
@@ -427,7 +427,7 @@ export default function AdminPartners() {
 
                 {expanded && (
                   <div style={{ borderTop: `1px solid ${C.hair}`, padding: 18 }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
                       <div style={{ background: C.surface2, borderRadius: 10, padding: "12px 14px" }}>
                         <p style={{ margin: "0 0 5px", fontSize: 10, fontFamily: MONO, color: C.muted, textTransform: "uppercase", letterSpacing: "0.07em" }}>Contract</p>
                         <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: C.ink }}>{partner.contract_title || "Not set"}</p>
@@ -491,7 +491,7 @@ export default function AdminPartners() {
           }}
         >
           <form onSubmit={handleSave}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
               <div>
                 <label style={labelStyle}>Partner Name *</label>
                 <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} />
@@ -571,7 +571,7 @@ export default function AdminPartners() {
               </button>
               <button
                 type="submit"
-                style={{ padding: "10px 16px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 700, fontFamily: SANS, cursor: "pointer" }}
+                style={{ padding: "10px 16px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 700, fontFamily: SANS, cursor: "pointer" }}
               >
                 {editing ? "Save Changes" : "Create Partner"}
               </button>

@@ -11,22 +11,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -41,7 +41,7 @@ function pct(spent: number, allocated: number) {
 
 function BudgetBar({ spent, allocated }: { spent: number; allocated: number }) {
   const p = Math.min(pct(spent, allocated), 100);
-  const color = p >= 100 ? "#DC2626" : p >= 80 ? "#D97706" : "#16A34A";
+  const color = p >= 100 ? "#FB7185" : p >= 80 ? "#FBBF24" : "#34D399";
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <div style={{ flex: 1, height: 6, borderRadius: 3, background: C.hair, overflow: "hidden" }}>
@@ -146,7 +146,7 @@ export default function AdminBudget() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif", fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Budget</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>
@@ -155,14 +155,14 @@ export default function AdminBudget() {
         </div>
         <button
           onClick={() => setShowAdd(true)}
-          style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+          style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
         >
           + Add Entry
         </button>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: "#34D399", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -175,7 +175,7 @@ export default function AdminBudget() {
       </div>
 
       {/* Summary cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
         {[
           { label: "Total Allocated", value: `$${totalAllocated.toLocaleString()}` },
           { label: "Total Spent", value: `$${totalSpent.toLocaleString()}` },
@@ -189,8 +189,8 @@ export default function AdminBudget() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["Category", "Allocated", "Spent", "Balance", "Variance", "Progress", "Notes", ""].map((h) => (
@@ -212,8 +212,8 @@ export default function AdminBudget() {
                     <td style={{ padding: "11px 16px", fontWeight: 600, color: C.ink }}>{entry.category}</td>
                     <td style={{ padding: "11px 16px", color: C.muted }}>${Number(entry.allocated_amount).toLocaleString()}</td>
                     <td style={{ padding: "11px 16px", color: C.muted }}>${Number(entry.spent_amount).toLocaleString()}</td>
-                    <td style={{ padding: "11px 16px", color: balance >= 0 ? "#16A34A" : "#DC2626", fontWeight: 600 }}>${balance.toLocaleString()}</td>
-                    <td style={{ padding: "11px 16px", color: p >= 100 ? "#DC2626" : p >= 80 ? "#D97706" : "#16A34A" }}>{p}%</td>
+                    <td style={{ padding: "11px 16px", color: balance >= 0 ? "#34D399" : "#FB7185", fontWeight: 600 }}>${balance.toLocaleString()}</td>
+                    <td style={{ padding: "11px 16px", color: p >= 100 ? "#FB7185" : p >= 80 ? "#FBBF24" : "#34D399" }}>{p}%</td>
                     <td style={{ padding: "11px 16px", minWidth: 140 }}>
                       <BudgetBar spent={Number(entry.spent_amount)} allocated={Number(entry.allocated_amount)} />
                     </td>
@@ -229,14 +229,14 @@ export default function AdminBudget() {
                             placeholder="Amount"
                             style={{ ...inputStyle, width: 80, padding: "5px 8px", fontSize: 12 }}
                           />
-                          <button onClick={() => handleAdjust(entry.id, 1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#16A34A", color: "#fff", cursor: "pointer", fontSize: 11 }}>+</button>
-                          <button onClick={() => handleAdjust(entry.id, -1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#DC2626", color: "#fff", cursor: "pointer", fontSize: 11 }}>−</button>
+                          <button onClick={() => handleAdjust(entry.id, 1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#34D399", color: "#fff", cursor: "pointer", fontSize: 11 }}>+</button>
+                          <button onClick={() => handleAdjust(entry.id, -1)} style={{ padding: "4px 8px", borderRadius: 5, border: "none", background: "#FB7185", color: "#fff", cursor: "pointer", fontSize: 11 }}>−</button>
                           <button onClick={() => { setAdjustId(null); setAdjustDelta(""); }} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 12 }}>✕</button>
                         </div>
                       ) : (
                         <>
                           <button onClick={() => setAdjustId(entry.id)} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 12, textDecoration: "underline", marginRight: 8 }}>Adjust</button>
-                          <button onClick={() => handleDelete(entry.id, entry.category)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
+                          <button onClick={() => handleDelete(entry.id, entry.category)} style={{ background: "none", border: "none", color: "#FB7185", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>Delete</button>
                         </>
                       )}
                     </td>
@@ -251,7 +251,7 @@ export default function AdminBudget() {
       {/* Add Modal */}
       {showAdd && (
         <div
-          style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+          style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
           onClick={(e) => { if (e.target === e.currentTarget) setShowAdd(false); }}
         >
           <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 420, boxShadow: "0 12px 48px rgba(26,26,26,0.18)" }}>
@@ -260,7 +260,7 @@ export default function AdminBudget() {
               <button onClick={() => setShowAdd(false)} style={{ background: "none", border: "none", fontSize: 20, color: C.muted, cursor: "pointer" }}>×</button>
             </div>
             <form onSubmit={handleAdd}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
                 <div style={{ marginBottom: 14 }}>
                   <label style={labelStyle}>Month</label>
                   <select style={inputStyle} value={form.month} onChange={(e) => setForm({ ...form, month: Number(e.target.value) })}>
@@ -286,7 +286,7 @@ export default function AdminBudget() {
                 <label style={labelStyle}>Notes</label>
                 <textarea style={{ ...inputStyle, minHeight: 70, resize: "vertical" }} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               </div>
-              <button type="submit" style={{ width: "100%", padding: "11px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              <button type="submit" style={{ width: "100%", padding: "11px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
                 Save Entry
               </button>
             </form>

@@ -26,39 +26,39 @@ import { canAccess, ROLE_LABEL, roleDept, isDeptStaff as checkDeptStaff } from "
 
 // ─── Design tokens — Kayrosco reference system ───────────────────────────────
 const C = {
-  accent:       "#2563EB",
-  accentPress:  "#1d4ed8",
-  accentSoft:   "rgba(37,99,235,0.10)",
-  accentRing:   "rgba(37,99,235,0.28)",
-  bg:           "#F4F4F5",
-  surface:      "#ffffff",
-  surface2:     "#FAFAFA",
-  border:       "#E4E4E7",
-  borderStrong: "#D4D4D8",
-  text:         "#09090B",
-  text2:        "#3F3F46",
-  text3:        "#71717A",
-  textFaint:    "#A1A1AA",
-  pos:          "#16A34A",
-  posSoft:      "rgba(22,163,74,0.10)",
-  neg:          "#DC2626",
-  negSoft:      "rgba(220,38,38,0.10)",
-  warn:         "#D97706",
-  warnSoft:     "rgba(217,119,6,0.10)",
+  accent:       "#8B7CFF",
+  accentPress:  "#6D5EF0",
+  accentSoft:   "rgba(139,124,255,0.10)",
+  accentRing:   "rgba(139,124,255,0.28)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  border:       "rgba(255,255,255,0.10)",
+  borderStrong: "rgba(255,255,255,0.18)",
+  text:         "#F4F2FF",
+  text2:        "#B7B0D6",
+  text3:        "#8A84A8",
+  textFaint:    "#6B6488",
+  pos:          "#34D399",
+  posSoft:      "rgba(52,211,153,0.10)",
+  neg:          "#FB7185",
+  negSoft:      "rgba(251,113,133,0.10)",
+  warn:         "#FBBF24",
+  warnSoft:     "rgba(251,191,36,0.10)",
 };
 
 const UI   = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const DISP = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = '"Geist Mono", "JetBrains Mono", ui-monospace, monospace';
 
-const shSm = "0 1px 2px rgba(20,25,37,.04)";
-const shMd = "0 4px 16px -6px rgba(20,25,37,.10), 0 1px 3px rgba(20,25,37,.04)";
+const shSm = "0 1px 2px rgba(43,26,110,.05)";
+const shMd = "0 10px 28px -10px rgba(43,26,110,.16), 0 1px 3px rgba(43,26,110,.05)";
 
 // Shared card style
 const card: React.CSSProperties = {
   background: C.surface,
   border: `1px solid ${C.border}`,
-  borderRadius: 14,
+  borderRadius: 16,
   padding: 22,
   boxShadow: shSm,
 };
@@ -68,7 +68,7 @@ const PRIORITY_COLOR: Record<TaskPriority, { fg: string; bg: string }> = {
   low:    { fg: C.pos,  bg: C.posSoft  },
   medium: { fg: C.warn, bg: C.warnSoft },
   high:   { fg: C.neg,  bg: C.negSoft  },
-  urgent: { fg: "#ef4444", bg: "#fef2f2" },
+  urgent: { fg: "#FB7185", bg: "rgba(251,113,133,0.14)" },
 };
 
 const STATUS_COLOR: Record<TaskStatus, { fg: string; bg: string; border: string }> = {
@@ -129,14 +129,14 @@ const Ico = {
 type ActionTile = { bg: string; color: string; Ic: React.FC };
 const ACTION_TILE: Record<string, ActionTile> = {
   login:    { bg: C.accentSoft,              color: C.accent, Ic: Ico.ActLogin    },
-  logout:   { bg: "#FAFAFA",                 color: C.text3,  Ic: Ico.ActLogout   },
+  logout:   { bg: "#1F1840",                 color: C.text3,  Ic: Ico.ActLogout   },
   create:   { bg: C.posSoft,                 color: C.pos,    Ic: Ico.ActCreate   },
   edit:     { bg: C.warnSoft,                color: C.warn,   Ic: Ico.ActEdit     },
   delete:   { bg: C.negSoft,                 color: C.neg,    Ic: Ico.ActDelete   },
   download: { bg: C.accentSoft,              color: C.accent, Ic: Ico.ActDownload },
   upload:   { bg: C.posSoft,                 color: C.pos,    Ic: Ico.ActUpload   },
 };
-const DEFAULT_ACT: ActionTile = { bg: "#FAFAFA", color: C.text3, Ic: Ico.Activity };
+const DEFAULT_ACT: ActionTile = { bg: "#1F1840", color: C.text3, Ic: Ico.Activity };
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 function Sparkline({ data, color = C.accent, w = 84, h = 28 }: {
@@ -170,7 +170,7 @@ function Sparkline({ data, color = C.accent, w = 84, h = 28 }: {
 
 // ─── KPI card ────────────────────────────────────────────────────────────────
 function KpiCard({
-  label, IcoEl, value, sub, delta, deltaDir, spark, sparkColor,
+  label, IcoEl, value, sub, delta, deltaDir, spark, sparkColor, tint,
 }: {
   label: string;
   IcoEl: React.FC<SvgProps>;
@@ -180,6 +180,7 @@ function KpiCard({
   deltaDir?: "up" | "down" | "flat";
   spark?: number[];
   sparkColor?: string;
+  tint?: string;
 }) {
   const [hov, setHov] = useState(false);
   const deltaStyle: React.CSSProperties = deltaDir === "up"
@@ -187,15 +188,17 @@ function KpiCard({
     : deltaDir === "down"
     ? { color: C.neg, background: C.negSoft }
     : { color: C.text3, background: C.surface2, border: `1px solid ${C.border}` };
+  const iconColor = tint ?? C.accent;
 
   return (
     <div
       style={{
         ...card,
         display: "flex", flexDirection: "column", gap: 14,
-        transition: "box-shadow .16s, border-color .16s",
+        transition: "box-shadow .16s, border-color .16s, transform .16s",
         boxShadow: hov ? shMd : shSm,
         borderColor: hov ? C.borderStrong : C.border,
+        transform: hov ? "translateY(-2px)" : "none",
       }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
@@ -208,12 +211,11 @@ function KpiCard({
         }}>
           {label}
         </span>
-        {/* Neutral icon chip — never colored */}
         <div style={{
           width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-          background: C.surface2, border: `1px solid ${C.border}`,
+          background: `${iconColor}18`, border: `1px solid ${iconColor}30`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          color: C.text2,
+          color: iconColor,
         }}>
           <IcoEl size={18} />
         </div>
@@ -273,7 +275,7 @@ function FinanceRow({
   ] : null;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1.55fr 1fr", gap: 18 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18 }}>
 
       {/* Budget panel */}
       <div style={card}>
@@ -429,7 +431,7 @@ function QuickAccess({ navigate, adminRole }: { navigate: (to: string) => void; 
         <span style={{ fontSize: 12.5, fontWeight: 650, color: C.text3, fontFamily: UI }}>Customize →</span>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 10 }}>
         {items.map((it) => (
           <QaButton key={it.label} label={it.label} Ic={it.Ic} onClick={() => navigate(it.to)} />
         ))}
@@ -460,7 +462,7 @@ function QaButton({ label, Ic, onClick }: { label: string; Ic: React.FC<SvgProps
       <div style={{
         width: 30, height: 30, borderRadius: 8, flexShrink: 0,
         background: hov ? C.surface : C.surface2,
-        border: `1px solid ${hov ? "rgba(37,99,235,.35)" : C.border}`,
+        border: `1px solid ${hov ? "rgba(139,124,255,.35)" : C.border}`,
         display: "flex", alignItems: "center", justifyContent: "center",
         color: hov ? C.accent : C.text2,
         transition: "all .14s",
@@ -541,7 +543,7 @@ function TasksWidget({ adminUser, deptFilter }: { adminUser: AdminUser | null; d
           onClick={() => setAdding((v) => !v)}
           style={{
             display: "inline-flex", alignItems: "center", gap: 6,
-            background: C.accent, color: "#fff", border: "none",
+            background: `linear-gradient(135deg, ${C.accent}, ${C.accentPress})`, color: "#fff", border: "none",
             padding: "7px 13px", borderRadius: 9, cursor: "pointer",
             fontSize: 13, fontWeight: 650, fontFamily: UI,
             boxShadow: `0 4px 12px -4px ${C.accentRing}`,
@@ -596,7 +598,7 @@ function TasksWidget({ adminUser, deptFilter }: { adminUser: AdminUser | null; d
             onClick={quickAdd}
             disabled={saving || !draft.trim()}
             style={{
-              background: C.accent, color: "#fff", border: "none",
+              background: `linear-gradient(135deg, ${C.accent}, ${C.accentPress})`, color: "#fff", border: "none",
               padding: "0 16px", borderRadius: 9, cursor: "pointer",
               fontSize: 13, fontWeight: 650, fontFamily: UI, opacity: saving ? 0.6 : 1,
             }}
@@ -749,7 +751,7 @@ function NotesWidget({ adminUser }: { adminUser: AdminUser | null }) {
           disabled={saving || !draft.trim()}
           style={{
             display: "inline-flex", alignItems: "center", gap: 6,
-            background: C.accent, color: "#fff", border: "none",
+            background: `linear-gradient(135deg, ${C.accent}, ${C.accentPress})`, color: "#fff", border: "none",
             padding: "7px 13px", borderRadius: 9, cursor: saving || !draft.trim() ? "not-allowed" : "pointer",
             fontSize: 13, fontWeight: 650, fontFamily: UI, opacity: saving || !draft.trim() ? 0.5 : 1,
           }}
@@ -919,7 +921,7 @@ export default function AdminDashboard() {
           }}>
             <span style={{
               width: 7, height: 7, borderRadius: "50%", background: C.pos, flexShrink: 0,
-              boxShadow: `0 0 0 3px rgba(14,159,110,.22)`,
+              boxShadow: `0 0 0 3px rgba(52,211,153,.22)`,
             }} />
             All systems operational
           </span>
@@ -945,7 +947,7 @@ export default function AdminDashboard() {
               ? { bg: C.negSoft,  border: "rgba(224,82,96,.25)",  text: C.neg,  label: "URGENT"  }
               : a.level === "warning"
               ? { bg: C.warnSoft, border: "rgba(199,125,18,.25)", text: C.warn, label: "WARNING" }
-              : { bg: C.accentSoft,border: "rgba(37,99,235,.20)", text: C.accent,label: "INFO"   };
+              : { bg: C.accentSoft,border: "rgba(139,124,255,.20)", text: C.accent,label: "INFO"   };
             return (
               <div key={a.id} style={{
                 padding: "12px 16px", borderRadius: 10,
@@ -970,14 +972,14 @@ export default function AdminDashboard() {
 
       {/* ── KPI row ── */}
       {isAdmin && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 18 }}>
           <KpiCard
             label="Active Staff" IcoEl={Ico.User}
             value={loading ? "—" : stats?.totalUsers ?? 0}
             sub="vs last month"
             delta={loading ? undefined : String(Math.max(0, (stats?.totalUsers ?? 0) - Math.max(0, (stats?.totalUsers ?? 0) - 3)))}
             deltaDir="up"
-            spark={staffSpark} sparkColor={C.accent}
+            spark={staffSpark} sparkColor={C.accent} tint={C.accent}
           />
           <KpiCard
             label="Contracts" IcoEl={Ico.File}
@@ -985,7 +987,7 @@ export default function AdminDashboard() {
             sub="active deals"
             delta={loading ? undefined : "2"}
             deltaDir="up"
-            spark={contractSpark} sparkColor={C.accent}
+            spark={contractSpark} sparkColor="#A78BFA" tint="#A78BFA"
           />
           <KpiCard
             label="Open Tasks" IcoEl={Ico.Check}
@@ -993,7 +995,7 @@ export default function AdminDashboard() {
             sub={loading ? "" : `${stats?.doneTasks ?? 0} done`}
             delta={loading ? undefined : "1"}
             deltaDir="down"
-            spark={taskSpark} sparkColor={C.warn}
+            spark={taskSpark} sparkColor={C.warn} tint={C.warn}
           />
           <KpiCard
             label="Pending Expenses" IcoEl={Ico.Card}
@@ -1001,23 +1003,24 @@ export default function AdminDashboard() {
             sub="awaiting review"
             delta={loading ? undefined : "0"}
             deltaDir="flat"
+            tint={C.pos}
           />
         </div>
       )}
 
       {isViewer && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 18 }}>
-          <KpiCard label="Contracts" IcoEl={Ico.File} value={loading ? "—" : stats?.activeContracts ?? 0} sub="active deals" />
-          <KpiCard label="Open Tasks" IcoEl={Ico.Check} value={loading ? "—" : stats?.openTasks ?? 0} sub={`${stats?.doneTasks ?? 0} done`} />
-          <KpiCard label="Budget Allocated" IcoEl={Ico.Budget} value={loading ? "—" : `$${budgetAllocated.toLocaleString()}`} sub={`${budgetPct}% used`} />
-          <KpiCard label="Total Balance" IcoEl={Ico.Trend} value={loading ? "—" : `$${accountBalanceTotal.toLocaleString()}`} sub="From all balance accounts" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 18 }}>
+          <KpiCard label="Contracts" IcoEl={Ico.File} value={loading ? "—" : stats?.activeContracts ?? 0} sub="active deals" tint="#A78BFA" />
+          <KpiCard label="Open Tasks" IcoEl={Ico.Check} value={loading ? "—" : stats?.openTasks ?? 0} sub={`${stats?.doneTasks ?? 0} done`} tint={C.warn} />
+          <KpiCard label="Budget Allocated" IcoEl={Ico.Budget} value={loading ? "—" : `$${budgetAllocated.toLocaleString()}`} sub={`${budgetPct}% used`} tint={C.accent} />
+          <KpiCard label="Total Balance" IcoEl={Ico.Trend} value={loading ? "—" : `$${accountBalanceTotal.toLocaleString()}`} sub="From all balance accounts" tint={C.pos} />
         </div>
       )}
 
       {isDeptStaff && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-          <KpiCard label="Open Tasks" IcoEl={Ico.Check} value={loading ? "—" : stats?.openTasks ?? 0} sub={`${stats?.doneTasks ?? 0} completed`} />
-          <KpiCard label="Pending Expenses" IcoEl={Ico.Card} value={loading ? "—" : stats?.pendingExpenses ?? 0} sub="Awaiting review" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 18 }}>
+          <KpiCard label="Open Tasks" IcoEl={Ico.Check} value={loading ? "—" : stats?.openTasks ?? 0} sub={`${stats?.doneTasks ?? 0} completed`} tint={C.accent} />
+          <KpiCard label="Pending Expenses" IcoEl={Ico.Card} value={loading ? "—" : stats?.pendingExpenses ?? 0} sub="Awaiting review" tint={C.warn} />
         </div>
       )}
 
@@ -1036,7 +1039,7 @@ export default function AdminDashboard() {
 
       {/* ── Tasks + Notes ── */}
       {!isViewer && (
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 18, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18, alignItems: "start" }}>
           <TasksWidget adminUser={admin} deptFilter={dept ? (dept as Department) : undefined} />
           <NotesWidget adminUser={admin} />
         </div>

@@ -6,18 +6,18 @@ import { getAdminUsers } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg: "#F4F4F5",
-  surface: "#FFFFFF",
-  surface2: "#FAFAFA",
-  ink: "#09090B",
-  ink2: "#18181B",
-  muted: "#71717A",
-  hair: "rgba(0,0,0,0.07)",
-  accent: "#2563EB",
-  accentSoft: "rgba(37,99,235,0.10)",
-  positive: "#16A34A",
-  warning: "#D97706",
-  danger: "#DC2626",
+  bg: "#0B0818",
+  surface: "#161029",
+  surface2: "#1F1840",
+  ink: "#F4F2FF",
+  ink2: "#E3DFFA",
+  muted: "#8A84A8",
+  hair: "rgba(255,255,255,0.08)",
+  accent: "#8B7CFF",
+  accentSoft: "rgba(139,124,255,0.10)",
+  positive: "#34D399",
+  warning: "#FBBF24",
+  danger: "#FB7185",
 };
 
 const statuses: AgentWorkStatus[] = [
@@ -55,7 +55,7 @@ export default function AdminAgentWork() {
     setError("");
     try {
       const result = await getAgentWork({ department, status, priority, date });
-      setItems(result.items);
+      setItems(result.items ?? []);
       if (selected) {
         const next = result.items.find((item) => item.id === selected.id) ?? null;
         setSelected(next);
@@ -190,12 +190,12 @@ export default function AdminAgentWork() {
       </section>
 
       {error && (
-        <div style={{ padding: "12px 14px", borderRadius: 12, background: "rgba(220,38,38,0.10)", color: C.danger }}>
+        <div style={{ padding: "12px 14px", borderRadius: 12, background: "rgba(251,113,133,0.10)", color: C.danger }}>
           {error}
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.2fr) minmax(300px, 0.8fr)", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         <section
           style={{
             background: C.surface,
@@ -262,7 +262,7 @@ export default function AdminAgentWork() {
                       </span>
                     </td>
                     <td style={cellStyle}>{item.priority}</td>
-                    <td style={cellStyle}>{item.uploadedFiles.length}</td>
+                    <td style={cellStyle}>{item.uploadedFiles?.length ?? 0}</td>
                     <td style={cellStyle}>{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td style={cellStyle}>{item.assignedWorkerName || "Unassigned"}</td>
                   </tr>
@@ -359,7 +359,7 @@ export default function AdminAgentWork() {
                 <div style={sectionTitleStyle}>
                   <UserPlus size={15} /> Uploaded Files
                 </div>
-                {selected.uploadedFiles.length === 0 ? (
+                {!selected.uploadedFiles?.length ? (
                   <div style={{ fontSize: 13, color: C.muted }}>No files uploaded.</div>
                 ) : (
                   <div style={{ display: "grid", gap: 8 }}>

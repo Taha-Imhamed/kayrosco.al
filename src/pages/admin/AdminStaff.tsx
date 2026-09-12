@@ -8,22 +8,22 @@ import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { ROLE_LABEL } from "@/lib/roleAccess";
 
 const C = {
-  bg:           "#F4F4F5",
-  surface:      "#FFFFFF",
-  surface2:     "#FAFAFA",
-  ink:          "#09090B",
-  ink2:         "#18181B",
-  ink3:         "#3F3F46",
-  muted:        "#71717A",
-  hair:         "rgba(0,0,0,0.07)",
-  accent:       "#2563EB",
-  accentTint:   "rgba(37,99,235,0.10)",
-  positive:     "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning:      "#D97706",
-  info:         "#3B82F6",
-  danger:       "#DC2626",
-  dangerTint:   "rgba(220,38,38,0.10)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  ink:          "#F4F2FF",
+  ink2:         "#E3DFFA",
+  ink3:         "#B7B0D6",
+  muted:        "#8A84A8",
+  hair:         "rgba(255,255,255,0.08)",
+  accent:       "#8B7CFF",
+  accentTint:   "rgba(139,124,255,0.10)",
+  positive:     "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning:      "#FBBF24",
+  info:         "#60A5FA",
+  danger:       "#FB7185",
+  dangerTint:   "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -31,7 +31,7 @@ const MONO = "'Geist Mono', ui-monospace, monospace";
 const ROLE_COLOR: Record<AdminRole, string> = {
   admin:            C.ink,
   tech_staff:       C.info,
-  consulting_staff: "#7C3AED",
+  consulting_staff: "#A78BFA",
   travel_staff:     C.positive,
   viewer:           C.muted,
 };
@@ -105,7 +105,7 @@ function RoleCheckboxes({
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div
-      style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+      style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 480, boxShadow: "0 12px 48px rgba(26,26,26,0.18)", maxHeight: "90vh", overflowY: "auto" }}>
@@ -218,23 +218,23 @@ export default function AdminStaff() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Staff Management</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>{users.filter(u => u.is_active).length} active accounts</p>
         </div>
-        <button onClick={() => setShowCreate(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+        <button onClick={() => setShowCreate(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
           + New Account
         </button>
       </div>
 
       {error   && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.dangerTint, border: "1px solid #f5c6c2", color: C.danger, fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       <input type="text" placeholder="Search by name, email, or role…" value={search} onChange={e => setSearch(e.target.value)} style={{ ...inputStyle, maxWidth: 340, marginBottom: 16 }} />
 
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg, textAlign: "left" }}>
               {["Username", "Email", "Primary Role", "Extra Roles", "Dept", "Last Login", "Status", ""].map(h => (
@@ -294,7 +294,7 @@ export default function AdminStaff() {
               <label style={labelStyle}>Password *</label>
               <input required minLength={8} type="password" style={inputStyle} value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
               <div>
                 <label style={labelStyle}>Primary Role</label>
                 <select style={inputStyle} value={form.role} onChange={e => setForm({ ...form, role: e.target.value as AdminRole, extraRoles: form.extraRoles.filter(r => r !== e.target.value) })}>
@@ -313,7 +313,7 @@ export default function AdminStaff() {
               <p style={{ fontSize: 11, color: C.muted, marginBottom: 10 }}>Staff can hold multiple roles. Primary role sets their main dept. Additional roles expand their access.</p>
               <RoleCheckboxes primary={form.role} extra={form.extraRoles} onChange={extra => setForm({ ...form, extraRoles: extra })} />
             </div>
-            <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 14, fontWeight: 600, cursor: "pointer", marginTop: 4 }}>
+            <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", marginTop: 4 }}>
               Create Account
             </button>
           </form>
@@ -328,7 +328,7 @@ export default function AdminStaff() {
               <label style={labelStyle}>Email</label>
               <input type="email" style={inputStyle} value={editForm.email} onChange={e => setEditForm({ ...editForm, email: e.target.value })} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
               <div>
                 <label style={labelStyle}>Primary Role</label>
                 <select style={inputStyle} value={editForm.role} onChange={e => setEditForm({ ...editForm, role: e.target.value as AdminRole, extraRoles: editForm.extraRoles.filter(r => r !== e.target.value) })}>
@@ -353,7 +353,7 @@ export default function AdminStaff() {
                 <option value="inactive">Inactive</option>
               </select>
             </div>
-            <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 14, fontWeight: 600, cursor: "pointer", marginTop: 4 }}>
+            <button type="submit" style={{ width: "100%", padding: 11, borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", marginTop: 4 }}>
               Save Changes
             </button>
           </form>

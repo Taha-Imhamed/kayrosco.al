@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
@@ -13,6 +13,11 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.documentElement.classList.add("no-site-zoom");
+    return () => document.documentElement.classList.remove("no-site-zoom");
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,18 +36,18 @@ export default function AdminLogin() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#0A0A0B",
+      background: "linear-gradient(190deg, #150F33 0%, #0C0920 60%)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontFamily: SANS,
       padding: "24px 16px",
     }}>
-      {/* Background grid texture */}
+      {/* Background glow texture */}
       <div style={{
         position: "fixed",
         inset: 0,
-        backgroundImage: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.03) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.02) 0%, transparent 50%)",
+        backgroundImage: "radial-gradient(circle at 22% 20%, rgba(139,124,255,0.16) 0%, transparent 45%), radial-gradient(circle at 80% 78%, rgba(139,124,255,0.14) 0%, transparent 50%)",
         pointerEvents: "none",
       }} />
 
@@ -53,11 +58,12 @@ export default function AdminLogin() {
       }}>
         {/* Card */}
         <div style={{
-          background: "#111113",
+          background: "rgba(21,15,51,0.72)",
+          backdropFilter: "blur(20px)",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: 20,
           padding: "40px 36px",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          boxShadow: "0 24px 80px rgba(5,2,20,0.55), 0 0 0 1px rgba(139,124,255,0.04)",
         }}>
           {/* Logo */}
           <div style={{ marginBottom: 36, textAlign: "center" }}>
@@ -65,18 +71,18 @@ export default function AdminLogin() {
               width: 48,
               height: 48,
               borderRadius: 14,
-              background: "linear-gradient(135deg, #1a1a1c, #2a2a2e)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "linear-gradient(135deg, #8B7CFF, #4338CA)",
+              boxShadow: "0 8px 24px -6px rgba(139,124,255,0.55)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               margin: "0 auto 16px",
             }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
-                <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
-                <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/>
-                <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.2)"/>
+                <rect x="3" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.95)"/>
+                <rect x="13" y="3" width="8" height="8" rx="2" fill="rgba(255,255,255,0.55)"/>
+                <rect x="3" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.55)"/>
+                <rect x="13" y="13" width="8" height="8" rx="2" fill="rgba(255,255,255,0.25)"/>
               </svg>
             </div>
             <span style={{
@@ -93,12 +99,12 @@ export default function AdminLogin() {
             <p style={{
               marginTop: 6,
               fontSize: 11,
-              color: "rgba(255,255,255,0.35)",
+              color: "#8B7CFF",
               fontFamily: MONO,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
             }}>
-              Admin Portal
+              Staff OS
             </p>
           </div>
 
@@ -129,14 +135,15 @@ export default function AdminLogin() {
                   width: "100%",
                   padding: "11px 14px",
                   borderRadius: 10,
-                  border: `1.5px solid ${focusedField === "user" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)"}`,
-                  background: "rgba(255,255,255,0.04)",
+                  border: `1.5px solid ${focusedField === "user" ? "#8B7CFF" : "rgba(255,255,255,0.09)"}`,
+                  background: "rgba(255,255,255,0.05)",
                   fontSize: 14,
                   color: "#FFFFFF",
                   outline: "none",
                   boxSizing: "border-box",
                   fontFamily: SANS,
-                  transition: "border-color 0.2s",
+                  boxShadow: focusedField === "user" ? "0 0 0 3px rgba(139,124,255,0.22)" : "none",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
             </div>
@@ -166,14 +173,15 @@ export default function AdminLogin() {
                   width: "100%",
                   padding: "11px 14px",
                   borderRadius: 10,
-                  border: `1.5px solid ${focusedField === "pass" ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.08)"}`,
-                  background: "rgba(255,255,255,0.04)",
+                  border: `1.5px solid ${focusedField === "pass" ? "#8B7CFF" : "rgba(255,255,255,0.09)"}`,
+                  background: "rgba(255,255,255,0.05)",
                   fontSize: 14,
                   color: "#FFFFFF",
                   outline: "none",
                   boxSizing: "border-box",
                   fontFamily: SANS,
-                  transition: "border-color 0.2s",
+                  boxShadow: focusedField === "pass" ? "0 0 0 3px rgba(139,124,255,0.22)" : "none",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
             </div>
@@ -201,12 +209,13 @@ export default function AdminLogin() {
                 padding: "13px",
                 borderRadius: 10,
                 border: "none",
-                background: loading ? "rgba(255,255,255,0.08)" : "#FFFFFF",
-                color: loading ? "rgba(255,255,255,0.35)" : "#09090B",
+                background: loading ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg, #8B7CFF, #8B7CFF)",
+                color: loading ? "rgba(255,255,255,0.35)" : "#FFFFFF",
                 fontSize: 14,
                 fontWeight: 600,
                 cursor: loading ? "not-allowed" : "pointer",
                 letterSpacing: "-0.01em",
+                boxShadow: loading ? "none" : "0 10px 28px -8px rgba(139,124,255,0.55)",
                 transition: "all 0.2s",
                 fontFamily: SANS,
               }}

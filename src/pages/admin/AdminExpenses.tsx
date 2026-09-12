@@ -8,22 +8,22 @@ import { applyTx, getAccounts, addAccount, BalanceCategoryKey } from "@/lib/bala
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:           "#F4F4F5",
-  surface:      "#FFFFFF",
-  surface2:     "#FAFAFA",
-  ink:          "#09090B",
-  ink2:         "#18181B",
-  ink3:         "#3F3F46",
-  muted:        "#71717A",
-  hair:         "rgba(0,0,0,0.07)",
-  accent:       "#2563EB",
-  accentTint:   "rgba(37,99,235,0.10)",
-  positive:     "#16A34A",
-  positiveTint: "rgba(22,163,74,0.10)",
-  warning:      "#D97706",
-  info:         "#3B82F6",
-  danger:       "#DC2626",
-  dangerTint:   "rgba(220,38,38,0.10)",
+  bg:           "#0B0818",
+  surface:      "#161029",
+  surface2:     "#1F1840",
+  ink:          "#F4F2FF",
+  ink2:         "#E3DFFA",
+  ink3:         "#B7B0D6",
+  muted:        "#8A84A8",
+  hair:         "rgba(255,255,255,0.08)",
+  accent:       "#8B7CFF",
+  accentTint:   "rgba(139,124,255,0.10)",
+  positive:     "#34D399",
+  positiveTint: "rgba(52,211,153,0.10)",
+  warning:      "#FBBF24",
+  info:         "#60A5FA",
+  danger:       "#FB7185",
+  dangerTint:   "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -50,9 +50,9 @@ function resolveOrCreateAccount(catKey: BalanceCategoryKey, catLabel: string, us
 }
 
 const STATUS_STYLE: Record<ExpenseStatus, { bg: string; color: string }> = {
-  pending:  { bg: "rgba(245,158,11,0.08)", color: "#D97706" },
-  approved: { bg: "rgba(16,185,129,0.10)", color: "#16A34A" },
-  rejected: { bg: "rgba(239,68,68,0.10)", color: "#DC2626" },
+  pending:  { bg: "rgba(251,191,36,0.08)", color: "#FBBF24" },
+  approved: { bg: "rgba(52,211,153,0.10)", color: "#34D399" },
+  rejected: { bg: "rgba(239,68,68,0.10)", color: "#FB7185" },
 };
 
 const inputStyle: React.CSSProperties = {
@@ -163,24 +163,24 @@ export default function AdminExpenses() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Expense Claims</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Submit, review, and approve expense claims</p>
         </div>
-        <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+        <button onClick={() => setShowAdd(true)} style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
           + Submit Claim
         </button>
       </div>
 
       {error   && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.dangerTint, border: "1px solid #f5c6c2", color: C.danger, fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: C.positive, fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Summary */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 20 }}>
         {[
-          { label: "Pending Claims", value: `$${totalPending.toLocaleString()}`,  color: C.warning, bg: "rgba(245,158,11,0.08)"  },
-          { label: "Approved",       value: `$${totalApproved.toLocaleString()}`, color: C.positive,bg: "rgba(16,185,129,0.10)"  },
+          { label: "Pending Claims", value: `$${totalPending.toLocaleString()}`,  color: C.warning, bg: "rgba(251,191,36,0.08)"  },
+          { label: "Approved",       value: `$${totalApproved.toLocaleString()}`, color: C.positive,bg: "rgba(52,211,153,0.10)"  },
           { label: "Total Claims",   value: String(claims.length),                color: C.ink,    bg: C.surface2                },
         ].map(card => (
           <div key={card.label} style={{ background: card.bg, borderRadius: 10, padding: "16px 18px", border: `1px solid ${C.hair}`, borderTop: `3px solid ${card.color}` }}>
@@ -205,8 +205,8 @@ export default function AdminExpenses() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["Title", "Amount", "Category", "Dept", "From Account", "Submitted By", "Status", "Reviewed By", "Date", ""].map(h => (
@@ -262,7 +262,7 @@ export default function AdminExpenses() {
 
       {/* Submit Modal */}
       {showAdd && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+        <div style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
           onClick={e => { if (e.target === e.currentTarget) setShowAdd(false); }}>
           <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 460, boxShadow: "0 12px 48px rgba(26,26,26,0.18)", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -274,7 +274,7 @@ export default function AdminExpenses() {
                 <label style={labelStyle}>Title *</label>
                 <input required style={inputStyle} value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="e.g. Flight to Tirana — Q2 conference" />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
                 <div>
                   <label style={labelStyle}>Amount ($) *</label>
                   <input required type="number" min={0} step="0.01" style={inputStyle} value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} />

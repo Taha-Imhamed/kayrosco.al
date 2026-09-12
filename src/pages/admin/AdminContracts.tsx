@@ -12,22 +12,22 @@ import { logActivity } from "@/lib/adminApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg:          "#F4F4F5",
-  surface:     "#FFFFFF",
-  surface2:    "#FAFAFA",
-  ink:         "#09090B",
-  ink2:        "#18181B",
-  ink3:        "#3F3F46",
-  muted:       "#71717A",
-  hair:        "rgba(0,0,0,0.07)",
-  accent:      "#2563EB",
-  accentTint:  "rgba(37,99,235,0.10)",
-  positive:    "#16A34A",
-  positiveTint:"rgba(22,163,74,0.10)",
-  warning:     "#D97706",
-  info:        "#3B82F6",
-  danger:      "#DC2626",
-  dangerTint:  "rgba(220,38,38,0.10)",
+  bg:          "#0B0818",
+  surface:     "#161029",
+  surface2:    "#1F1840",
+  ink:         "#F4F2FF",
+  ink2:        "#E3DFFA",
+  ink3:        "#B7B0D6",
+  muted:       "#8A84A8",
+  hair:        "rgba(255,255,255,0.08)",
+  accent:      "#8B7CFF",
+  accentTint:  "rgba(139,124,255,0.10)",
+  positive:    "#34D399",
+  positiveTint:"rgba(52,211,153,0.10)",
+  warning:     "#FBBF24",
+  info:        "#60A5FA",
+  danger:      "#FB7185",
+  dangerTint:  "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -36,9 +36,9 @@ const CATS: ContractCategory[] = ["tech", "consulting", "travel"];
 const TYPES: ContractType[] = ["internal", "client", "government"];
 
 const CAT_COLORS: Record<ContractCategory, string> = {
-  tech: "#3B82F6",
-  consulting: "#7C3AED",
-  travel: "#16A34A",
+  tech: "#60A5FA",
+  consulting: "#A78BFA",
+  travel: "#34D399",
 };
 
 const inputStyle: React.CSSProperties = {
@@ -195,21 +195,21 @@ export default function AdminContracts() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: "'Geist', ui-sans-serif, -apple-system, sans-serif", fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}>Contracts</h1>
           <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>{filtered.length} contract{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowUpload(true)}
-          style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: C.ink, color: C.bg, fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+          style={{ padding: "10px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #8B7CFF, #4F46E5)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
         >
           + Upload Contract
         </button>
       </div>
 
-      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#DC2626", fontSize: 13, marginBottom: 12 }}>{error}</div>}
-      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(16,185,129,0.10)", border: "1px solid #a9dfbf", color: "#16A34A", fontSize: 13, marginBottom: 12 }}>{success}</div>}
+      {error && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(239,68,68,0.10)", border: "1px solid #f5c6c2", color: "#FB7185", fontSize: 13, marginBottom: 12 }}>{error}</div>}
+      {success && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(52,211,153,0.10)", border: "1px solid #a9dfbf", color: "#34D399", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
@@ -231,8 +231,8 @@ export default function AdminContracts() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <div style={{ background: C.surface2, borderRadius: 12, border: `1px solid ${C.hair}`, overflow: "hidden", overflowX: "auto" }}>
+        <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
             <tr style={{ background: C.bg }}>
               {["Title", "Category", "Type", "Uploaded By", "Date", "File", ""].map((h) => (
@@ -249,7 +249,7 @@ export default function AdminContracts() {
               filtered.map((contract, i) => (
                 <tr key={contract.id} style={{ borderTop: i === 0 ? "none" : `1px solid ${C.hair}` }}>
                   <td style={{ padding: "11px 16px" }}>
-                    <div style={{ fontWeight: 600, color: C.ink }}>{contract.title}</div>
+                    <div style={{ fontWeight: 600, color: C.ink, whiteSpace: "nowrap" }}>{contract.title}</div>
                     {contract.description && <div style={{ fontSize: 11, color: C.muted, marginTop: 2, maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{contract.description}</div>}
                   </td>
                   <td style={{ padding: "11px 16px" }}>
@@ -265,12 +265,12 @@ export default function AdminContracts() {
                   </td>
                   <td style={{ padding: "11px 16px", whiteSpace: "nowrap" }}>
                     {contract.storage_path && (
-                      <button onClick={() => handleDownload(contract)} style={{ background: "none", border: "none", color: "#3B82F6", cursor: "pointer", fontSize: 12, textDecoration: "underline", marginRight: 8 }}>
+                      <button onClick={() => handleDownload(contract)} style={{ background: "none", border: "none", color: "#60A5FA", cursor: "pointer", fontSize: 12, textDecoration: "underline", marginRight: 8 }}>
                         Download
                       </button>
                     )}
                     {admin?.role === "admin" && (
-                      <button onClick={() => handleDelete(contract)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>
+                      <button onClick={() => handleDelete(contract)} style={{ background: "none", border: "none", color: "#FB7185", cursor: "pointer", fontSize: 12, textDecoration: "underline" }}>
                         Delete
                       </button>
                     )}
@@ -285,7 +285,7 @@ export default function AdminContracts() {
       {/* Upload Modal */}
       {showUpload && (
         <div
-          style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}
+          style={{ position: "fixed", inset: 0, background: "rgba(26,26,26,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }}
           onClick={(e) => { if (e.target === e.currentTarget) setShowUpload(false); }}
         >
           <div style={{ background: C.bg, borderRadius: 14, padding: "28px 28px 24px", width: "100%", maxWidth: 460, boxShadow: "0 12px 48px rgba(26,26,26,0.18)" }}>
@@ -298,7 +298,7 @@ export default function AdminContracts() {
                 <label style={labelStyle}>Contract Title *</label>
                 <input required style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Q2 Flight Booking Agreement" />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
                 <div style={{ marginBottom: 14 }}>
                   <label style={labelStyle}>Department *</label>
                   <select style={inputStyle} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as ContractCategory })}>

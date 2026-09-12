@@ -5,17 +5,17 @@ import type { AgentChatMessage, AgentWorkItem } from "@/lib/agentTypes";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const C = {
-  bg: "#F4F4F5",
-  surface: "#FFFFFF",
-  surface2: "#FAFAFA",
-  ink: "#09090B",
-  ink2: "#18181B",
-  muted: "#71717A",
-  hair: "rgba(0,0,0,0.07)",
-  accent: "#2563EB",
-  accentSoft: "rgba(37,99,235,0.10)",
-  danger: "#DC2626",
-  dangerSoft: "rgba(220,38,38,0.10)",
+  bg: "#0B0818",
+  surface: "#161029",
+  surface2: "#1F1840",
+  ink: "#F4F2FF",
+  ink2: "#E3DFFA",
+  muted: "#8A84A8",
+  hair: "rgba(255,255,255,0.08)",
+  accent: "#8B7CFF",
+  accentSoft: "rgba(139,124,255,0.10)",
+  danger: "#FB7185",
+  dangerSoft: "rgba(251,113,133,0.10)",
 };
 const SANS = "'Geist', ui-sans-serif, -apple-system, sans-serif";
 const MONO = "'Geist Mono', ui-monospace, monospace";
@@ -114,7 +114,7 @@ export default function AdminAgentChat() {
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(260px, 300px)", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
       <section
         style={{
           background: C.surface,
@@ -200,7 +200,7 @@ export default function AdminAgentChat() {
             display: "flex",
             flexDirection: "column",
             gap: 14,
-            background: "linear-gradient(180deg, #F9FAFF 0%, #F3F5FC 100%)",
+            background: `linear-gradient(180deg, ${C.bg} 0%, ${C.surface2} 100%)`,
           }}
         >
           {messages.map((message) => (
@@ -210,7 +210,7 @@ export default function AdminAgentChat() {
                 maxWidth: "82%",
                 alignSelf: message.sender === "user" ? "flex-end" : "flex-start",
                 background: message.sender === "user" ? C.ink : C.surface,
-                color: message.sender === "user" ? "#F8FAFC" : C.ink2,
+                color: message.sender === "user" ? C.bg : C.ink2,
                 borderRadius: 16,
                 padding: "12px 14px",
                 border: message.sender === "user" ? "none" : `1px solid ${C.hair}`,
