@@ -663,7 +663,7 @@ const GlobalStyles = () => (
         flex-shrink: 0;
     }
     .expertise-card .card-image.tech-logo-frame {
-        background: #ffffff;
+        background: #000000;
     }
     .expertise-card .card-image.travel-logo-frame {
         background: #C0D7C7;
@@ -1556,7 +1556,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             <p>Technology solutions designed to help your business move forward.</p>
                         </div>
 
-                        <div className="solutions-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', marginTop: 40 }}>
+                        <div className="solutions-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', marginTop: 64 }}>
                             {/* Tech */}
                             <div className="expertise-card">
                                 <div className="card-image tech-logo-frame">
@@ -1805,7 +1805,14 @@ const App: React.FC = () => {
             document.removeEventListener('touchmove', handleTouchMove);
             document.removeEventListener('wheel', handleWheel);
         };
-    }, [currentPageName, isMobileViewport]); 
+    }, [currentPageName, isMobileViewport]);
+
+    useEffect(() => {
+        document.documentElement.classList.add('no-site-zoom');
+        return () => {
+            document.documentElement.classList.remove('no-site-zoom');
+        };
+    }, []);
 
     /**
      * Determines if a navigation link should have the 'active' class.

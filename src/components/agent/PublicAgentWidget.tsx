@@ -24,6 +24,22 @@ const initialAssistantMessage: AgentChatMessage = {
   createdAt: new Date().toISOString(),
 };
 
+const techInitialAssistantMessage: AgentChatMessage = {
+  id: "tech-welcome",
+  sender: "assistant",
+  content:
+    "Welcome to Kayrosco Tech. Tell me about the software, website, or digital product you want to build, and I’ll collect the details for our team.",
+  createdAt: new Date().toISOString(),
+};
+
+const mainInitialAssistantMessage: AgentChatMessage = {
+  id: "main-welcome",
+  sender: "assistant",
+  content:
+    "Welcome to Kayrosco Group. Tell me about the website, software, or digital product you need, and I’ll collect the details for our team.",
+  createdAt: new Date().toISOString(),
+};
+
 const inputStyle: React.CSSProperties = {
   width: "100%",
   borderRadius: 10,
@@ -37,11 +53,19 @@ const inputStyle: React.CSSProperties = {
 
 export default function PublicAgentWidget() {
   const { pathname } = useLocation();
+  const isTechPage = pathname === "/tech";
+  const isMainIndex = pathname === "/";
+  const isTechFocused = isTechPage || isMainIndex;
+  const visibleDepartments = isTechFocused
+    ? departments.filter((item) => item.value === "tech")
+    : departments;
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth <= 768);
   const [isOpen, setIsOpen] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<AgentChatMessage[]>([initialAssistantMessage]);
+  const [messages, setMessages] = useState<AgentChatMessage[]>(() => [
+    isTechPage ? techInitialAssistantMessage : isMainIndex ? mainInitialAssistantMessage : initialAssistantMessage,
+  ]);
   const [draft, setDraft] = useState("");
   const [department, setDepartment] = useState<AgentDepartment | null>(null);
   const [error, setError] = useState("");
@@ -101,6 +125,11 @@ export default function PublicAgentWidget() {
       document.body.style.overscrollBehavior = "";
     };
   }, [isOpen]);
+
+  // Keep the Tech page and the main homepage focused on software projects.
+  useEffect(() => {
+    if (isTechFocused) setDepartment("tech");
+  }, [isTechFocused]);
 
   if (!enabled) return null;
 
@@ -167,7 +196,7 @@ export default function PublicAgentWidget() {
     setError("");
     setSuccess("");
     if (!department) {
-      setError("Choose Travel, Consulting, or Tech first.");
+      setError("Choose a service area first.");
       return;
     }
     if (!form.fullName || !form.email || !form.phone || !form.serviceType || !form.message) {
@@ -455,7 +484,7 @@ export default function PublicAgentWidget() {
               <div>
                 <div style={{ color: "#F8FAFC", fontWeight: 700, fontSize: 14 }}>Kayrosco Agent</div>
                 <div style={{ color: "rgba(255,255,255,0.62)", fontSize: 12 }}>
-                  Fast intake for Travel, Consulting, and Tech
+                  {isTechFocused ? "Software project intake" : "Fast intake for Travel, Consulting, and Tech"}
                 </div>
               </div>
               </div>
@@ -500,8 +529,8 @@ export default function PublicAgentWidget() {
           <div style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
             {activeView === "chat" ? (
               <div style={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}>
-                <div style={{ padding: "12px 14px 10px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {departments.map((item) => (
+                {!isTechPage && <div style={{ padding: "12px 14px 10px", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {visibleDepartments.map((item) => (
                     <button
                       key={item.value}
                       type="button"
@@ -530,7 +559,7 @@ export default function PublicAgentWidget() {
                       {item.label}
                     </button>
                   ))}
-                </div>
+                </div>}
 
                 <div
                   ref={logRef}
@@ -604,8 +633,8 @@ export default function PublicAgentWidget() {
                   gap: 10,
                 }}
               >
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                  {departments.map((item) => (
+                {!isTechPage && <div style={{ display: "grid", gridTemplateColumns: `repeat(${visibleDepartments.length}, 1fr)`, gap: 8 }}>
+                  {visibleDepartments.map((item) => (
                     <button
                       key={item.value}
                       type="button"
@@ -618,7 +647,7 @@ export default function PublicAgentWidget() {
                       {item.label}
                     </button>
                   ))}
-                </div>
+                </div>}
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   <input

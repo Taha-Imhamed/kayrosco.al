@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Plane, Scale, Cpu, ChevronDown, type LucideIcon } from "lucide-react";
+import { Cpu, ChevronDown, type LucideIcon } from "lucide-react";
 
 type CompanyKey = "travel" | "consulting" | "tech";
 
@@ -12,8 +12,6 @@ const COMPANIES: {
   color: string;
   bg: string;
 }[] = [
-  { key: "travel", href: "/travel", title: "Travel", desc: "Trips, transfers & stays in Albania", icon: Plane, color: "#2dd4bf", bg: "rgba(20,184,166,0.15)" },
-  { key: "consulting", href: "/consulting", title: "Consulting", desc: "Public services, permits & residency", icon: Scale, color: "#c084fc", bg: "rgba(168,85,247,0.15)" },
   { key: "tech", href: "/tech", title: "Tech", desc: "Software & cloud systems", icon: Cpu, color: "#60a5fa", bg: "rgba(59,130,246,0.15)" },
 ];
 
@@ -81,13 +79,13 @@ export default function CompanySwitcher({
             href="/"
             style={{
               display: "block",
-              padding: "8px 10px",
+              padding: "10px 12px",
               borderRadius: 8,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: 700,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: dark ? "#9ca3af" : "#94a3b8",
+              textAlign: "center",
+              color: dark ? "#f8fafc" : "#1e293b",
+              background: dark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.06)",
               textDecoration: "none",
             }}
           >

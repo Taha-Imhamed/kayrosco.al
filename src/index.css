@@ -5,6 +5,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Render the site at 80% scale by default, so a 100% browser zoom
+   looks the way a manual ctrl+scroll zoom-out to 80% would.
+   The main Index page opts out (adds .no-site-zoom to <html>) and stays at 100%. */
+html {
+  zoom: 0.8;
+}
+html.no-site-zoom {
+  zoom: 1;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

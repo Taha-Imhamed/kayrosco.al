@@ -37,7 +37,7 @@ const C = {
   blueGlow: "rgba(37,99,235,0.35)",
 };
 
-const FONT_STACK = "'Rostex', Inter, Satoshi, Manrope, sans-serif";
+const FONT_STACK = "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif";
 const MONO_STACK = "'JetBrains Mono', 'Fira Code', monospace";
 
 const STATIC_SERVICES = [
@@ -171,7 +171,7 @@ function SectionTitle({
         style={{
           margin: 0,
           color: C.textMain,
-          fontFamily: "'Orbitron', 'Rostex', Inter, sans-serif",
+          fontFamily: FONT_STACK,
           fontSize: "clamp(26px, 5vw, 54px)",
           lineHeight: 1.05,
           fontWeight: 800,
@@ -349,16 +349,8 @@ function TechPage() {
       link.id = fontId;
       link.rel = "stylesheet";
       link.href =
-        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@600;700;800&display=swap";
+        "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap";
       document.head.appendChild(link);
-    }
-    const gsId = "general-sans-font";
-    if (!document.getElementById(gsId)) {
-      const gsLink = document.createElement("link");
-      gsLink.id = gsId;
-      gsLink.rel = "stylesheet";
-      gsLink.href = "https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap";
-      document.head.appendChild(gsLink);
     }
   }, []);
 
@@ -449,12 +441,9 @@ function TechPage() {
       />
 
       <style>{`
-        @font-face {
-          font-family: 'Rostex';
-          src: local('Rostex'), local('Rostex Regular');
-          font-display: swap;
-        }
         .tk-wrap { max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+        .tk-page-root, .tk-page-root button, .tk-page-root input, .tk-page-root select, .tk-page-root textarea { font-family: ${FONT_STACK}; }
+        .tk-page-root h1, .tk-page-root h2, .tk-page-root h3 { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
         .tk-nav-link { color: ${C.textMuted}; text-decoration: none; font-size: 15px; transition: color .18s ease; }
         .tk-nav-link:hover { color: ${C.textMain}; }
         .tk-primary { background: linear-gradient(135deg, ${C.blueMain}, ${C.blueLight}); color: white; border: none; border-radius: 10px; padding: 16px 28px; font-weight: 600; cursor: pointer; box-shadow: none; }
@@ -678,17 +667,15 @@ function TechPage() {
         }
         @media (max-width: 1024px) {
           .tk-feature-grid, .tk-process-grid, .tk-stack-grid, .tk-project-grid, .tk-contact-grid { grid-template-columns: 1fr !important; }
-          .tk-why-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .tk-hero { min-height: auto !important; padding-bottom: 72px; }
           .tk-header-bar { border-radius: 20px; }
           .tk-nav-center { gap: 22px; }
         }
         @media (max-width: 640px) {
-          .tk-why-grid { grid-template-columns: 1fr !important; }
           .tk-project-grid { grid-template-columns: 1fr !important; }
-          .tk-why-text { font-size: 14px !important; line-height: 1.55 !important; }
           .tk-section-title { text-align: center !important; max-width: 100% !important; }
           .tk-section-title p { max-width: 100% !important; }
+          .tk-trust-row { justify-content: center !important; }
         }
         @media (max-width: 780px) {
           .tk-nav-desktop { display: none !important; }
@@ -772,7 +759,7 @@ function TechPage() {
           background: none; border: none; cursor: pointer;
           display: inline-flex; align-items: center; gap: 4px;
           color: rgba(243,241,238,0.9);
-          font-size: 14px; font-family: 'Geist', ui-sans-serif, sans-serif;
+          font-size: 14px; font-family: ${FONT_STACK};
           padding: 4px 2px;
           transition: color 0.18s ease;
         }
@@ -783,7 +770,7 @@ function TechPage() {
           color: hsl(40,6%,95%);
           border-radius: 9999px;
           cursor: pointer;
-          font-family: 'Geist', ui-sans-serif, sans-serif;
+          font-family: ${FONT_STACK};
           transition: background 0.18s ease, border-color 0.18s ease;
         }
         .vg-cta-btn:hover {
@@ -795,7 +782,100 @@ function TechPage() {
           .vg-nav-signup { display: none !important; }
           .vg-headline { font-size: clamp(36px, 10vw, 100px) !important; }
         }
+        /* ── Accessibility: visible keyboard focus ───────── */
+        .tk-page-root a:focus-visible,
+        .tk-page-root button:focus-visible {
+          outline: 2px solid ${C.blueLight};
+          outline-offset: 3px;
+          border-radius: 8px;
+        }
+        .tk-field { transition: border-color .18s ease, box-shadow .18s ease; }
+        .tk-field:focus {
+          outline: none;
+          border-color: ${C.blueMain};
+          box-shadow: 0 0 0 3px ${C.blueGlow};
+        }
+        /* ── Trust / company wordmarks ────────────────────── */
+        .tk-trust-row { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; align-items: center; }
+        .tk-trust-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 18px;
+          border-radius: 999px;
+          border: 1px solid ${C.borderSoft};
+          background: rgba(255,255,255,0.03);
+          color: ${C.textMuted};
+          font-size: 14px;
+          font-weight: 500;
+        }
+        .tk-company-logo {
+          color: ${C.textMain};
+          opacity: 0.5;
+          transition: opacity .2s ease, transform .2s ease;
+        }
+        .tk-company-logo:hover { opacity: 0.9; transform: translateY(-1px); }
+        /* ── Ambient aurora blobs (drifting background glow) ── */
+        .tk-aurora-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(100px);
+          pointer-events: none;
+          will-change: transform;
+        }
+        @keyframes tk-aurora-drift-a {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(70px, 90px, 0) scale(1.14); }
+        }
+        @keyframes tk-aurora-drift-b {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(-90px, -60px, 0) scale(1.1); }
+        }
+        @keyframes tk-aurora-drift-c {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(-60px, 80px, 0) scale(0.9); }
+        }
+        @media (max-width: 780px) {
+          .tk-aurora-blob { filter: blur(70px); opacity: 0.7; }
+        }
+        /* ── Respect reduced-motion preference ───────────── */
+        @media (prefers-reduced-motion: reduce) {
+          .tk-float-block,
+          .tk-page-float,
+          .tk-aurora-blob,
+          .vg-marquee-track,
+          .tk-logo-stripe-track,
+          .tk-brand-text::before,
+          .tk-brand-text::after,
+          .tk-glitch::before,
+          .tk-glitch::after {
+            animation: none !important;
+          }
+        }
       `}</style>
+
+      {/* Large soft drifting glow shapes — fills the empty space between sections */}
+      {[
+        { left: "-8%", top: 880, size: 520, duration: "32s", delay: "0s", anim: "tk-aurora-drift-a", color: "rgba(37,99,235,0.22)" },
+        { left: "68%", top: 1650, size: 460, duration: "36s", delay: "2s", anim: "tk-aurora-drift-b", color: "rgba(96,165,250,0.18)" },
+        { left: "4%", top: 2500, size: 440, duration: "29s", delay: "1.2s", anim: "tk-aurora-drift-c", color: "rgba(129,140,248,0.16)" },
+        { left: "72%", top: 3300, size: 500, duration: "34s", delay: "0.6s", anim: "tk-aurora-drift-a", color: "rgba(37,99,235,0.18)" },
+        { left: "-6%", top: 4050, size: 440, duration: "31s", delay: "1.8s", anim: "tk-aurora-drift-b", color: "rgba(96,165,250,0.16)" },
+      ].map((blob, index) => (
+        <div
+          key={`aurora-${index}`}
+          className="tk-aurora-blob"
+          style={{
+            left: blob.left,
+            top: blob.top,
+            width: blob.size,
+            height: blob.size,
+            background: `radial-gradient(circle, ${blob.color}, transparent 72%)`,
+            animation: `${blob.anim} ${blob.duration} ease-in-out infinite`,
+            animationDelay: blob.delay,
+          }}
+        />
+      ))}
 
       {[
         { left: "9%", top: 940, width: 18, height: 18, delay: "0.4s", duration: "16s" },
@@ -805,6 +885,9 @@ function TechPage() {
         { left: "12%", top: 2320, width: 26, height: 26, delay: "2.8s", duration: "18s" },
         { left: "68%", top: 2740, width: 16, height: 16, delay: "1.6s", duration: "20s" },
         { left: "88%", top: 3220, width: 22, height: 22, delay: "3.1s", duration: "17s" },
+        { left: "30%", top: 3620, width: 18, height: 18, delay: "0.7s", duration: "19s" },
+        { left: "80%", top: 3960, width: 24, height: 24, delay: "2.4s", duration: "22s" },
+        { left: "15%", top: 4300, width: 16, height: 16, delay: "1.3s", duration: "18s" },
       ].map((block, index) => (
         <div
           key={`page-float-${index}`}
@@ -848,21 +931,13 @@ function TechPage() {
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', flex: 1 }}>
 
           {/* ── Navbar ── */}
-          <nav className="vg-hero-nav" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 32px' }}>
-            {/* Logo */}
-            <img
-              src="/logo_kc_finall-removebg-preview.png"
-              alt="Kayrosco Tech"
-              style={{ height: 32, objectFit: 'contain' }}
-            />
-
-            {/* Center nav */}
+          <nav className="vg-hero-nav" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 32px' }}>
             <div className="vg-nav-center" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               {([
-                ['Services', true,   'services'],
-                ['Process',  false,  'process' ],
+                ['Services', true, 'services'],
+                ['Process', false, 'process'],
                 ['Case Studies', false, 'projects'],
-                ['Blog',     false,  'blog'    ],
+                ['Blog', false, 'blog'],
               ] as [string, boolean, string][]).map(([label, chevron, target]) => (
                 <button
                   key={label}
@@ -875,8 +950,7 @@ function TechPage() {
               ))}
             </div>
 
-            {/* Let's Talk */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ position: 'absolute', right: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
               <CompanySwitcher current="tech" variant="dark" />
               <button
                 className="vg-cta-btn vg-nav-signup"
@@ -888,17 +962,15 @@ function TechPage() {
             </div>
           </nav>
 
-          {/* Divider */}
           <div style={{ height: 1, marginTop: 3, background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent)' }} />
-
           {/* ── Hero content ── */}
-          <div className="vg-hero-content" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 32px' }}>
+          <div className="vg-hero-content" style={{ flex: 1, minHeight: 'calc(100vh - 120px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 32px' }}>
             <div style={{ textAlign: 'center' }}>
               <h1
                 className="vg-headline"
                 style={{
                   margin: 0,
-                  fontFamily: '"General Sans", ui-sans-serif, sans-serif',
+                  fontFamily: FONT_STACK,
                   fontSize: 100,
                   fontWeight: 400,
                   lineHeight: 1.02,
@@ -921,7 +993,7 @@ function TechPage() {
                 color: 'hsl(40,6%,82%)',
                 fontSize: 18, lineHeight: '32px',
                 maxWidth: 520, margin: '9px auto 0', opacity: 0.8,
-                fontFamily: 'Geist, ui-sans-serif, sans-serif',
+                fontFamily: FONT_STACK,
               }}>
                 Senior-built software. Shipped in weeks.
               </p>
@@ -953,7 +1025,7 @@ function TechPage() {
                 flexShrink: 0,
                 color: 'rgba(255,255,255,0.5)',
                 fontSize: 14, lineHeight: 1.5,
-                fontFamily: 'Geist, ui-sans-serif, sans-serif',
+                fontFamily: FONT_STACK,
                 margin: 0,
               }}>
                 Built with the<br />best in the stack
@@ -974,7 +1046,7 @@ function TechPage() {
                       <span style={{
                         fontSize: 16, fontWeight: 600,
                         color: 'hsl(40,6%,95%)',
-                        fontFamily: 'Geist, ui-sans-serif, sans-serif',
+                        fontFamily: FONT_STACK,
                         whiteSpace: 'nowrap',
                       }}>
                         {name}
@@ -1024,6 +1096,11 @@ function TechPage() {
       </section>
 
       <section className="tk-wrap" style={{ padding: "80px 0 100px" }}>
+        <SectionTitle
+          eyebrow="Stack"
+          title="A modern, reliable engineering stack."
+          text="Tools chosen for stability, velocity, and long-term maintainability — not resume-driven complexity."
+        />
         {/* Desktop: code card + mini grid */}
         <div className="tk-stack-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24 }}>
           <CodeCard />
@@ -1072,7 +1149,14 @@ function TechPage() {
         </div>
       </section>
 
-      <section id="services" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
+      <section
+        id="services"
+        className="tk-wrap"
+        style={{
+          padding: "80px 0 96px",
+          background: "radial-gradient(1100px 440px at 50% 0%, rgba(37,99,235,0.07), transparent 70%)",
+        }}
+      >
         <SectionTitle
           eyebrow="Services"
           title="Custom software, shipped fast."
@@ -1275,30 +1359,28 @@ function TechPage() {
         </section>
       )}
 
-      <section id="why-us" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
+      <section id="why-us" className="tk-wrap" style={{ padding: "64px 0 40px" }}>
         <SectionTitle
           eyebrow="Why Us"
           title="Built for quality, speed, and ownership."
           text="Direct communication and accountable delivery."
         />
-        <div className="tk-why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+        <div className="tk-trust-row">
           {[
             "Direct collaboration with senior technical people",
             "Premium execution without bloated process overhead",
             "Secure implementation and scalable system decisions",
             "Clean product thinking from design through launch",
           ].map((line) => (
-            <GlassCard key={line} style={{ padding: 24 }} >
-              <div className="tk-glass-hover" style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                <ShieldCheck size={22} color={C.blueMain} strokeWidth={1.8} />
-                <div className="tk-why-text" style={{ color: C.textMuted, fontSize: 16, lineHeight: 1.7 }}>{line}</div>
-              </div>
-            </GlassCard>
+            <div key={line} className="tk-trust-chip">
+              <ShieldCheck size={16} color={C.blueMain} strokeWidth={2} />
+              <span>{line}</span>
+            </div>
           ))}
         </div>
       </section>
 
-      <section className="tk-wrap" style={{ padding: "80px 0 96px" }}>
+      <section className="tk-wrap" style={{ padding: "40px 0 96px" }}>
         <div
           style={{
             padding: "28px 0 22px",
@@ -1312,7 +1394,7 @@ function TechPage() {
           </div>
           <div className="tk-company-strip" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 18, alignItems: "center" }}>
             {["AcmeCorp", "Novus", "Pulse", "Vertex", "Cloudly"].map((name) => (
-              <div className="tk-company-logo" key={name} style={{ color: "rgba(255,255,255,0.46)", fontSize: 38, fontWeight: 700, letterSpacing: "-0.04em" }}>
+              <div className="tk-company-logo" key={name} style={{ fontSize: 38, fontWeight: 700, letterSpacing: "-0.04em" }}>
                 {name}
               </div>
             ))}
@@ -1361,7 +1443,14 @@ function TechPage() {
         </div>
       </section>
 
-      <section id="contact" className="tk-wrap" style={{ padding: "80px 0 100px" }}>
+      <section
+        id="contact"
+        className="tk-wrap"
+        style={{
+          padding: "80px 0 100px",
+          background: "radial-gradient(1100px 460px at 50% 100%, rgba(37,99,235,0.06), transparent 70%)",
+        }}
+      >
         <div className="tk-contact-grid" style={{ display: "grid", gridTemplateColumns: "0.92fr 1.08fr", gap: 20 }}>
           <GlassCard style={{ padding: 28 }}>
             <div style={{ color: C.blueLight, fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>
@@ -1433,6 +1522,7 @@ function TechPage() {
                 value={form.details}
                 onChange={(e) => setForm((current) => ({ ...current, details: e.target.value }))}
                 placeholder="Project details"
+                className="tk-field"
                 style={fieldStyle({ minHeight: 140, resize: "vertical" })}
               />
 
@@ -1471,6 +1561,7 @@ function Input({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
+      className="tk-field"
       style={fieldStyle()}
       required={placeholder !== "Company" && placeholder !== "Budget range" && placeholder !== "Timeline"}
     />
@@ -1487,7 +1578,7 @@ function Select({
   options: string[];
 }) {
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)} style={fieldStyle()} required>
+    <select value={value} onChange={(e) => onChange(e.target.value)} className="tk-field" style={fieldStyle()} required>
       {options.map((item) => (
         <option key={item} value={item} style={{ color: "#020617" }}>
           {item}
