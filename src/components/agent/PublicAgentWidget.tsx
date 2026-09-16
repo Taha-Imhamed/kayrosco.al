@@ -102,10 +102,7 @@ export default function PublicAgentWidget() {
   });
   const logRef = useRef<HTMLDivElement | null>(null);
 
-  const enabled = useMemo(
-    () => ["/", "/travel", "/consulting", "/tech"].includes(pathname),
-    [pathname]
-  );
+  const enabled = false;
 
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth <= 768);
