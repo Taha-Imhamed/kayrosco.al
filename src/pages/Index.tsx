@@ -35,7 +35,8 @@ const HERO_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJO
 // --- Global Styles Component ---
 const GlobalStyles = () => (
     <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&family=Press+Start+2P&display=swap');
+    @import url('https://api.fontshare.com/v2/css?f[]=switzer@700&display=swap');
 
     /* --- Custom Properties (Black Mode) --- */
     :root {
@@ -61,7 +62,7 @@ const GlobalStyles = () => (
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Manrope', sans-serif;
     }
 
     html, body {
@@ -92,11 +93,11 @@ const GlobalStyles = () => (
     h1, h2, h3 {
         color: var(--text-light);
         margin-bottom: 0.5em;
-        font-family: 'Playfair Display', serif; 
+        font-family: 'Instrument Serif', serif; 
     }
     h1 { font-size: clamp(3rem, 7vw, 5rem); font-weight: 700; letter-spacing: -1px; color: var(--accent-purple); }
     h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--text-light); }
-    h3 { font-size: 1.6rem; color: var(--accent-purple); font-weight: 600; font-family: 'Poppins', sans-serif; }
+    h3 { font-size: 1.6rem; color: var(--accent-purple); font-weight: 600; font-family: 'Manrope', sans-serif; }
     p { line-height: 1.7; color: var(--text-muted); font-weight: 400;}
     .logo {
         color: var(--text-light);
@@ -521,11 +522,11 @@ const GlobalStyles = () => (
     }
 
     .hero-heading {
-        font-family: 'Inter', sans-serif;
-        font-weight: 750;
-        letter-spacing: -0.065em;
-        line-height: 0.86;
-        font-size: clamp(2.55rem, 5vw, 4.65rem);
+        font-family: 'Switzer', 'Manrope', sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 0.9;
+        font-size: clamp(2.75rem, 6vw, 6rem);
     }
 
     .hero-heading-line {
@@ -540,13 +541,17 @@ const GlobalStyles = () => (
     .hero-lede {
         max-width: 28rem;
         margin-top: 1.15rem;
-        font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+        font-size: clamp(1.05rem, 1.6vw, 1.4375rem);
+        font-weight: 400;
+        line-height: 1.5;
         color: rgba(244, 247, 255, 0.88);
         text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
     }
 
     .hero-cta {
         margin-top: 1.35rem;
+        font-size: 1.1875rem;
+        font-weight: 500;
         border: 1px solid rgba(122, 205, 255, 0.85);
         background: linear-gradient(135deg, rgba(20, 54, 110, 0.98) 0%, rgba(11, 23, 50, 0.98) 52%, rgba(30, 33, 80, 0.98) 100%);
         box-shadow: 0 18px 40px rgba(5, 16, 40, 0.45), inset 0 0 0 1px rgba(170, 206, 255, 0.16);
@@ -658,7 +663,7 @@ const GlobalStyles = () => (
     .contact-info-value {
         font-size: 1.05rem;
         color: var(--text-light);
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Manrope', sans-serif;
     }
     .contact-info-divider {
         height: 1px;
@@ -812,7 +817,7 @@ const GlobalStyles = () => (
     }
     .expertise-card .card-content .consulting-card-title {
         text-align: center;
-        font-family: 'Playfair Display', serif;
+        font-family: 'Instrument Serif', serif;
         font-size: clamp(1.35rem, 2vw, 1.6rem);
         line-height: 1.2;
         letter-spacing: 0.02em;
@@ -840,7 +845,7 @@ const GlobalStyles = () => (
         text-align: center;
         margin-bottom: 14px;
         color: var(--travel-ink);
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Manrope', sans-serif;
         font-size: clamp(1.2rem, 1.8vw, 1.45rem);
         font-weight: 500;
         letter-spacing: 0.34em;
@@ -896,7 +901,7 @@ const GlobalStyles = () => (
         font-size: 2.8rem;
         font-weight: 800;
         color: #7ccfff;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Manrope', sans-serif;
         letter-spacing: -1px;
         line-height: 1;
     }
@@ -939,7 +944,7 @@ const GlobalStyles = () => (
         top: 10px;
         right: 20px;
         line-height: 1;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Manrope', sans-serif;
         user-select: none;
     }
     .step-icon {
@@ -1039,7 +1044,7 @@ const GlobalStyles = () => (
         font-size: clamp(1.3rem, 2.1vw, 1.8rem);
         margin-bottom: 26px;
         color: #ffffff;
-        font-family: 'Playfair Display', serif;
+        font-family: 'Instrument Serif', serif;
         font-weight: 700;
     }
     .platforms-strip {
@@ -1678,7 +1683,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                                 Building the future
                             </span>
                             <ShinyText
-                                text="Delivering real impact."
+                                text="Delivering real impact"
                                 className="hero-gradient-line hero-anim hero-reveal"
                                 baseColor="#44bafc"
                                 shineColor="#a78bfa"
@@ -1773,21 +1778,21 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Poppins', sans-serif", marginBottom: 8 }}>Local Roots, Global Reach</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>Local Roots, Global Reach</h3>
                                 <p style={{ fontSize: '0.9rem' }}>Born and based in Albania, we have the relationships and on-the-ground knowledge that no outsider can replicate.</p>
                             </div>
                             <div className="why-card">
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Poppins', sans-serif", marginBottom: 8 }}>One Partner, Three Disciplines</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>One Partner, Three Disciplines</h3>
                                 <p style={{ fontSize: '0.9rem' }}>No hand-offs, no gaps. Our divisions talk to each other so your experience is always seamless.</p>
                             </div>
                             <div className="why-card">
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Poppins', sans-serif", marginBottom: 8 }}>Transparent & Accountable</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>Transparent & Accountable</h3>
                                 <p style={{ fontSize: '0.9rem' }}>Clear pricing, honest timelines, and a team that stands behind every commitment it makes.</p>
                             </div>
                         </div>
@@ -2090,6 +2095,10 @@ const App: React.FC = () => {
                     logo: `${SITE_URL}/lolo.png`,
                     image: `${SITE_URL}/banner.png`,
                     description: "KAYROSCO GROUP provides technology services in Albania.",
+                    areaServed: [
+                        { "@type": "Country", name: "Albania" },
+                        { "@type": "Country", name: "Turkey" },
+                    ],
                 },
                 {
                     "@context": "https://schema.org",
@@ -2103,6 +2112,10 @@ const App: React.FC = () => {
                         addressLocality: "Tirana",
                         addressCountry: "Albania",
                     },
+                    areaServed: [
+                        { "@type": "Country", name: "Albania" },
+                        { "@type": "Country", name: "Turkey" },
+                    ],
                 },
             ],
         },
@@ -2129,6 +2142,10 @@ const App: React.FC = () => {
                         addressLocality: "Tirana",
                         addressCountry: "Albania",
                     },
+                    areaServed: [
+                        { "@type": "Country", name: "Albania" },
+                        { "@type": "Country", name: "Turkey" },
+                    ],
                 },
             ],
         },
