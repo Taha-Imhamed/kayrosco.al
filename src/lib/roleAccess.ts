@@ -6,6 +6,9 @@ export const ROLE_ROUTES: Record<AdminRole, readonly string[]> = {
   /** Full access — financial data is ADMIN ONLY */
   admin: [
     "/memo/dashboard",
+    "/memo/tasks",
+    "/memo/social-accounts",
+    "/memo/media",
     "/memo/balance",          // confidential
     "/memo/budget",
     "/memo/revenue",
@@ -30,6 +33,9 @@ export const ROLE_ROUTES: Record<AdminRole, readonly string[]> = {
   /** Read-only overview — no financial/staff management */
   viewer: [
     "/memo/dashboard",
+    "/memo/tasks",
+    "/memo/social-accounts",
+    "/memo/media",
     "/memo/budget",
     "/memo/contracts",
     "/memo/partners",
@@ -46,6 +52,9 @@ export const ROLE_ROUTES: Record<AdminRole, readonly string[]> = {
   /** Tech department staff */
   tech_staff: [
     "/memo/dashboard",
+    "/memo/tasks",
+    "/memo/social-accounts",
+    "/memo/media",
     "/memo/expenses",
     "/memo/clients",
     "/memo/tickets",
@@ -57,6 +66,9 @@ export const ROLE_ROUTES: Record<AdminRole, readonly string[]> = {
   /** Consulting department staff */
   consulting_staff: [
     "/memo/dashboard",
+    "/memo/tasks",
+    "/memo/social-accounts",
+    "/memo/media",
     "/memo/expenses",
     "/memo/clients",
     "/memo/tickets",
@@ -68,6 +80,9 @@ export const ROLE_ROUTES: Record<AdminRole, readonly string[]> = {
   /** Travel department staff */
   travel_staff: [
     "/memo/dashboard",
+    "/memo/tasks",
+    "/memo/social-accounts",
+    "/memo/media",
     "/memo/expenses",
     "/memo/clients",
     "/memo/tickets",

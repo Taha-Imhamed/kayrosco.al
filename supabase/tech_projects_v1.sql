@@ -29,3 +29,23 @@ CREATE POLICY "public_read_tech_projects"
 DROP POLICY IF EXISTS "admin_all_tech_projects" ON tech_projects;
 CREATE POLICY "admin_all_tech_projects"
   ON tech_projects FOR ALL USING (true);
+
+-- Homepage labels carousel. Admin manages these from the Tech department.
+CREATE TABLE IF NOT EXISTS homepage_labels (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        text NOT NULL,
+  image_url   text NOT NULL,
+  link        text,
+  order_index integer NOT NULL DEFAULT 0,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE homepage_labels ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "public_read_homepage_labels" ON homepage_labels;
+CREATE POLICY "public_read_homepage_labels"
+  ON homepage_labels FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "admin_all_homepage_labels" ON homepage_labels;
+CREATE POLICY "admin_all_homepage_labels"
+  ON homepage_labels FOR ALL USING (true);

@@ -100,6 +100,7 @@ create table if not exists admin_tasks (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   description text,
+  is_private boolean not null default false,
   assigned_to uuid references admin_users(id) on delete set null,
   assigned_to_username text,
   department text check (department in ('tech','consulting','travel','admin')),

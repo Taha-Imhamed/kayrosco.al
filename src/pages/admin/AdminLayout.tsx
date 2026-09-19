@@ -45,6 +45,11 @@ export const Ico = {
       <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
     </svg>
   ),
+  Check: ({ size = 14 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12.5 10 17l9-10"/>
+    </svg>
+  ),
   Staff: ({ size = 14 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -199,6 +204,9 @@ const NAV_CATEGORIES = [
     label: "Overview",
     items: [
       { to: "/memo/dashboard", label: "Dashboard", Icon: Ico.Dashboard, end: true },
+      { to: "/memo/tasks",     label: "To-do",     Icon: Ico.Check },
+      { to: "/memo/social-accounts", label: "Social Accounts", Icon: Ico.Company },
+      { to: "/memo/media", label: "Pictures & Logos", Icon: Ico.Company },
     ],
   },
   {

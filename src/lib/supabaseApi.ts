@@ -378,6 +378,58 @@ export const deleteTechProject = async (id: string) => {
   if (error) throw error;
 };
 
+// ─── Homepage Labels ─────────────────────────────────────────────────────────
+
+export type HomepageLabel = {
+  id: string;
+  name: string;
+  image_url: string;
+  link: string | null;
+  order_index: number;
+  created_at: string;
+};
+
+export const getHomepageLabels = async () => {
+  const { data, error } = await supabase
+    .from("homepage_labels")
+    .select("*")
+    .order("order_index", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as HomepageLabel[];
+};
+
+export const createHomepageLabel = async (
+  payload: Omit<HomepageLabel, "id" | "created_at">
+) => {
+  const { data, error } = await supabase
+    .from("homepage_labels")
+    .insert(payload)
+    .select("*")
+    .single();
+  if (error) throw error;
+  return data as HomepageLabel;
+};
+
+export const updateHomepageLabel = async (
+  id: string,
+  updates: Partial<Omit<HomepageLabel, "id" | "created_at">>
+) => {
+  const { error } = await supabase
+    .from("homepage_labels")
+    .update(updates)
+    .eq("id", id);
+  if (error) throw error;
+};
+
+export const deleteHomepageLabel = async (id: string) => {
+  const { error } = await supabase
+    .from("homepage_labels")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+};
+
 /** Fetch workers who can handle a given area (or area "all"). */
 export const getWorkersByArea = async (area: ServiceArea) => {
   const { data, error } = await supabase

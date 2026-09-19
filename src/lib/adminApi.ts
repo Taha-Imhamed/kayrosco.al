@@ -98,6 +98,7 @@ export interface AdminTask {
   id: string;
   title: string;
   description: string | null;
+  is_private: boolean;
   assigned_to: string | null;
   assigned_to_username: string | null;
   department: Department | null;
@@ -440,6 +441,7 @@ export const getTasks = async (filters?: {
   status?: TaskStatus;
   department?: Department;
   assignedTo?: string;
+  viewerId?: string | null;
 }): Promise<AdminTask[]> => {
   let q = supabase
     .from("admin_tasks")
@@ -449,6 +451,11 @@ export const getTasks = async (filters?: {
   if (filters?.status) q = q.eq("status", filters.status);
   if (filters?.department) q = q.eq("department", filters.department);
   if (filters?.assignedTo) q = q.eq("assigned_to", filters.assignedTo);
+  if (filters?.viewerId) {
+    q = q.or(`is_private.eq.false,created_by.eq.${filters.viewerId},assigned_to.eq.${filters.viewerId}`);
+  } else {
+    q = q.eq("is_private", false);
+  }
 
   const { data, error } = await q;
   if (error) throw new Error(error.message);
@@ -458,6 +465,7 @@ export const getTasks = async (filters?: {
 export const createTask = async (payload: {
   title: string;
   description?: string;
+  isPrivate?: boolean;
   assignedTo?: string | null;
   assignedToUsername?: string | null;
   department?: Department | null;
@@ -471,6 +479,7 @@ export const createTask = async (payload: {
     .insert({
       title: payload.title,
       description: payload.description ?? null,
+      is_private: payload.isPrivate ?? false,
       assigned_to: payload.assignedTo ?? null,
       assigned_to_username: payload.assignedToUsername ?? null,
       department: payload.department ?? null,
@@ -496,6 +505,124 @@ export const updateTaskStatus = async (id: string, status: TaskStatus): Promise<
 
 export const deleteTask = async (id: string): Promise<void> => {
   const { error } = await supabase.from("admin_tasks").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+};
+
+// ─── Social Accounts ─────────────────────────────────────────────────────────
+
+export interface SocialAccount {
+  id: string;
+  name: string;
+  username: string;
+  password: string;
+  created_by: string | null;
+  created_by_username: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export const getSocialAccounts = async (): Promise<SocialAccount[]> => {
+  const { data, error } = await supabase
+    .from("social_accounts")
+    .select("*")
+    .order("name", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as SocialAccount[];
+};
+
+export const createSocialAccount = async (payload: {
+  name: string;
+  username: string;
+  password: string;
+  createdBy: string | null;
+  createdByUsername: string;
+}): Promise<SocialAccount> => {
+  const { data, error } = await supabase
+    .from("social_accounts")
+    .insert({
+      name: payload.name,
+      username: payload.username,
+      password: payload.password,
+      created_by: payload.createdBy,
+      created_by_username: payload.createdByUsername,
+    })
+    .select("*")
+    .single();
+  if (error) throw new Error(error.message);
+  return data as SocialAccount;
+};
+
+export const deleteSocialAccount = async (id: string): Promise<void> => {
+  const { error } = await supabase.from("social_accounts").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+};
+
+// ─── Media Library ───────────────────────────────────────────────────────────
+
+export interface AdminMediaAsset {
+  id: string;
+  name: string;
+  file_name: string;
+  storage_path: string;
+  public_url: string;
+  mime_type: string | null;
+  size_bytes: number | null;
+  uploaded_by: string | null;
+  uploaded_by_username: string | null;
+  created_at: string;
+}
+
+const ADMIN_MEDIA_BUCKET = "admin-media";
+
+export const getAdminMedia = async (): Promise<AdminMediaAsset[]> => {
+  const { data, error } = await supabase
+    .from("admin_media")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as AdminMediaAsset[];
+};
+
+export const uploadAdminMedia = async (payload: {
+  file: File;
+  name: string;
+  uploadedBy: string | null;
+  uploadedByUsername: string;
+}): Promise<AdminMediaAsset> => {
+  const safeName = payload.file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const storagePath = `${crypto.randomUUID()}-${safeName}`;
+  const { error: uploadError } = await supabase.storage
+    .from(ADMIN_MEDIA_BUCKET)
+    .upload(storagePath, payload.file, { contentType: payload.file.type, upsert: false });
+  if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+
+  const { data: publicData } = supabase.storage.from(ADMIN_MEDIA_BUCKET).getPublicUrl(storagePath);
+  const { data, error } = await supabase
+    .from("admin_media")
+    .insert({
+      name: payload.name,
+      file_name: payload.file.name,
+      storage_path: storagePath,
+      public_url: publicData.publicUrl,
+      mime_type: payload.file.type || null,
+      size_bytes: payload.file.size,
+      uploaded_by: payload.uploadedBy,
+      uploaded_by_username: payload.uploadedByUsername,
+    })
+    .select("*")
+    .single();
+  if (error) {
+    await supabase.storage.from(ADMIN_MEDIA_BUCKET).remove([storagePath]);
+    throw new Error(error.message);
+  }
+  return data as AdminMediaAsset;
+};
+
+export const deleteAdminMedia = async (asset: AdminMediaAsset): Promise<void> => {
+  const { error: storageError } = await supabase.storage.from(ADMIN_MEDIA_BUCKET).remove([asset.storage_path]);
+  if (storageError) throw new Error(storageError.message);
+  const { error } = await supabase.from("admin_media").delete().eq("id", asset.id);
   if (error) throw new Error(error.message);
 };
 

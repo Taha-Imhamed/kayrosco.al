@@ -275,6 +275,7 @@ function CodeCard() {
 }
 
 function TechPage() {
+    const { t } = useSiteLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showAllServices, setShowAllServices] = useState(false);
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
@@ -361,16 +362,16 @@ function TechPage() {
   }, []);
 
   const serviceOptions = useMemo(
-    () => (services.length ? services.map((item) => item.title) : STATIC_SERVICES),
+    () => (services.length ? services.map((item) => item.title) : STATIC_SERVICES).map(t),
     [services]
   );
   const visibleServiceCards = useMemo(
     () => [
-      { icon: Code2, title: "Custom Software", text: "Internal systems, business tools, and tailored platforms built around your workflows." },
-      { icon: Database, title: "Data & Backend", text: "APIs, architecture, integrations, and databases designed for stability and scale." },
-      { icon: Cloud, title: "Cloud & Delivery", text: "Deployment pipelines, hosting, monitoring, and infrastructure that keeps products running." },
+      { icon: Code2, title: t("Custom Software"), text: t("Internal systems, business tools, and tailored platforms built around your workflows.") },
+      { icon: Database, title: t("Data & Backend"), text: t("APIs, architecture, integrations, and databases designed for stability and scale.") },
+      { icon: Cloud, title: t("Cloud & Delivery"), text: t("Deployment pipelines, hosting, monitoring, and infrastructure that keeps products running.") },
     ],
-    []
+    [t]
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -934,10 +935,10 @@ function TechPage() {
           <nav className="vg-hero-nav" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 32px' }}>
             <div className="vg-nav-center" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
               {([
-                ['Services', true, 'services'],
-                ['Process', false, 'process'],
-                ['Case Studies', false, 'projects'],
-                ['Blog', false, 'blog'],
+                [t('Services'), true, 'services'],
+                [t('Process'), false, 'process'],
+                [t('Case Studies'), false, 'projects'],
+                [t('Blog'), false, 'blog'],
               ] as [string, boolean, string][]).map(([label, chevron, target]) => (
                 <button
                   key={label}
@@ -951,13 +952,14 @@ function TechPage() {
             </div>
 
             <div style={{ position: 'absolute', right: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <LanguagePill dark />
               <CompanySwitcher current="tech" variant="dark" />
               <button
                 className="vg-cta-btn vg-nav-signup"
                 style={{ padding: '8px 16px', fontSize: 13 }}
                 onClick={() => scrollToId('contact')}
               >
-                Let's Talk
+                {t("Let's Talk")}
               </button>
             </div>
           </nav>
@@ -978,7 +980,7 @@ function TechPage() {
                   color: 'hsl(40,6%,95%)',
                 }}
               >
-                Powered by{' '}
+                {t('Powered by')}{' '}
                 <span style={{
                   backgroundImage: 'linear-gradient(to left, #60A5FA, #2563EB, #818cf8)',
                   WebkitBackgroundClip: 'text',
@@ -995,7 +997,7 @@ function TechPage() {
                 maxWidth: 520, margin: '9px auto 0', opacity: 0.8,
                 fontFamily: FONT_STACK,
               }}>
-                Senior-built software. Shipped in weeks.
+                {t('Senior-built software. Shipped in weeks.')}
               </p>
 
               <div className="vg-hero-btns" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 25, flexWrap: 'wrap' }}>
@@ -1004,14 +1006,14 @@ function TechPage() {
                   style={{ padding: '16px 29px', fontSize: 15 }}
                   onClick={() => scrollToId('contact')}
                 >
-                  Start Your Project
+                  {t('Start Your Project')}
                 </button>
                 <button
                   className="vg-nav-btn"
                   style={{ padding: '16px 22px', fontSize: 15, border: '1px solid rgba(255,255,255,0.15)', borderRadius: 9999 }}
                   onClick={() => scrollToId('services')}
                 >
-                  Explore Services
+                  {t('Explore Services')}
                 </button>
               </div>
             </div>
@@ -1028,7 +1030,7 @@ function TechPage() {
                 fontFamily: FONT_STACK,
                 margin: 0,
               }}>
-                Built with the<br />best in the stack
+                {t('Built with the')}<br />{t('best in the stack')}
               </p>
 
               {/* Scrolling track */}
@@ -1097,9 +1099,9 @@ function TechPage() {
 
       <section className="tk-wrap" style={{ padding: "80px 0 100px" }}>
         <SectionTitle
-          eyebrow="Stack"
-          title="A modern, reliable engineering stack."
-          text="Tools chosen for stability, velocity, and long-term maintainability — not resume-driven complexity."
+          eyebrow={t('Stack')}
+          title={t('A modern, reliable engineering stack.')}
+          text={t('Tools chosen for stability, velocity, and long-term maintainability — not resume-driven complexity.')}
         />
         {/* Desktop: code card + mini grid */}
         <div className="tk-stack-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24 }}>
@@ -1158,9 +1160,9 @@ function TechPage() {
         }}
       >
         <SectionTitle
-          eyebrow="Services"
-          title="Custom software, shipped fast."
-          text="Core delivery areas for product, engineering, and launch."
+          eyebrow={t('Services')}
+          title={t('Custom software, shipped fast.')}
+          text={t('Core delivery areas for product, engineering, and launch.')}
         />
         <div className="tk-feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {visibleServiceCards.map((item) => (
@@ -1180,7 +1182,7 @@ function TechPage() {
             className="tk-secondary"
             style={{ padding: "14px 22px" }}
           >
-            {showAllServices ? "Hide services" : "Show more services"}
+            {showAllServices ? t("Hide services") : t("Show more services")}
           </button>
         </div>
         {showAllServices && (
@@ -1206,9 +1208,9 @@ function TechPage() {
 
       <section id="process" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
-          eyebrow="Process"
-          title="How we work"
-          text="A simple delivery flow with clear ownership from planning to launch."
+          eyebrow={t('Process')}
+          title={t('How we work')}
+          text={t('A simple delivery flow with clear ownership from planning to launch.')}
         />
         <div className="tk-process-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {processSteps.map((step, index) => (
@@ -1230,8 +1232,8 @@ function TechPage() {
                 >
                   0{index + 1}
                 </div>
-                <h3 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: "-0.03em" }}>{step.title}</h3>
-                <p style={{ margin: 0, color: C.textSoft, fontSize: 15, lineHeight: 1.7 }}>{step.text}</p>
+                <h3 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: "-0.03em" }}>{t(step.title)}</h3>
+                <p style={{ margin: 0, color: C.textSoft, fontSize: 15, lineHeight: 1.7 }}>{t(step.text)}</p>
               </div>
             </GlassCard>
           ))}
@@ -1241,8 +1243,8 @@ function TechPage() {
       {!!projects.length && (
         <section id="projects" className="tk-wrap" style={{ paddingBottom: 96 }}>
           <SectionTitle
-            eyebrow="Projects"
-            title="Projects available"
+            eyebrow={t('Projects')}
+            title={t('Projects available')}
           />
           <div className="tk-project-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             {projects.slice(0, 6).map((project) => {
@@ -1283,7 +1285,7 @@ function TechPage() {
                       </div>
                       {hasDetails && (
                         <div style={{ color: C.textSoft, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                          {isOpen ? "Hide details" : "Show details"}
+                          {isOpen ? t("Hide details") : t("Show details")}
                         </div>
                       )}
                     </div>
@@ -1346,7 +1348,7 @@ function TechPage() {
                               fontWeight: 600,
                             }}
                           >
-                            View Project <ExternalLink size={15} />
+                            {t('View Project')} <ExternalLink size={15} />
                           </a>
                         )}
                       </div>
@@ -1361,9 +1363,9 @@ function TechPage() {
 
       <section id="why-us" className="tk-wrap" style={{ padding: "64px 0 40px" }}>
         <SectionTitle
-          eyebrow="Why Us"
-          title="Built for quality, speed, and ownership."
-          text="Direct communication and accountable delivery."
+          eyebrow={t('Why Us')}
+          title={t('Built for quality, speed, and ownership.')}
+          text={t('Direct communication and accountable delivery.')}
         />
         <div className="tk-trust-row">
           {[
@@ -1374,7 +1376,7 @@ function TechPage() {
           ].map((line) => (
             <div key={line} className="tk-trust-chip">
               <ShieldCheck size={16} color={C.blueMain} strokeWidth={2} />
-              <span>{line}</span>
+              <span>{t(line)}</span>
             </div>
           ))}
         </div>
@@ -1390,7 +1392,7 @@ function TechPage() {
           }}
         >
           <div style={{ color: C.blueLight, fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 30 }}>
-            Trusted by innovative companies
+            {t('Trusted by innovative companies')}
           </div>
           <div className="tk-company-strip" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 18, alignItems: "center" }}>
             {["AcmeCorp", "Novus", "Pulse", "Vertex", "Cloudly"].map((name) => (
@@ -1404,8 +1406,8 @@ function TechPage() {
 
       <section id="faq" className="tk-wrap" style={{ padding: "80px 0 96px" }}>
         <SectionTitle
-          eyebrow="FAQ"
-          title="Common questions, answered clearly."
+          eyebrow={t('FAQ')}
+          title={t('Common questions, answered clearly.')}
         />
         <div style={{ display: "grid", gap: 14 }}>
           {faqs.map((item, index) => (
@@ -1454,13 +1456,13 @@ function TechPage() {
         <div className="tk-contact-grid" style={{ display: "grid", gridTemplateColumns: "0.92fr 1.08fr", gap: 20 }}>
           <GlassCard style={{ padding: 28 }}>
             <div style={{ color: C.blueLight, fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>
-              Get Started
+              {t('Get Started')}
             </div>
             <h2 style={{ margin: 0, fontSize: "clamp(24px, 5vw, 54px)", lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.04em" }}>
-              Start your next tech project with a cleaner process.
+              {t('Start your next tech project with a cleaner process.')}
             </h2>
             <p style={{ margin: "18px 0 0", color: C.textSoft, fontSize: 16, lineHeight: 1.7 }}>
-              Share your scope and we will follow up with the next technical steps.
+              {t('Share your scope and we will follow up with the next technical steps.')}
             </p>
             <div style={{ display: "grid", gap: 14, marginTop: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, color: C.textMuted }}>
@@ -1478,25 +1480,25 @@ function TechPage() {
             <form onSubmit={handleSubmit} style={{ display: "grid", gap: 14 }}>
               <div className="tk-form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <Input
-                  placeholder="Full name"
+                  placeholder={t('Full name')}
                   value={form.full_name}
                   onChange={(value) => setForm((current) => ({ ...current, full_name: value }))}
                 />
                 <Input
-                  placeholder="Phone"
+                  placeholder={t('Phone')}
                   value={form.phone}
                   onChange={(value) => setForm((current) => ({ ...current, phone: value }))}
                 />
               </div>
               <div className="tk-form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <Input
-                  placeholder="Email"
+                  placeholder={t('Email')}
                   type="email"
                   value={form.email}
                   onChange={(value) => setForm((current) => ({ ...current, email: value }))}
                 />
                 <Input
-                  placeholder="Company"
+                  placeholder={t('Company')}
                   value={form.company}
                   onChange={(value) => setForm((current) => ({ ...current, company: value }))}
                 />
@@ -1508,20 +1510,20 @@ function TechPage() {
                   options={serviceOptions}
                 />
                 <Input
-                  placeholder="Budget range"
+                  placeholder={t('Budget range')}
                   value={form.budget}
                   onChange={(value) => setForm((current) => ({ ...current, budget: value }))}
                 />
               </div>
               <Input
-                placeholder="Timeline"
+                placeholder={t('Timeline')}
                 value={form.timeline}
                 onChange={(value) => setForm((current) => ({ ...current, timeline: value }))}
               />
               <textarea
                 value={form.details}
                 onChange={(e) => setForm((current) => ({ ...current, details: e.target.value }))}
-                placeholder="Project details"
+                placeholder={t('Project details')}
                 className="tk-field"
                 style={fieldStyle({ minHeight: 140, resize: "vertical" })}
               />
@@ -1534,7 +1536,7 @@ function TechPage() {
               )}
 
               <button className="tk-primary" type="submit" disabled={loading}>
-                {loading ? "Sending..." : "Send Request"}
+                {loading ? t("Sending...") : t("Send Request")}
               </button>
             </form>
           </GlassCard>

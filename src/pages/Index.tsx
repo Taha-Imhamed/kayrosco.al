@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import SeoHead from "@/components/SeoHead";
 import { SITE_URL } from "@/data/seoPages";
 import ShinyText from "@/components/ShinyText";
+import { getHomepageLabels, HomepageLabel } from "@/lib/supabaseApi";
+import { LanguagePill, useSiteLanguage } from "@/contexts/SiteLanguageContext";
 
 // --- Type Definition for Page State ---
 type Page = '/' | '/travel' | '/consulting' | '/tech' | '/about' | '/contact';
@@ -549,7 +551,7 @@ const GlobalStyles = () => (
     }
 
     .hero-cta {
-        margin-top: 1.35rem;
+        margin-top: 0.65rem;
         font-size: 1.1875rem;
         font-weight: 500;
         border: 1px solid rgba(122, 205, 255, 0.85);
@@ -745,6 +747,27 @@ const GlobalStyles = () => (
         display: flex;
         flex-direction: column;
     }
+
+    .tech-showcase { position: relative; overflow: hidden; padding: clamp(28px, 5vw, 64px); border: 1px solid rgba(143,210,255,0.18); border-radius: 24px; background: radial-gradient(circle at 86% 18%, rgba(56,189,248,0.18), transparent 26%), linear-gradient(125deg, #0d101c 0%, #111a2b 52%, #080b13 100%); box-shadow: 0 24px 70px rgba(0,0,0,0.34); isolation: isolate; }
+    .tech-showcase::before { content: ""; position: absolute; width: 340px; height: 340px; right: -120px; bottom: -190px; border: 1px solid rgba(143,210,255,0.16); border-radius: 50%; box-shadow: 0 0 0 22px rgba(143,210,255,0.03), 0 0 0 46px rgba(143,210,255,0.025); pointer-events: none; }
+    .tech-showcase-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr); gap: clamp(28px, 6vw, 88px); align-items: center; }
+    .tech-showcase-kicker { display: inline-flex; align-items: center; gap: 9px; color: #8fd2ff; font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+    .tech-showcase-kicker::before { content: ""; width: 28px; height: 1px; background: #8fd2ff; box-shadow: 0 0 12px #8fd2ff; }
+    .tech-showcase-title { max-width: 650px; margin: 18px 0 16px; color: #fff; font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 5vw, 4.6rem); line-height: 0.98; letter-spacing: -0.02em; }
+    .tech-showcase-copy { max-width: 540px; margin: 0; color: rgba(232,242,255,0.68); font-size: clamp(0.95rem, 1.5vw, 1.08rem); line-height: 1.75; }
+    .tech-showcase-cta { display: inline-flex; align-items: center; gap: 9px; margin-top: 28px; color: #07111e; background: #8fd2ff; border: 1px solid #b6e2ff; box-shadow: 0 0 24px rgba(96,165,250,0.28); }
+    .tech-showcase-cta:hover { color: #07111e; background: #b6e2ff; border-color: #d9f1ff; box-shadow: 0 0 34px rgba(96,165,250,0.46); }
+    .tech-showcase-visual { position: relative; min-height: 280px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; background: rgba(0,0,0,0.34); box-shadow: inset 0 0 50px rgba(56,189,248,0.08); }
+    .tech-showcase-visual::after { content: "KAYROSCO / TECH"; position: absolute; right: 16px; bottom: 13px; color: rgba(255,255,255,0.32); font-family: 'Press Start 2P', monospace; font-size: 0.48rem; letter-spacing: 0.08em; }
+    .tech-showcase-logo { width: min(78%, 360px); animation: tech-logo-float 5s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(143,210,255,0.22)); }
+    @keyframes tech-logo-float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.015); } }
+    .tech-metrics { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .tech-metric { padding: 17px 18px 14px; border-right: 1px solid rgba(255,255,255,0.12); transition: background 0.25s ease, transform 0.25s ease; }
+    .tech-metric:last-child { border-right: 0; }
+    .tech-metric:hover { background: rgba(143,210,255,0.07); transform: translateY(-3px); }
+    .tech-metric-number { color: #fff; font-family: 'Instrument Serif', serif; font-size: 2.15rem; line-height: 1; }
+    .tech-metric-label { margin-top: 7px; color: rgba(232,242,255,0.52); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    @media (max-width: 760px) { .tech-showcase-grid { grid-template-columns: 1fr; } .tech-showcase-visual { min-height: 210px; order: -1; } .tech-metrics { grid-template-columns: repeat(2, 1fr); } .tech-metric:nth-child(2) { border-right: 0; } .tech-metric:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.12); } }
     .expertise-card:hover {
         transform: translateY(-5px);
         border-color: var(--accent-purple);
@@ -1039,6 +1062,108 @@ const GlobalStyles = () => (
     }
     .why-card:hover { border-color: rgba(255,255,255,0.18); }
     .why-icon { display: block; margin-bottom: 14px; }
+
+    .homepage-labels-section {
+        width: 100%;
+        padding: 74px 0 18px;
+        overflow: hidden;
+    }
+    .homepage-labels-window {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        overflow: hidden;
+        padding: 12px 0 18px;
+    }
+    .homepage-labels-track {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(12px, 2vw, 28px);
+        min-width: max-content;
+    }
+    .homepage-label-link {
+        display: block;
+        flex: 0 0 clamp(210px, 28vw, 340px);
+        color: inherit;
+        text-decoration: none;
+    }
+    .homepage-label-card {
+        position: relative;
+        height: clamp(170px, 24vw, 260px);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        background: #151515;
+        opacity: 0.52;
+        transform: scale(0.88);
+        transition: opacity 0.45s ease, transform 0.45s ease, border-color 0.3s ease;
+        box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+    }
+    .homepage-label-card.is-center {
+        opacity: 1;
+        transform: scale(1);
+        border-color: rgba(143,210,255,0.48);
+        box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+    }
+    .homepage-label-card img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.45s ease, filter 0.45s ease;
+    }
+    .homepage-label-card:hover img {
+        transform: scale(1.06);
+        filter: brightness(0.58);
+    }
+    .homepage-label-name {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        left: 14px;
+        padding: 9px 11px;
+        border-radius: 9px;
+        background: rgba(5,9,19,0.78);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .homepage-label-card:hover .homepage-label-name,
+    .homepage-label-card.is-center .homepage-label-name {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .homepage-label-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .homepage-label-dots button {
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.28);
+        cursor: pointer;
+        transition: width 0.2s ease, border-radius 0.2s ease, background 0.2s ease;
+    }
+    .homepage-label-dots button.is-active {
+        width: 24px;
+        border-radius: 8px;
+        background: #8fd2ff;
+    }
+    @media (max-width: 720px) {
+        .homepage-labels-track { gap: 8px; }
+        .homepage-label-link { flex-basis: 72vw; }
+        .homepage-label-link:first-child,
+        .homepage-label-link:last-child { opacity: 0.65; }
+    }
 
     .platforms-section-title {
         font-size: clamp(1.3rem, 2.1vw, 1.8rem);
@@ -1581,33 +1706,62 @@ const ContactView: React.FC = () => (
 
 // --- Home View (Container for Hero and Main Sections) ---
 const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
+    const { t } = useSiteLanguage();
     const [showQuickContact, setShowQuickContact] = useState(false);
     const [ctaPointer, setCtaPointer] = useState({ x: '50%', y: '50%', active: false });
+    const [homepageLabels, setHomepageLabels] = useState<HomepageLabel[]>([]);
+    const [labelIndex, setLabelIndex] = useState(0);
+
+    useEffect(() => {
+        getHomepageLabels().then(setHomepageLabels).catch(() => setHomepageLabels([]));
+    }, []);
+
+    useEffect(() => {
+        if (homepageLabels.length < 2) return;
+        const timer = window.setInterval(() => {
+            setLabelIndex((current) => (current + 1) % homepageLabels.length);
+        }, 4500);
+        return () => window.clearInterval(timer);
+    }, [homepageLabels.length]);
+
     const platformRows = [
         [
             { name: 'Kayrosco Group', href: '/', logo: '/lolo.png' },
-            { name: 'Turkish Airlines', href: 'https://www.turkishairlines.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=turkishairlines.com' },
-            { name: 'Pegasus Airlines', href: 'https://www.flypgs.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=flypgs.com' },
             { name: 'Stripe', href: 'https://stripe.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=stripe.com' },
             { name: 'PayPal', href: 'https://www.paypal.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=paypal.com' },
-        ],
-        [
             { name: 'Kayrosco Tech', href: '/tech', logo: '/logo 7.png' },
-            { name: 'Amazon Web Services', href: 'https://aws.amazon.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=aws.amazon.com' },
-            { name: 'Google Cloud', href: 'https://cloud.google.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=cloud.google.com' },
             { name: 'Hostinger', href: 'https://www.hostinger.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=hostinger.com' },
-            { name: 'Vercel', href: 'https://vercel.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=vercel.com' },
-        ],
-        [
-            { name: 'Kayrosco Group', href: '/', logo: '/lolo.png' },
-            { name: 'Kayrosco Tech', href: '/tech', logo: '/logo 7.png' },
-            { name: 'e-Albania', href: 'https://e-albania.al/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=e-albania.al' },
             { name: 'Google Workspace', href: 'https://workspace.google.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=workspace.google.com' },
             { name: 'Microsoft 365', href: 'https://www.office.com/', logo: 'https://www.google.com/s2/favicons?sz=256&domain_url=office.com' },
         ],
+        [
+            { name: 'AWS', href: 'https://aws.amazon.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg' },
+            { name: 'PostgreSQL', href: 'https://www.postgresql.org/', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg' },
+            { name: 'Supabase', href: 'https://supabase.com/', logo: 'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/supabase-icon.png' },
+            { name: 'Cloudflare', href: 'https://www.cloudflare.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png' },
+            { name: 'Vercel', href: 'https://vercel.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Vercel_logo_black.svg' },
+            { name: 'Google Cloud Platform', href: 'https://cloud.google.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg' },
+            { name: 'Microsoft Azure', href: 'https://azure.microsoft.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg' },
+        ],
+        [
+            { name: 'Firebase', href: 'https://firebase.google.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/37/Firebase_Logo.svg' },
+            { name: 'Netlify', href: 'https://www.netlify.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Netlify_logo.svg' },
+            { name: 'Render', href: 'https://render.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Render_Logo.svg' },
+            { name: 'MongoDB', href: 'https://www.mongodb.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg' },
+            { name: 'Redis', href: 'https://redis.io/', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Redis_Logo.svg' },
+            { name: 'Docker', href: 'https://www.docker.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg' },
+        ],
+        [
+            { name: 'GitHub', href: 'https://github.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' },
+            { name: 'Fastly', href: 'https://www.fastly.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Fastly_logo.svg' },
+            { name: 'Unity', href: 'https://unity.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Official_unity_logo.png' },
+            { name: 'Blender', href: 'https://www.blender.org/', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Blender_logo_no_text.svg' },
+            { name: 'Steam', href: 'https://store.steampowered.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg' },
+            { name: 'Discord', href: 'https://discord.com/', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Discord_logo_2015-2021.svg' },
+        ],
     ] as const;
-    const rowDurations = ['34s', '42s', '50s'];
-    const rowDelays = ['0s', '-1s', '-2s'];
+    const rowDurations = ['34s', '42s', '50s', '58s'];
+    const rowDelays = ['0s', '-1s', '-2s', '-3s'];
 
     const renderPlatformItem = (platform: { name: string; href: string; logo: string }, key: string, hideFromTabOrder = false) => (
         <div className="platform-item" key={key}>
@@ -1680,7 +1834,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             className="hero-heading"
                         >
                             <span className="hero-heading-line hero-anim hero-reveal text-white" style={{ animationDelay: '0.2s' }}>
-                                Building the future
+                                {t('Building the future')}
                             </span>
                             <ShinyText
                                 text="Delivering real impact"
@@ -1692,14 +1846,14 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             />
                         </h1>
                         <p className="hero-lede hero-anim hero-fade" style={{ animationDelay: '0.45s' }}>
-                            We build technology that creates value and drives progress.
+                            {t('We build technology that creates value and drives progress.')}
                         </p>
                         <a
                             href="/tech"
                             className="hero-cta hero-anim hero-fade group inline-flex items-center gap-2 rounded-full px-6 py-3 text-white transition-all duration-300 md:px-8 md:py-4"
                             style={{ animationDelay: '0.8s' }}
                         >
-                            Explore Kayrosco Tech
+                            {t('Explore Kayrosco Tech')}
                             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                         </a>
                         </div>
@@ -1711,95 +1865,87 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
             <div className="page-view">
                 <div className="view-content-padding">
 
-                    {/* Gateway intro */}
-                    <section>
-                        <div className="section-header">
-                            <h2>Technology. Driven by Vision.</h2>
-                            <p>Kayrosco Tech delivers technology projects across industries and borders. <strong>Bold solutions. Real impact.</strong></p>
-                            <a className="button-style primary-button section-cta" href="/tech">
-                                Take a Closer Look →
-                            </a>
-                        </div>
-                    </section>
-
-                    {/* ── Stats ── */}
-                    <section style={{ padding: '10px 0 70px' }}>
-                        <div className="stats-grid">
-                            <div className="stat-item">
-                                <div className="stat-number">1</div>
-                                <div className="stat-label">Technology Team</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-number">4+</div>
-                                <div className="stat-label">Countries Active</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-number">50+</div>
-                                <div className="stat-label">Projects Delivered</div>
-                            </div>
-                            <div className="stat-item">
-                                <div className="stat-number">1</div>
-                                <div className="stat-label">Unified Group</div>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* ── Integrated Expertise — bigger cards with image ── */}
-                    <section id="integrated-expertise">
-                        <div className="section-header">
-                            <h2>Kayrosco Tech</h2>
-                            <p>Technology solutions designed to help your business move forward.</p>
-                        </div>
-
-                        <div className="solutions-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', marginTop: 64 }}>
-                            {/* Tech */}
-                            <div className="expertise-card">
-                                <div className="card-image tech-logo-frame">
-                                    <img className="tech-logo-image" src="/logo 7.png" alt="Kayrosco Tech logo" />
+                    {/* ── Technology showcase ── */}
+                    <section id="integrated-expertise" style={{ paddingTop: 34 }}>
+                        <div className="tech-showcase">
+                            <div className="tech-showcase-grid">
+                                <div>
+                                    <div className="tech-showcase-kicker">Kayrosco / Digital Systems</div>
+                                    <h2 className="tech-showcase-title">{t('Technology. Driven by Vision.')}</h2>
+                                    <p className="tech-showcase-copy">{t('Kayrosco Tech delivers technology projects across industries and borders.')} <strong style={{ color: '#fff' }}>{t('Bold solutions. Real impact.')}</strong></p>
+                                    <a className="button-style tech-showcase-cta" href="/tech">{t('Take a Closer Look →')} <ArrowRight size={16} /></a>
                                 </div>
-                                <div className="card-content">
-                                    <h3 className="tech-card-title">Kayrosco Tech</h3>
-                                    <p>Power your digital presence and physical security with custom software, modern web platforms, and professional CCTV systems.</p>
-                                    <a className="button-style" href="/tech">Innovate &rarr;</a>
-                                </div>
+                                <div className="tech-showcase-visual"><img className="tech-showcase-logo" src="/logo 7.png" alt="Kayrosco Tech logo" /></div>
+                            </div>
+                            <div className="tech-metrics">
+                                <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Technology Team</div></div>
+                                <div className="tech-metric"><div className="tech-metric-number">4+</div><div className="tech-metric-label">Countries Active</div></div>
+                                <div className="tech-metric"><div className="tech-metric-number">50+</div><div className="tech-metric-label">Projects Delivered</div></div>
+                                <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Unified Group</div></div>
                             </div>
                         </div>
-
                     </section>
 
                     {/* ── Why Kayrosco ── */}
                     <section style={{ paddingTop: 80 }}>
                         <div className="section-header">
-                            <h2>Why Kayrosco?</h2>
-                            <p>Local knowledge, global standards. One trusted partner for everything Albania.</p>
+                            <h2>{t('Why Kayrosco?')}</h2>
+                            <p>{t('Local knowledge, global standards. One trusted partner for everything Albania.')}</p>
                         </div>
                         <div className="why-grid">
                             <div className="why-card">
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>Local Roots, Global Reach</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>{t('Local Roots, Global Reach')}</h3>
                                 <p style={{ fontSize: '0.9rem' }}>Born and based in Albania, we have the relationships and on-the-ground knowledge that no outsider can replicate.</p>
                             </div>
                             <div className="why-card">
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>One Partner, Three Disciplines</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>{t('One Partner, Three Disciplines')}</h3>
                                 <p style={{ fontSize: '0.9rem' }}>No hand-offs, no gaps. Our divisions talk to each other so your experience is always seamless.</p>
                             </div>
                             <div className="why-card">
                                 <svg className="why-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
-                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>Transparent & Accountable</h3>
+                                <h3 style={{ fontSize: '1rem', color: 'var(--text-light)', fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>{t('Transparent & Accountable')}</h3>
                                 <p style={{ fontSize: '0.9rem' }}>Clear pricing, honest timelines, and a team that stands behind every commitment it makes.</p>
                             </div>
                         </div>
                     </section>
 
+                    {homepageLabels.length > 0 && (
+                        <section className="homepage-labels-section" aria-label="Kayrosco highlights">
+                            <div className="homepage-labels-window">
+                                <div className="homepage-labels-track">
+                                    {[-1, 0, 1].map((offset) => {
+                                        const label = homepageLabels[(labelIndex + offset + homepageLabels.length) % homepageLabels.length];
+                                        const isCenter = offset === 0;
+                                        const card = (
+                                            <div className={`homepage-label-card ${isCenter ? 'is-center' : ''}`}>
+                                                <img src={label.image_url} alt={label.name} />
+                                                <div className="homepage-label-name">{label.name}</div>
+                                            </div>
+                                        );
+                                        return label.link ? <a key={`${label.id}-${offset}`} href={label.link} target="_blank" rel="noreferrer" className="homepage-label-link">{card}</a> : <div key={`${label.id}-${offset}`} className="homepage-label-link">{card}</div>;
+                                    })}
+                                </div>
+                            </div>
+                            {homepageLabels.length > 1 && (
+                                <div className="homepage-label-dots" aria-label="Choose homepage highlight">
+                                    {homepageLabels.map((label, index) => (
+                                        <button key={label.id} type="button" aria-label={`Show ${label.name}`} aria-current={index === labelIndex} className={index === labelIndex ? 'is-active' : ''} onClick={() => setLabelIndex(index)} />
+                                    ))}
+                                </div>
+                            )}
+                        </section>
+                    )}
+
                     <section style={{ paddingTop: 30, paddingBottom: 10 }}>
-                        <h2 className="platforms-section-title">Platforms & Services</h2>
+                        <h2 className="platforms-section-title">{t('Platforms & Services')}</h2>
                         <div className="platforms-strip">
                             {platformRows.map((row, rowIndex) => (
                                 <div
@@ -1922,6 +2068,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
 
 // Main Application Component
 const App: React.FC = () => {
+    const { t } = useSiteLanguage();
     const [currentPath, setCurrentPath] = useState<Page>(
         (window.location.pathname as Page) || '/'
     );
@@ -1931,6 +2078,7 @@ const App: React.FC = () => {
     const currentPageName = mapPathToPageName(currentPath);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [footerClicks, setFooterClicks] = useState(0);
+    const footerClickResetRef = useRef<number | null>(null);
     const [headerVisible, setHeaderVisible] = useState(true);
 
     useEffect(() => {
@@ -2024,9 +2172,10 @@ const App: React.FC = () => {
     const navbarElement = (
         <div className={`navbar-wrapper ${currentPageName === 'home' ? `home-header ${headerVisible ? '' : 'is-hidden'}` : ''}`}>
             <nav className="navbar">
+                <div style={{ position: 'absolute', right: 82, top: '50%', transform: 'translateY(calc(-50% + 12px))' }}><LanguagePill /></div>
                 <div className="nav-links-container">
 
-                    <a className={`nav-link ${getLinkClass('/')}`} href="/">Home</a>
+                    <a className={`nav-link ${getLinkClass('/')}`} href="/">{t('Home')}</a>
 
                     {/* Dropdown Menu (hover-to-open disabled; toggle links straight to /tech) */}
                     <div
@@ -2036,7 +2185,7 @@ const App: React.FC = () => {
                             className={`nav-link dropdown-toggle ${getLinkClass('solutions')}`}
                             href="/tech"
                         >
-                            Kayrosco Tech <span className="chevron">▾</span>
+                            {t('Kayrosco Tech')} <span className="chevron">▾</span>
                         </a>
 
                         <div className={`dropdown-menu ${isDropdownOpen ? 'visible' : 'hidden'}`}>
@@ -2047,15 +2196,15 @@ const App: React.FC = () => {
                                         <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
                                     </svg>
                                 </div>
-                                <span className="dm-title">Tech Solutions</span>
-                                <span className="dm-desc">Software & cloud systems</span>
+                                <span className="dm-title">{t('Tech Solutions')}</span>
+                                <span className="dm-desc">{t('Software & cloud systems')}</span>
                                 <span className="dm-arrow">→</span>
                             </a>
                         </div>
                     </div>
 
-                    <a className={`nav-link ${getLinkClass('/about')}`} href="/about">About Us</a>
-                    <a className={`nav-link button-style primary-button ${getLinkClass('/contact')}`} href="/contact">Contact</a>
+                    <a className={`nav-link ${getLinkClass('/about')}`} href="/about">{t('About Us')}</a>
+                    <a className={`nav-link button-style primary-button ${getLinkClass('/contact')}`} href="/contact">{t('Contact')}</a>
                 </div>
             </nav>
         </div>
@@ -2078,7 +2227,18 @@ const App: React.FC = () => {
 
     const handleFooterKayroscoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        window.location.href = "/memo/login";
+        const nextClickCount = footerClicks + 1;
+        setFooterClicks(nextClickCount);
+
+        if (footerClickResetRef.current !== null) {
+            window.clearTimeout(footerClickResetRef.current);
+        }
+        footerClickResetRef.current = window.setTimeout(() => setFooterClicks(0), 1500);
+
+        if (nextClickCount >= 3) {
+            setFooterClicks(0);
+            window.location.href = "/memo/login";
+        }
     };
 
     const seoMap = {
@@ -2219,7 +2379,7 @@ const App: React.FC = () => {
                                 <path d="M6.5 9.75V20h11V9.75" />
                                 <path d="M10 20v-5h4v5" />
                             </svg>
-                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>Home</span>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{t('Home')}</span>
                         </a>
                         <a
                             href="/#integrated-expertise"
@@ -2248,7 +2408,7 @@ const App: React.FC = () => {
                                 <rect x="4.5" y="14" width="6" height="6" rx="1.2" />
                                 <rect x="13.5" y="14" width="6" height="6" rx="1.2" />
                             </svg>
-                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>Companies</span>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{t('Companies')}</span>
                         </a>
                         <a
                             className={getLinkClass('/about')}
@@ -2268,7 +2428,7 @@ const App: React.FC = () => {
                                 <circle cx="12" cy="8" r="3" />
                                 <path d="M6 19c1.5-3 4-4.5 6-4.5s4.5 1.5 6 4.5" />
                             </svg>
-                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>About</span>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{t('About Us')}</span>
                         </a>
                         <a
                             className={getLinkClass('/contact')}
@@ -2287,7 +2447,7 @@ const App: React.FC = () => {
                             <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
                                 <path d="M6.6 4.8h2.6l1.2 3.1-1.6 1.6a14 14 0 0 0 5.3 5.3l1.6-1.6 3.1 1.2v2.6a1.6 1.6 0 0 1-1.7 1.6A15.5 15.5 0 0 1 5 6.5 1.6 1.6 0 0 1 6.6 4.8Z" />
                             </svg>
-                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>Contact</span>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{t('Contact')}</span>
                         </a>
                     </nav>
                 </>
@@ -2296,7 +2456,7 @@ const App: React.FC = () => {
             {/* Footer */}
             <footer className="footer">
                 <div className="footer-content">
-                    <a href="/" className="logo" onClick={handleFooterKayroscoClick}>KAYROSCO</a>
+                    <a href="/" className="logo" onClick={handleFooterKayroscoClick} style={{ cursor: 'default' }}>KAYROSCO</a>
                     <div className="footer-social-row">
                         {[...CONTACT_DETAILS, ...CONTACT_SOCIALS].map((item) => (
                             <a
@@ -2317,9 +2477,9 @@ const App: React.FC = () => {
                         {SHOW_TRAVEL_CONSULTING && <span className="text-muted">|</span>}
                         {SHOW_TRAVEL_CONSULTING && <a href="/consulting" className="text-sm text-muted hover:text-accent-purple">Consulting</a>}
                         {SHOW_TRAVEL_CONSULTING && <span className="text-muted">|</span>}
-                        <a href="/tech" className="text-sm text-muted hover:text-accent-purple">Tech Solutions</a>
+                        <a href="/tech" className="text-sm text-muted hover:text-accent-purple">{t('Tech Solutions')}</a>
                         <span className="text-muted">|</span>
-                        <a href="/partners" className="text-sm text-muted hover:text-accent-purple">Partners</a>
+                        <a href="/partners" className="text-sm text-muted hover:text-accent-purple">{t('Partners')}</a>
                     </div>
                 </div>
                 <p className="copyright" style={{marginTop: '20px'}}>© 2026 Kayrosco. All rights reserved. | Global Bridge to Albania.</p>

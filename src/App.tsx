@@ -29,6 +29,9 @@ import AdminGuard from "./components/AdminGuard";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminTasks from "./pages/admin/AdminTasks";
+import AdminSocialAccounts from "./pages/admin/AdminSocialAccounts";
+import AdminMedia from "./pages/admin/AdminMedia";
 import AdminStaff from "./pages/admin/AdminStaff";
 import AdminBudget from "./pages/admin/AdminBudget";
 import AdminCompany from "./pages/admin/AdminCompany";
@@ -95,6 +98,9 @@ const App = () => (
               }
             >
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="tasks" element={<AdminTasks />} />
+              <Route path="social-accounts" element={<AdminSocialAccounts />} />
+              <Route path="media" element={<AdminMedia />} />
               <Route path="staff" element={<AdminStaff />} />
               <Route path="budget" element={<AdminBudget />} />
               <Route path="company" element={<AdminCompany />} />

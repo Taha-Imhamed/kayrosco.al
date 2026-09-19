@@ -489,6 +489,7 @@ function TasksWidget({ adminUser, deptFilter }: { adminUser: AdminUser | null; d
     getTasks({
       ...(filter     ? { status:     filter     as TaskStatus } : {}),
       ...(deptFilter ? { department: deptFilter as Department } : {}),
+      viewerId: adminUser?.id,
     }).then(setTasks).catch(console.error).finally(() => setLoading(false));
   }, [filter, deptFilter]);
 

@@ -5,6 +5,7 @@ import {
   RequestLinkType, ChecklistItem, WorkerProfile,
   updateServiceRequest, getRequestsByArea, getWorkersByArea, deleteServiceRequest,
   TechProject, TechProjectStatus, getTechProjects, createTechProject, updateTechProject, deleteTechProject,
+  HomepageLabel, getHomepageLabels, createHomepageLabel, updateHomepageLabel, deleteHomepageLabel,
 } from "@/lib/supabaseApi";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { logActivity, uploadTechProjectImage } from "@/lib/adminApi";
@@ -484,7 +485,7 @@ export default function AdminDept() {
   const [newCityDays,  setNewCityDays]  = useState(2);
 
   // ── Page-level tabs (tech dept only) ────────────────────────────────────────
-  const [pageTab, setPageTab] = useState<"requests" | "projects">("requests");
+  const [pageTab, setPageTab] = useState<"requests" | "projects" | "labels">("requests");
 
   // ── Projects (tech dept only) ────────────────────────────────────────────────
   const [projects,              setProjects]              = useState<TechProject[]>([]);
@@ -507,6 +508,16 @@ export default function AdminDept() {
     tags:        "",
     order_index: 0,
   });
+  const [labels, setLabels] = useState<HomepageLabel[]>([]);
+  const [labelsLoading, setLabelsLoading] = useState(false);
+  const [labelSaving, setLabelSaving] = useState(false);
+  const [labelDeleting, setLabelDeleting] = useState(false);
+  const [labelDeleteConfirm, setLabelDeleteConfirm] = useState<string | null>(null);
+  const [showLabelForm, setShowLabelForm] = useState(false);
+  const [editingLabel, setEditingLabel] = useState<HomepageLabel | null>(null);
+  const [labelUploading, setLabelUploading] = useState(false);
+  const [labelForm, setLabelForm] = useState({ name: "", image_url: "", link: "", order_index: 0 });
+  const labelPhotoInputRef = useRef<HTMLInputElement>(null);
 
   // ── Load ────────────────────────────────────────────────────────────────────
   const load = async () => {
@@ -542,6 +553,18 @@ export default function AdminDept() {
   };
   useEffect(() => {
     if (dept === "tech" && pageTab === "projects") loadProjects();
+  }, [dept, pageTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const loadLabels = async () => {
+    setLabelsLoading(true); setProjectsError("");
+    try {
+      setLabels(await getHomepageLabels());
+    } catch (e: unknown) {
+      setProjectsError(e instanceof Error ? e.message : "Failed to load labels.");
+    } finally { setLabelsLoading(false); }
+  };
+  useEffect(() => {
+    if (dept === "tech" && pageTab === "labels") loadLabels();
   }, [dept, pageTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Modal open/close ────────────────────────────────────────────────────────
@@ -742,6 +765,63 @@ export default function AdminDept() {
     } finally { setProjectDeleting(false); }
   };
 
+  const openNewLabel = () => {
+    setEditingLabel(null);
+    setLabelForm({ name: "", image_url: "", link: "", order_index: labels.length });
+    setProjectsError("");
+    setShowLabelForm(true);
+  };
+  const openEditLabel = (label: HomepageLabel) => {
+    setEditingLabel(label);
+    setLabelForm({ name: label.name, image_url: label.image_url, link: label.link ?? "", order_index: label.order_index });
+    setProjectsError("");
+    setShowLabelForm(true);
+  };
+  const handleLabelPhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setLabelUploading(true); setProjectsError("");
+    try {
+      const url = await uploadTechProjectImage(file);
+      setLabelForm(form => ({ ...form, image_url: url }));
+    } catch (e: unknown) {
+      setProjectsError(e instanceof Error ? e.message : "Image upload failed.");
+    } finally {
+      setLabelUploading(false);
+      if (labelPhotoInputRef.current) labelPhotoInputRef.current.value = "";
+    }
+  };
+  const handleLabelSave = async () => {
+    if (!labelForm.name.trim() || !labelForm.image_url.trim()) return;
+    setLabelSaving(true); setProjectsError("");
+    try {
+      const payload = {
+        name: labelForm.name.trim(), image_url: labelForm.image_url.trim(),
+        link: labelForm.link.trim() || null, order_index: Number(labelForm.order_index) || 0,
+      };
+      if (editingLabel) {
+        await updateHomepageLabel(editingLabel.id, payload);
+        logActivity(admin?.id ?? null, admin?.username ?? "admin", `Updated homepage label: ${payload.name}`, "edit", admin?.department);
+      } else {
+        await createHomepageLabel(payload);
+        logActivity(admin?.id ?? null, admin?.username ?? "admin", `Created homepage label: ${payload.name}`, "create", admin?.department);
+      }
+      setShowLabelForm(false); setEditingLabel(null); await loadLabels();
+    } catch (e: unknown) {
+      setProjectsError(e instanceof Error ? e.message : "Failed to save label.");
+    } finally { setLabelSaving(false); }
+  };
+  const handleLabelDelete = async (id: string) => {
+    setLabelDeleting(true);
+    try {
+      await deleteHomepageLabel(id);
+      setLabelDeleteConfirm(null); await loadLabels();
+    } catch (e: unknown) {
+      setProjectsError(e instanceof Error ? e.message : "Failed to delete label.");
+      setLabelDeleteConfirm(null);
+    } finally { setLabelDeleting(false); }
+  };
+
   // ── Delete ──────────────────────────────────────────────────────────────────
   const handleDelete = async (id: string) => {
     setDeleting(true);
@@ -787,6 +867,7 @@ export default function AdminDept() {
           {([
             { key: "requests", label: "📋 Requests" },
             { key: "projects", label: "◆ Projects" },
+              { key: "labels", label: "▣ Labels" },
           ] as { key: typeof pageTab; label: string }[]).map(tab => (
             <button key={tab.key} onClick={() => setPageTab(tab.key)}
               style={{ padding: "11px 22px", background: "none", border: "none", borderBottom: `2.5px solid ${pageTab === tab.key ? C.info : "transparent"}`, color: pageTab === tab.key ? C.info : C.muted, fontFamily: SANS, fontSize: 14, fontWeight: pageTab === tab.key ? 600 : 400, cursor: "pointer", marginBottom: -1.5, whiteSpace: "nowrap" }}>
@@ -928,6 +1009,46 @@ export default function AdminDept() {
 
       </>)}
 
+      {/* ── Homepage labels tab ─────────────────────────────────────────────── */}
+      {pageTab === "labels" && dept === "tech" && (
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
+            <div>
+              <h1 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 28, color: C.ink, margin: 0 }}><span style={{ color: C.info, marginRight: 8 }}>▣</span>Homepage Labels</h1>
+              <p style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Cards shown in the moving carousel below Why Kayrosco?</p>
+            </div>
+            <button onClick={openNewLabel} style={{ padding: "9px 18px", borderRadius: 8, border: "none", background: C.info, color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>+ New Label</button>
+          </div>
+          {projectsError && <div style={{ ...alertBase, background: C.dangerTint, border: "1px solid #f5c6c2", color: C.danger, marginBottom: 16 }}>{projectsError}</div>}
+          {labelsLoading ? (
+            <div style={{ textAlign: "center", padding: 48, color: C.muted, fontFamily: SANS }}>Loading labels…</div>
+          ) : labels.length === 0 ? (
+            <div style={{ textAlign: "center", padding: 56, background: C.surface2, borderRadius: 14, border: `1px solid ${C.hair}` }}>
+              <p style={{ fontSize: 36, marginBottom: 10 }}>▣</p>
+              <p style={{ fontWeight: 600, fontSize: 16, color: C.ink, margin: "0 0 8px" }}>No homepage labels yet</p>
+              <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px" }}>Add labels here and they will appear on the homepage carousel.</p>
+              <button onClick={openNewLabel} style={{ padding: "10px 22px", borderRadius: 8, border: "none", background: C.info, color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: SANS }}>+ Create First Label</button>
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
+              {labels.map(label => (
+                <div key={label.id} style={{ background: C.surface, borderRadius: 14, border: `1.5px solid ${C.hair}`, overflow: "hidden" }}>
+                  <div style={{ height: 130, background: C.surface2, display: "flex", alignItems: "center", justifyContent: "center" }}><img src={label.image_url} alt={label.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>
+                  <div style={{ padding: 14 }}>
+                    <h3 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 15, color: C.ink, margin: "0 0 5px" }}>{label.name}</h3>
+                    <p style={{ fontSize: 11, color: C.muted, margin: "0 0 10px" }}>Order: {label.order_index}</p>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button onClick={() => openEditLabel(label)} style={{ flex: 1, padding: "6px 0", borderRadius: 6, border: `1.5px solid ${C.info}`, background: "none", color: C.info, fontSize: 12, cursor: "pointer", fontFamily: SANS }}>Edit</button>
+                      {labelDeleteConfirm === label.id ? <><button onClick={() => handleLabelDelete(label.id)} disabled={labelDeleting} style={{ padding: "6px 9px", borderRadius: 6, border: "none", background: C.danger, color: "#fff", fontSize: 11, cursor: "pointer" }}>{labelDeleting ? "…" : "Yes"}</button><button onClick={() => setLabelDeleteConfirm(null)} style={{ padding: "6px 9px", borderRadius: 6, border: `1px solid ${C.hair}`, background: "none", color: C.muted, fontSize: 11, cursor: "pointer" }}>No</button></> : <button onClick={() => setLabelDeleteConfirm(label.id)} style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.dangerTint}`, background: C.dangerTint, color: C.danger, fontSize: 12, cursor: "pointer" }}>×</button>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Projects tab (tech dept only) ─────────────────────────────────────── */}
       {pageTab === "projects" && dept === "tech" && (
         <div>
@@ -1060,6 +1181,31 @@ export default function AdminDept() {
               })}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Homepage label create / edit modal */}
+      {showLabelForm && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(22,33,62,0.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100, padding: 20 }} onClick={e => { if (e.target === e.currentTarget) setShowLabelForm(false); }}>
+          <div style={{ background: C.bg, borderRadius: 16, width: "100%", maxWidth: 520, padding: 24, boxShadow: "0 20px 60px rgba(22,33,62,0.28)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ fontFamily: SANS, fontWeight: 600, fontSize: 18, color: C.ink, margin: 0 }}>{editingLabel ? "Edit Label" : "New Label"}</h2>
+              <button onClick={() => setShowLabelForm(false)} style={{ background: "none", border: "none", fontSize: 24, color: C.muted, cursor: "pointer" }}>×</button>
+            </div>
+            <label style={labelStyle}>Name *</label>
+            <input style={{ ...inputStyle, marginBottom: 14 }} value={labelForm.name} onChange={e => setLabelForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Albania Business Hub" />
+            <label style={labelStyle}>Image URL *</label>
+            <input ref={labelPhotoInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleLabelPhotoChange} />
+            <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+              <input style={{ ...inputStyle, flex: 1 }} value={labelForm.image_url} onChange={e => setLabelForm(f => ({ ...f, image_url: e.target.value }))} placeholder="Paste a URL or upload a picture" disabled={labelUploading} />
+              <button type="button" onClick={() => labelPhotoInputRef.current?.click()} disabled={labelUploading} style={{ flexShrink: 0, padding: "0 14px", borderRadius: 8, border: `1.5px solid ${C.accent}`, background: "transparent", color: C.accent, fontFamily: SANS, fontWeight: 600, cursor: labelUploading ? "wait" : "pointer" }}>{labelUploading ? "Uploading…" : "Upload"}</button>
+            </div>
+            <label style={labelStyle}>Link (optional)</label>
+            <input style={{ ...inputStyle, marginBottom: 14 }} value={labelForm.link} onChange={e => setLabelForm(f => ({ ...f, link: e.target.value }))} placeholder="https://example.com" />
+            <label style={labelStyle}>Order</label>
+            <input type="number" min="0" style={{ ...inputStyle, marginBottom: 20 }} value={labelForm.order_index} onChange={e => setLabelForm(f => ({ ...f, order_index: Number(e.target.value) }))} />
+            <button onClick={handleLabelSave} disabled={labelSaving || !labelForm.name.trim() || !labelForm.image_url.trim()} style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "none", background: C.info, color: "#fff", fontFamily: SANS, fontWeight: 600, cursor: "pointer", opacity: labelSaving ? .6 : 1 }}>{labelSaving ? "Saving…" : "Save Label"}</button>
+          </div>
         </div>
       )}
 

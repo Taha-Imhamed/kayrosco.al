@@ -5,9 +5,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Render the site at 80% scale by default, so a 100% browser zoom
-   looks the way a manual ctrl+scroll zoom-out to 80% would.
-   The main Index page opts out (adds .no-site-zoom to <html>) and stays at 100%. */
+/* Render the site at 80% scale by default, while the main Index page and admin use their own scale override. */
 html {
   zoom: 0.8;
 }
@@ -65,6 +63,35 @@ All colors MUST be HSL.
     --sidebar-ring: 158 100% 50%;
   }
 }
+
+.language-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid rgba(143, 210, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(8, 16, 34, 0.28);
+  box-shadow: 0 0 18px rgba(96, 165, 250, 0.24), inset 0 0 14px rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px);
+}
+.language-pill button {
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: transparent;
+  color: rgba(255,255,255,0.68);
+  font: 700 10px/1 ui-sans-serif, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.language-pill button:hover,
+.language-pill button.active {
+  color: #fff;
+  background: rgba(96, 165, 250, 0.3);
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.34);
+}
+.language-pill:not(.language-pill-dark) { border-color: rgba(255,255,255,0.24); }
 
 @layer base {
   :root {
