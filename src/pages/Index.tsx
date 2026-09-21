@@ -1075,15 +1075,18 @@ const GlobalStyles = () => (
         padding: 12px 0 18px;
     }
     .homepage-labels-track {
+        --hl-item-w: clamp(210px, 28vw, 340px);
+        --hl-gap: clamp(12px, 2vw, 28px);
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: clamp(12px, 2vw, 28px);
-        min-width: max-content;
+        gap: var(--hl-gap);
+        width: max-content;
+        will-change: transform;
+        transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
     }
     .homepage-label-link {
         display: block;
-        flex: 0 0 clamp(210px, 28vw, 340px);
+        flex: 0 0 var(--hl-item-w);
         color: inherit;
         text-decoration: none;
     }
@@ -1159,10 +1162,7 @@ const GlobalStyles = () => (
         background: #8fd2ff;
     }
     @media (max-width: 720px) {
-        .homepage-labels-track { gap: 8px; }
-        .homepage-label-link { flex-basis: 72vw; }
-        .homepage-label-link:first-child,
-        .homepage-label-link:last-child { opacity: 0.65; }
+        .homepage-labels-track { --hl-item-w: 72vw; --hl-gap: 8px; }
     }
 
     .platforms-section-title {
@@ -1920,17 +1920,19 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                     {homepageLabels.length > 0 && (
                         <section className="homepage-labels-section" aria-label="Kayrosco highlights">
                             <div className="homepage-labels-window">
-                                <div className="homepage-labels-track">
-                                    {[-1, 0, 1].map((offset) => {
-                                        const label = homepageLabels[(labelIndex + offset + homepageLabels.length) % homepageLabels.length];
-                                        const isCenter = offset === 0;
+                                <div
+                                    className="homepage-labels-track"
+                                    style={{ transform: `translateX(calc(50vw - (${labelIndex} * (var(--hl-item-w) + var(--hl-gap))) - (var(--hl-item-w) / 2)))` }}
+                                >
+                                    {homepageLabels.map((label, index) => {
+                                        const isCenter = index === labelIndex;
                                         const card = (
                                             <div className={`homepage-label-card ${isCenter ? 'is-center' : ''}`}>
-                                                <img src={label.image_url} alt={label.name} />
+                                                <img src={label.image_url} alt={label.name} loading="lazy" />
                                                 <div className="homepage-label-name">{label.name}</div>
                                             </div>
                                         );
-                                        return label.link ? <a key={`${label.id}-${offset}`} href={label.link} target="_blank" rel="noreferrer" className="homepage-label-link">{card}</a> : <div key={`${label.id}-${offset}`} className="homepage-label-link">{card}</div>;
+                                        return label.link ? <a key={label.id} href={label.link} target="_blank" rel="noreferrer" className="homepage-label-link">{card}</a> : <div key={label.id} className="homepage-label-link">{card}</div>;
                                     })}
                                 </div>
                             </div>
