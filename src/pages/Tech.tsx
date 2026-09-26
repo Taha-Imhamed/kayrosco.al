@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SeoHead from "@/components/SeoHead";
 import CompanySwitcher from "@/components/CompanySwitcher";
+import { LanguagePill, useSiteLanguage } from "@/contexts/SiteLanguageContext";
 import {
   createServiceRequest,
   getServicesByArea,

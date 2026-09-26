@@ -33,6 +33,8 @@ const SHOW_TRAVEL_CONSULTING = false;
 
 // --- Hero video background ---
 const HERO_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4';
+// Same background video used on the /tech page hero, reused behind the tech-showcase banner.
+const TECH_SHOWCASE_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_065045_c44942da-53c6-4804-b734-f9e07fc22e08.mp4';
 
 // --- Global Styles Component ---
 const GlobalStyles = () => (
@@ -748,26 +750,48 @@ const GlobalStyles = () => (
         flex-direction: column;
     }
 
-    .tech-showcase { position: relative; overflow: hidden; padding: clamp(28px, 5vw, 64px); border: 1px solid rgba(143,210,255,0.18); border-radius: 24px; background: radial-gradient(circle at 86% 18%, rgba(56,189,248,0.18), transparent 26%), linear-gradient(125deg, #0d101c 0%, #111a2b 52%, #080b13 100%); box-shadow: 0 24px 70px rgba(0,0,0,0.34); isolation: isolate; }
-    .tech-showcase::before { content: ""; position: absolute; width: 340px; height: 340px; right: -120px; bottom: -190px; border: 1px solid rgba(143,210,255,0.16); border-radius: 50%; box-shadow: 0 0 0 22px rgba(143,210,255,0.03), 0 0 0 46px rgba(143,210,255,0.025); pointer-events: none; }
-    .tech-showcase-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr); gap: clamp(28px, 6vw, 88px); align-items: center; }
-    .tech-showcase-kicker { display: inline-flex; align-items: center; gap: 9px; color: #8fd2ff; font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
-    .tech-showcase-kicker::before { content: ""; width: 28px; height: 1px; background: #8fd2ff; box-shadow: 0 0 12px #8fd2ff; }
-    .tech-showcase-title { max-width: 650px; margin: 18px 0 16px; color: #fff; font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 5vw, 4.6rem); line-height: 0.98; letter-spacing: -0.02em; }
-    .tech-showcase-copy { max-width: 540px; margin: 0; color: rgba(232,242,255,0.68); font-size: clamp(0.95rem, 1.5vw, 1.08rem); line-height: 1.75; }
-    .tech-showcase-cta { display: inline-flex; align-items: center; gap: 9px; margin-top: 28px; color: #07111e; background: #8fd2ff; border: 1px solid #b6e2ff; box-shadow: 0 0 24px rgba(96,165,250,0.28); }
-    .tech-showcase-cta:hover { color: #07111e; background: #b6e2ff; border-color: #d9f1ff; box-shadow: 0 0 34px rgba(96,165,250,0.46); }
-    .tech-showcase-visual { position: relative; min-height: 280px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; background: rgba(0,0,0,0.34); box-shadow: inset 0 0 50px rgba(56,189,248,0.08); }
-    .tech-showcase-visual::after { content: "KAYROSCO / TECH"; position: absolute; right: 16px; bottom: 13px; color: rgba(255,255,255,0.32); font-family: 'Press Start 2P', monospace; font-size: 0.48rem; letter-spacing: 0.08em; }
-    .tech-showcase-logo { width: min(78%, 360px); animation: tech-logo-float 5s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(143,210,255,0.22)); }
-    @keyframes tech-logo-float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.015); } }
-    .tech-metrics { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    /* Plain single-column banner. Background is a flat neutral placeholder -
+       swap background-color below for a background-image (cover/center)
+       once you have the image you want here. */
+    .tech-showcase { position: relative; overflow: hidden; padding: clamp(32px, 6vw, 72px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); background-color: #0b0d10; isolation: isolate; }
+    .tech-showcase-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .tech-showcase-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4,6,10,0.86) 0%, rgba(4,6,10,0.72) 45%, rgba(4,6,10,0.92) 100%); z-index: 1; pointer-events: none; }
+    .tech-showcase-content { position: relative; z-index: 2; }
+    .tech-showcase-intro { text-align: center; }
+    .tech-showcase-kicker { display: inline-flex; align-items: center; gap: 9px; color: rgba(255,255,255,0.55); font-family: 'JetBrains Mono', 'Geist Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+    .tech-showcase-kicker::before { content: ""; width: 28px; height: 1px; background: rgba(255,255,255,0.35); }
+    .tech-showcase-title { max-width: 600px; margin: 14px auto; color: #fff; font-family: 'JetBrains Mono', 'Geist Mono', monospace; font-weight: 700; font-size: clamp(1.6rem, 3.2vw, 2.5rem); line-height: 1.12; letter-spacing: -0.01em; }
+    .tech-showcase-copy { max-width: 480px; margin: 0 auto; color: rgba(232,242,255,0.68); font-size: clamp(0.86rem, 1.3vw, 0.96rem); line-height: 1.65; }
+    .tech-showcase-cta {
+        display: inline-flex; align-items: center; gap: 7px; margin-top: 24px;
+        padding: 9px 20px; font-size: 0.8rem;
+        position: relative; overflow: hidden;
+    }
+    .tech-showcase-cta::after {
+        content: "";
+        position: absolute;
+        top: 0; left: -60%;
+        width: 40%; height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.65), transparent);
+        transform: skewX(-20deg);
+        transition: left 0.55s ease;
+        pointer-events: none;
+    }
+    .tech-showcase-cta:hover {
+        background-color: rgba(255,255,255,0.08);
+        color: #fff;
+        border-color: rgba(255,255,255,0.4);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 8px 20px rgba(0,0,0,0.35);
+        transform: translateY(-1px);
+    }
+    .tech-showcase-cta:hover::after { left: 130%; }
+    .tech-metrics { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 34px; border-top: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(255,255,255,0.12); }
     .tech-metric { padding: 17px 18px 14px; border-right: 1px solid rgba(255,255,255,0.12); transition: background 0.25s ease, transform 0.25s ease; }
     .tech-metric:last-child { border-right: 0; }
-    .tech-metric:hover { background: rgba(143,210,255,0.07); transform: translateY(-3px); }
-    .tech-metric-number { color: #fff; font-family: 'Instrument Serif', serif; font-size: 2.15rem; line-height: 1; }
+    .tech-metric:hover { background: rgba(255,255,255,0.04); transform: translateY(-3px); }
+    .tech-metric-number { color: #fff; font-family: 'JetBrains Mono', 'Geist Mono', monospace; font-weight: 700; font-size: 2.15rem; line-height: 1; }
     .tech-metric-label { margin-top: 7px; color: rgba(232,242,255,0.52); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-    @media (max-width: 760px) { .tech-showcase-grid { grid-template-columns: 1fr; } .tech-showcase-visual { min-height: 210px; order: -1; } .tech-metrics { grid-template-columns: repeat(2, 1fr); } .tech-metric:nth-child(2) { border-right: 0; } .tech-metric:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.12); } }
+    @media (max-width: 760px) { .tech-metrics { grid-template-columns: repeat(2, 1fr); } .tech-metric:nth-child(2) { border-right: 0; } .tech-metric:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.12); } }
     .expertise-card:hover {
         transform: translateY(-5px);
         border-color: var(--accent-purple);
@@ -980,7 +1004,7 @@ const GlobalStyles = () => (
         background: linear-gradient(135deg, #150a2e 0%, #16213e 55%, #0a1520 100%);
         border: 1px solid rgba(187,134,252,0.25);
         border-radius: 18px;
-        padding: 72px 48px;
+        padding: 44px 36px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -1711,18 +1735,49 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
     const [ctaPointer, setCtaPointer] = useState({ x: '50%', y: '50%', active: false });
     const [homepageLabels, setHomepageLabels] = useState<HomepageLabel[]>([]);
     const [labelIndex, setLabelIndex] = useState(0);
+    const [labelJumpInstant, setLabelJumpInstant] = useState(false);
+    const repeatedLabels = homepageLabels.length ? [...homepageLabels, ...homepageLabels, ...homepageLabels] : [];
 
     useEffect(() => {
         getHomepageLabels().then(setHomepageLabels).catch(() => setHomepageLabels([]));
     }, []);
 
+    // Start on the middle copy of the (tripled) strip so it has room to keep
+    // advancing seamlessly instead of ever needing to jump backward to "restart".
+    // The jump itself is done with the transition off so it isn't visible on load.
+    useEffect(() => {
+        if (homepageLabels.length === 0) return;
+        setLabelJumpInstant(true);
+        setLabelIndex(homepageLabels.length);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => setLabelJumpInstant(false));
+        });
+    }, [homepageLabels.length]);
+
     useEffect(() => {
         if (homepageLabels.length < 2) return;
         const timer = window.setInterval(() => {
-            setLabelIndex((current) => (current + 1) % homepageLabels.length);
-        }, 4500);
+            setLabelIndex((current) => current + 1);
+        }, 6500);
         return () => window.clearInterval(timer);
     }, [homepageLabels.length]);
+
+    // Once the strip scrolls past the middle copy into the trailing copy, silently
+    // rewind exactly one cycle (transition disabled for that single frame) back into
+    // the middle copy. Because both copies are identical, the rewind is invisible and
+    // the strip can keep going forever without ever visibly resetting to the start.
+    useEffect(() => {
+        const total = homepageLabels.length;
+        if (total < 2 || labelIndex < total * 2) return;
+        const rewind = window.setTimeout(() => {
+            setLabelJumpInstant(true);
+            setLabelIndex((current) => current - total);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => setLabelJumpInstant(false));
+            });
+        }, 720);
+        return () => window.clearTimeout(rewind);
+    }, [labelIndex, homepageLabels.length]);
 
     const platformRows = [
         [
@@ -1867,21 +1922,29 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
 
                     {/* ── Technology showcase ── */}
                     <section id="integrated-expertise" style={{ paddingTop: 34 }}>
-                        <div className="tech-showcase">
-                            <div className="tech-showcase-grid">
-                                <div>
+                        <div className="tech-showcase animate-fade-up">
+                            <video
+                                className="tech-showcase-video"
+                                src={TECH_SHOWCASE_VIDEO_URL}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                            />
+                            <div className="tech-showcase-overlay" />
+                            <div className="tech-showcase-content">
+                                <div className="tech-showcase-intro">
                                     <div className="tech-showcase-kicker">Kayrosco / Digital Systems</div>
                                     <h2 className="tech-showcase-title">{t('Technology. Driven by Vision.')}</h2>
-                                    <p className="tech-showcase-copy">{t('Kayrosco Tech delivers technology projects across industries and borders.')} <strong style={{ color: '#fff' }}>{t('Bold solutions. Real impact.')}</strong></p>
-                                    <a className="button-style tech-showcase-cta" href="/tech">{t('Take a Closer Look →')} <ArrowRight size={16} /></a>
+                                    <p className="tech-showcase-copy">{t('Technology projects across industries and borders.')} <strong style={{ color: '#fff' }}>{t('Bold solutions. Real impact.')}</strong></p>
+                                    <a className="button-style tech-showcase-cta" href="/tech">{t('Take a Closer Look →')} <ArrowRight size={14} /></a>
                                 </div>
-                                <div className="tech-showcase-visual"><img className="tech-showcase-logo" src="/logo 7.png" alt="Kayrosco Tech logo" /></div>
-                            </div>
-                            <div className="tech-metrics">
-                                <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Technology Team</div></div>
-                                <div className="tech-metric"><div className="tech-metric-number">4+</div><div className="tech-metric-label">Countries Active</div></div>
-                                <div className="tech-metric"><div className="tech-metric-number">50+</div><div className="tech-metric-label">Projects Delivered</div></div>
-                                <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Unified Group</div></div>
+                                <div className="tech-metrics">
+                                    <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Technology Team</div></div>
+                                    <div className="tech-metric"><div className="tech-metric-number">4+</div><div className="tech-metric-label">Countries Active</div></div>
+                                    <div className="tech-metric"><div className="tech-metric-number">50+</div><div className="tech-metric-label">Projects Delivered</div></div>
+                                    <div className="tech-metric"><div className="tech-metric-number">1</div><div className="tech-metric-label">Unified Group</div></div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -1922,9 +1985,12 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             <div className="homepage-labels-window">
                                 <div
                                     className="homepage-labels-track"
-                                    style={{ transform: `translateX(calc(50vw - (${labelIndex} * (var(--hl-item-w) + var(--hl-gap))) - (var(--hl-item-w) / 2)))` }}
+                                    style={{
+                                        transform: `translateX(calc(50vw - (${labelIndex} * (var(--hl-item-w) + var(--hl-gap))) - (var(--hl-item-w) / 2)))`,
+                                        transition: labelJumpInstant ? 'none' : undefined,
+                                    }}
                                 >
-                                    {homepageLabels.map((label, index) => {
+                                    {repeatedLabels.map((label, index) => {
                                         const isCenter = index === labelIndex;
                                         const card = (
                                             <div className={`homepage-label-card ${isCenter ? 'is-center' : ''}`}>
@@ -1932,15 +1998,17 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                                                 <div className="homepage-label-name">{label.name}</div>
                                             </div>
                                         );
-                                        return label.link ? <a key={label.id} href={label.link} target="_blank" rel="noreferrer" className="homepage-label-link">{card}</a> : <div key={label.id} className="homepage-label-link">{card}</div>;
+                                        const key = `${label.id}-${index}`;
+                                        return label.link ? <a key={key} href={label.link} target="_blank" rel="noreferrer" className="homepage-label-link">{card}</a> : <div key={key} className="homepage-label-link">{card}</div>;
                                     })}
                                 </div>
                             </div>
                             {homepageLabels.length > 1 && (
                                 <div className="homepage-label-dots" aria-label="Choose homepage highlight">
-                                    {homepageLabels.map((label, index) => (
-                                        <button key={label.id} type="button" aria-label={`Show ${label.name}`} aria-current={index === labelIndex} className={index === labelIndex ? 'is-active' : ''} onClick={() => setLabelIndex(index)} />
-                                    ))}
+                                    {homepageLabels.map((label, index) => {
+                                        const isActive = index === labelIndex % homepageLabels.length;
+                                        return <button key={label.id} type="button" aria-label={`Show ${label.name}`} aria-current={isActive} className={isActive ? 'is-active' : ''} onClick={() => setLabelIndex(homepageLabels.length + index)} />;
+                                    })}
                                 </div>
                             )}
                         </section>
@@ -1991,16 +2059,17 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                             onMouseLeave={() => setCtaPointer((current) => ({ ...current, active: false }))}
                         >
                             <div className="cta-pointer-effect"></div>
-                            <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', marginBottom: 16, position: 'relative', zIndex: 1 }}>
+                            <h2 style={{ fontSize: 'clamp(1.4rem, 2.6vw, 2rem)', marginBottom: 10, position: 'relative', zIndex: 1 }}>
                                 Building Success Starts Here
                             </h2>
-                            <p style={{ maxWidth: 640, margin: '0 auto 36px', fontSize: '1.05rem', position: 'relative', zIndex: 1 }}>
+                            <p style={{ maxWidth: 540, margin: '0 auto 22px', fontSize: '0.92rem', position: 'relative', zIndex: 1 }}>
                                 Trusted support for investors, entrepreneurs, travelers, and organizations seeking seamless solutions across Albania.
                             </p>
                             <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
                                 <button
                                     type="button"
                                     className="button-style primary-button"
+                                    style={{ padding: '10px 24px', fontSize: '0.85rem' }}
                                     onClick={() => setShowQuickContact((current) => !current)}
                                 >
                                     Get in Touch &rarr;
