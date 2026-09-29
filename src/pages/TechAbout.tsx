@@ -257,9 +257,9 @@ export default function TechAbout() {
               style={{ padding: "14px 28px", borderRadius: 12, border: "2px solid rgba(255,255,255,0.35)", background: "#fff", color: C.accent, fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: SANS }}>
               Start a project →
             </button>
-            <a href="mailto:tech@kayrosco.com"
+            <a href="mailto:tech@kayrosco.al"
               style={{ padding: "14px 24px", borderRadius: 12, border: "2px solid rgba(255,255,255,0.35)", background: "transparent", color: "#fff", fontSize: 15, fontWeight: 600, cursor: "pointer", fontFamily: SANS, display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-              <Mail size={16} /> tech@kayrosco.com
+              <Mail size={16} /> tech@kayrosco.al
             </a>
           </div>
         </div>

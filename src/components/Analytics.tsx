@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { COOKIE_CONSENT_EVENT, getCookieConsent } from "./CookieConsent";
 
 const DEFAULT_GA_ID = "G-ER8ZH7MM7L";
 const GA_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) || DEFAULT_GA_ID;
@@ -26,6 +27,7 @@ function appendScript(src: string, id: string) {
 
 export function trackEvent(eventName: string, params: Record<string, unknown> = {}) {
   if (!IS_PRODUCTION) return;
+  if (getCookieConsent() !== "accepted") return;
 
   if (window.gtag && GA_ID) {
     window.gtag("event", eventName, params);
@@ -35,9 +37,20 @@ export function trackEvent(eventName: string, params: Record<string, unknown> = 
 export default function Analytics() {
   const location = useLocation();
   const hasSentInitialRouteView = useRef(false);
+  const [hasConsent, setHasConsent] = useState(() => getCookieConsent() === "accepted");
+
+  useEffect(() => {
+    const handleConsentChange = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      setHasConsent(detail === "accepted");
+    };
+    window.addEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+    return () => window.removeEventListener(COOKIE_CONSENT_EVENT, handleConsentChange);
+  }, []);
 
   useEffect(() => {
     if (!IS_PRODUCTION) return;
+    if (!hasConsent) return;
 
     if (GA_ID) {
       appendScript(`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`, "kayrosco-ga");
@@ -64,10 +77,11 @@ export default function Analytics() {
       `;
       document.head.appendChild(inline);
     }
-  }, []);
+  }, [hasConsent]);
 
   useEffect(() => {
     if (!IS_PRODUCTION) return;
+    if (!hasConsent) return;
 
     if (!hasSentInitialRouteView.current) {
       hasSentInitialRouteView.current = true;

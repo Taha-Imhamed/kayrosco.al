@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Analytics from "./components/Analytics";
 import PublicAgentWidget from "./components/agent/PublicAgentWidget";
+import CookieConsent from "./components/CookieConsent";
 
 // Public pages
 import Index from "./pages/Index";
@@ -22,6 +23,7 @@ import SeoToolPage from "./pages/SeoToolPage";
 import SeoDirectoryPage from "./pages/SeoDirectoryPage";
 import PartnersPage from "./pages/PartnersPage";
 import Threedmt from "./pages/Threedmt";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Admin pages
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
@@ -62,6 +64,7 @@ const App = () => (
         <BrowserRouter>
           <Analytics />
           <PublicAgentWidget />
+          <CookieConsent />
           <Routes>
             {/* ── Public routes ───────────────────────────────────────── */}
             <Route path="/" element={<Index />} />
@@ -77,6 +80,7 @@ const App = () => (
             <Route path="/tools" element={<SeoDirectoryPage />} />
             <Route path="/tools/:slug" element={<SeoToolPage />} />
             <Route path="/partners" element={<PartnersPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/3dmt" element={<Threedmt />} />
             <Route path="/:category/:slug" element={<SeoLandingPage />} />
             <Route path="/client/login" element={<ClientPortalLogin />} />

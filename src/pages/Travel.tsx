@@ -1415,7 +1415,7 @@ function Footer({ settings, lang }: { settings: Record<string, string> | null; l
   const mob = useMobile();
   const t = T[lang];
   const [clicks, setClicks] = useState(0);
-  const click = () => { const n = clicks + 1; setClicks(n); if (n >= 3) { window.location.href = "/admin"; setClicks(0); return; } setTimeout(() => setClicks(0), 600); };
+  const click = () => { const n = clicks + 1; setClicks(n); if (n >= 3) { window.location.href = "/memo/login"; setClicks(0); return; } setTimeout(() => setClicks(0), 600); };
   return (
     <footer style={{ background: C.ink, color: "#94A3B8", fontFamily: SANS }} dir={t.dir}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: mob ? "36px 20px 100px" : "50px 32px" }}>

@@ -4,7 +4,7 @@ import SeoHead from "@/components/SeoHead";
 import { SITE_URL } from "@/data/seoPages";
 import ShinyText from "@/components/ShinyText";
 import { getHomepageLabels, HomepageLabel } from "@/lib/supabaseApi";
-import { LanguagePill, useSiteLanguage } from "@/contexts/SiteLanguageContext";
+import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
 
 // --- Type Definition for Page State ---
 type Page = '/' | '/travel' | '/consulting' | '/tech' | '/about' | '/contact';
@@ -687,11 +687,61 @@ const GlobalStyles = () => (
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 30px;
     }
-    
+
+    .founders-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 48px;
+    }
+
+    .about-card {
+        background-color: #262626;
+        border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .about-divider {
+        max-width: 800px;
+        height: 1px;
+        margin: 60px auto;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 50%, transparent 100%);
+        border: none;
+    }
+
+    .about-facts-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin: 0 auto 10px;
+    }
+
+    .about-fact-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--border-light);
+        background-color: #262626;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .founder-card {
+        flex: 0 1 300px;
+        max-width: 340px;
+        background-color: #262626;
+        border-color: rgba(255, 255, 255, 0.16);
+    }
+
     /* Footer */
     .footer {
         padding: 50px 50px;
-        background-color: var(--background-med);
+        background-color: #232323;
         border-top: 1px solid var(--border-light);
         text-align: center;
         font-size: 0.9rem;
@@ -722,6 +772,35 @@ const GlobalStyles = () => (
         width: 17px;
         height: 17px;
     }
+    .footer-lang-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+    }
+    .footer-lang-btn {
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border-light);
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+    }
+    .footer-lang-btn:hover {
+        color: var(--text-light);
+        border-color: var(--accent-purple);
+    }
+    .footer-lang-btn.is-active {
+        color: var(--text-light);
+        background: var(--accent-purple);
+        border-color: var(--accent-purple);
+    }
+
     .footer-social-icon:hover {
         color: var(--text-light);
         border-color: var(--accent-purple);
@@ -1542,6 +1621,48 @@ const TechView: React.FC = () => (
     </div>
 );
 
+const FOUNDERS: { name: string; role: string; initials: string; linkedin: string }[] = [
+    { name: 'Mehmet Alkaya', role: 'Founder & CEO', initials: 'MA', linkedin: 'https://www.linkedin.com/in/mehmet-alkaya-0b351a30b/' },
+    { name: 'Anas Abusefrita', role: 'Co-Founder', initials: 'AA', linkedin: 'https://www.linkedin.com/in/anas-abusefrita-1775392b8/' },
+    { name: 'Mohamed Imhamed', role: 'Co-Founder', initials: 'MI', linkedin: 'https://www.linkedin.com/in/mohammed-hosin-1707402aa/' },
+    { name: 'Taha Imhamed', role: 'Co-Founder', initials: 'TI', linkedin: 'https://www.linkedin.com/in/taha-imhamed/' },
+];
+
+const FounderCard: React.FC<{ founder: (typeof FOUNDERS)[number] }> = ({ founder }) => (
+    <a
+        href={founder.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="section-card founder-card"
+        style={{ textAlign: 'center', textDecoration: 'none', color: 'inherit', display: 'block' }}
+    >
+        <div
+            style={{
+                width: 64, height: 64, margin: '0 auto 16px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '50%',
+                background: 'var(--accent-purple)',
+                color: 'var(--background-dark)',
+                fontWeight: 700, fontSize: '1.1rem',
+            }}
+        >
+            {founder.initials}
+        </div>
+        <h3 style={{ margin: 0 }}>{founder.name}</h3>
+        <p className="text-muted" style={{ marginTop: '4px' }}>{founder.role}</p>
+        <span
+            style={{
+                marginTop: '14px',
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                color: 'var(--accent-purple)', fontSize: '0.85rem', fontWeight: 600,
+            }}
+        >
+            <ContactIcon kind="linkedin" />
+            View LinkedIn
+        </span>
+    </a>
+);
+
 const AboutView: React.FC = () => (
     <div className="page-view">
         <div className="view-content-padding">
@@ -1550,19 +1671,85 @@ const AboutView: React.FC = () => (
                 <p className="text-muted" style={{ maxWidth: '800px', margin: '0 auto 40px' }}>
                     Kayrosco Group was founded on the principle of providing clear, focused, and impactful technology solutions for international clients engaging with Albania. From custom software to modern web platforms and CCTV systems, you have a single, trusted partner.
                 </p>
-            
+
+                <hr className="about-divider" />
+
                 <div className="solutions-grid">
-                     <div className="section-card">
+                     <div className="section-card about-card">
                         <h3>Our Mission</h3>
                         <p>To be the definitive bridge between the global market and the opportunities present in the fast-developing Albanian economy.</p>
                     </div>
-                    <div className="section-card">
+                    <div className="section-card about-card">
                         <h3>Our Vision</h3>
                         <p>To establish a new standard for excellence and reliability in technology services in the Western Balkans.</p>
                     </div>
                 </div>
 
-                <div className="section-card" style={{ maxWidth: '800px', margin: '30px auto', textAlign: 'center' }}>
+                <div className="section-card about-card" style={{ maxWidth: '800px', margin: '30px auto', textAlign: 'center' }}>
+                    <h3>Our Goal</h3>
+                    <p>Kayrosco Group has one goal: to change the way businesses are built and started. We manage more than one product and department under a single group, giving founders and companies a single trusted partner instead of a patchwork of vendors.</p>
+                </div>
+
+                <hr className="about-divider" />
+
+                <h3 style={{ textAlign: 'center' }}>Our Founders</h3>
+                <p className="text-muted" style={{ maxWidth: '700px', margin: '10px auto 0', textAlign: 'center' }}>
+                    The team behind Kayrosco Group, across technology, consulting, and travel.
+                </p>
+                <div className="founders-row" style={{ marginTop: '20px' }}>
+                    {FOUNDERS.slice(0, 3).map((founder) => (
+                        <FounderCard key={founder.name} founder={founder} />
+                    ))}
+                </div>
+                <div className="founders-row" style={{ marginTop: '48px' }}>
+                    {FOUNDERS.slice(3).map((founder) => (
+                        <FounderCard key={founder.name} founder={founder} />
+                    ))}
+                </div>
+
+                <hr className="about-divider" />
+
+                <div className="section-card about-card" style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                    <h3>Our Portfolio</h3>
+                    <p>Kayrosco Group manages more than one product and department. Explore our full company portfolio and the projects we've delivered at{' '}
+                        <a href="https://work.kayrosco.al" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-purple)', fontWeight: 600 }}>work.kayrosco.al</a>.
+                    </p>
+                    <a
+                        href="https://work.kayrosco.al"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="button-style"
+                        style={{ display: 'inline-block', marginTop: '14px' }}
+                    >
+                        View Company Portfolio &rarr;
+                    </a>
+                </div>
+
+                <hr className="about-divider" />
+
+                <h3 style={{ textAlign: 'center' }}>Connect With Us</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '12px', marginTop: '20px' }}>
+                    {[...CONTACT_DETAILS, ...CONTACT_SOCIALS].map((item) => (
+                        <a
+                            key={item.label}
+                            href={item.href}
+                            target={item.href.startsWith('http') ? '_blank' : undefined}
+                            rel="noopener noreferrer"
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: '8px',
+                                borderRadius: '999px', border: '1px solid var(--border-light)',
+                                padding: '10px 18px', fontSize: '0.85rem', fontWeight: 600,
+                                color: 'var(--text-light)', textDecoration: 'none',
+                                transition: 'border-color 0.15s ease-in-out, transform 0.15s ease-in-out',
+                            }}
+                        >
+                            <ContactIcon kind={item.icon} />
+                            {item.label}
+                        </a>
+                    ))}
+                </div>
+
+                <div className="section-card about-card" style={{ maxWidth: '800px', margin: '30px auto', textAlign: 'center' }}>
                     <h3>Our Hub</h3>
                     <p><strong>Main Address:</strong> Rruga 'e Kavajes', Pallati 18/A, Kati 3, Tirana, Albania 1001</p>
                     <p style={{ marginTop: '10px' }}><strong>Hours:</strong> Mon - Fri: 09:00 - 17:00</p>
@@ -1680,19 +1867,29 @@ const ContactView: React.FC = () => (
                     Reach out today for tailored advice on your technology needs in Albania.
                 </p>
                 
-                <form 
-                    className="section-card" 
+                <form
+                    className="section-card"
                     style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const data = new FormData(e.currentTarget);
+                        const fullName = String(data.get('fullName') || '').trim();
+                        const email = String(data.get('emailAddress') || '').trim();
+                        const service = String(data.get('serviceInterest') || '').trim();
+                        const message = String(data.get('message') || '').trim();
+                        const subject = `New inquiry from ${fullName || 'website visitor'}`;
+                        const body = `Name: ${fullName}\nEmail: ${email}\nService Interest: ${service || 'Not specified'}\n\nMessage:\n${message}`;
+                        window.location.href = `mailto:info@kayrosco.al?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    }}
                 >
                     <label htmlFor="fullName">Full Name</label>
-                    <input type="text" id="fullName" placeholder="John Doe" />
-                    
+                    <input type="text" id="fullName" name="fullName" placeholder="John Doe" required />
+
                     <label htmlFor="emailAddress">Email Address</label>
-                    <input type="email" id="emailAddress" placeholder="you@example.com" />
-                    
+                    <input type="email" id="emailAddress" name="emailAddress" placeholder="you@example.com" required />
+
                     <label htmlFor="serviceInterest">Service Interest</label>
-                    <select id="serviceInterest">
+                    <select id="serviceInterest" name="serviceInterest">
                         <option value="">-- Select a Service --</option>
                         <option value="General">General Inquiry</option>
                         {SHOW_TRAVEL_CONSULTING && <option value="Travel">Kayrosco Travel</option>}
@@ -1701,11 +1898,11 @@ const ContactView: React.FC = () => (
                     </select>
 
                     <label htmlFor="message">Your Message</label>
-                    <textarea id="message" placeholder="Tell us about your project or inquiry..."></textarea>
-                    
-                    <button 
-                        type="submit" 
-                        className="button-style primary-button" 
+                    <textarea id="message" name="message" placeholder="Tell us about your project or inquiry..." required></textarea>
+
+                    <button
+                        type="submit"
+                        className="button-style primary-button"
                         style={{ width: '100%', marginTop: '30px' }}
                     >
                         Send Message
@@ -2077,11 +2274,23 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                                 {SHOW_TRAVEL_CONSULTING && <a href="/consulting" className="button-style">Our Services</a>}
                             </div>
                             {showQuickContact && (
-                                <form className="quick-contact-form" onSubmit={(e) => e.preventDefault()}>
+                                <form
+                                    className="quick-contact-form"
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const data = new FormData(e.currentTarget);
+                                        const email = String(data.get('email') || '').trim();
+                                        const whatsapp = String(data.get('whatsapp') || '').trim();
+                                        const description = String(data.get('description') || '').trim();
+                                        const subject = `New quick request from ${email || 'website visitor'}`;
+                                        const body = `Email: ${email}\nWhatsApp: ${whatsapp || 'Not provided'}\n\nDescription:\n${description}`;
+                                        window.location.href = `mailto:info@kayrosco.al?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                    }}
+                                >
                                     <div className="quick-contact-grid">
                                         <div>
                                             <label htmlFor="quick-email">Email</label>
-                                            <input id="quick-email" name="email" type="email" placeholder="you@example.com" />
+                                            <input id="quick-email" name="email" type="email" placeholder="you@example.com" required />
                                         </div>
                                         <div>
                                             <label htmlFor="quick-whatsapp">WhatsApp Number</label>
@@ -2089,7 +2298,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
                                         </div>
                                         <div className="quick-contact-full">
                                             <label htmlFor="quick-description">Description</label>
-                                            <textarea id="quick-description" name="description" placeholder="Tell us what you need help with." />
+                                            <textarea id="quick-description" name="description" placeholder="Tell us what you need help with." required />
                                         </div>
                                         <div className="quick-contact-full" style={{ display: 'flex', justifyContent: 'center' }}>
                                             <button type="submit" className="button-style primary-button">Send Request</button>
@@ -2139,7 +2348,7 @@ const HomeView: React.FC<{ navbar?: React.ReactNode }> = ({ navbar }) => {
 
 // Main Application Component
 const App: React.FC = () => {
-    const { t } = useSiteLanguage();
+    const { t, language, setLanguage } = useSiteLanguage();
     const [currentPath, setCurrentPath] = useState<Page>(
         (window.location.pathname as Page) || '/'
     );
@@ -2243,7 +2452,6 @@ const App: React.FC = () => {
     const navbarElement = (
         <div className={`navbar-wrapper ${currentPageName === 'home' ? `home-header ${headerVisible ? '' : 'is-hidden'}` : ''}`}>
             <nav className="navbar">
-                <div style={{ position: 'absolute', right: 82, top: '50%', transform: 'translateY(calc(-50% + 12px))' }}><LanguagePill /></div>
                 <div className="nav-links-container">
 
                     <a className={`nav-link ${getLinkClass('/')}`} href="/">{t('Home')}</a>
@@ -2413,12 +2621,12 @@ const App: React.FC = () => {
                             left: 14,
                             right: 14,
                             bottom: 8,
-                            zIndex: 1200,
+                            zIndex: 1500,
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(4, 1fr)',
+                            gridTemplateColumns: 'repeat(5, 1fr)',
                             gap: 6,
                             padding: 6,
-                            background: 'rgba(13, 19, 31, 0.94)',
+                            background: 'rgba(26, 33, 47, 0.94)',
                             backdropFilter: 'blur(18px)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
                             borderRadius: 16,
@@ -2520,6 +2728,25 @@ const App: React.FC = () => {
                             </svg>
                             <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{t('Contact')}</span>
                         </a>
+                        <button
+                            type="button"
+                            aria-label="Change language"
+                            onClick={() => setLanguage(language === 'en' ? 'ar' : language === 'ar' ? 'tr' : 'en')}
+                            style={{
+                                minHeight: 46, borderRadius: 12, border: '1px solid transparent',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3,
+                                color: '#FFFFFF', background: 'transparent', cursor: 'pointer',
+                                transition: 'background 0.2s ease, border-color 0.2s ease',
+                            }}
+                            onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.animation = 'tab-pop 0.28s ease'; }}
+                            onAnimationEnd={(e) => { (e.currentTarget as HTMLButtonElement).style.animation = ''; }}
+                        >
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 20, height: 20, stroke: '#FFFFFF', fill: 'none' }}>
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z" />
+                            </svg>
+                            <span style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.01em' }}>{language.toUpperCase()}</span>
+                        </button>
                     </nav>
                 </>
             )}
@@ -2543,6 +2770,18 @@ const App: React.FC = () => {
                             </a>
                         ))}
                     </div>
+                    <div className="footer-lang-row" aria-label="Choose language">
+                        {(['en', 'ar', 'tr'] as const).map((lng) => (
+                            <button
+                                key={lng}
+                                type="button"
+                                className={`footer-lang-btn ${language === lng ? 'is-active' : ''}`}
+                                onClick={() => setLanguage(lng)}
+                            >
+                                {lng.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
                     <div className="footer-links" style={{marginTop: '20px', display: 'flex', gap: '15px', justifyContent: 'center'}}>
                         {SHOW_TRAVEL_CONSULTING && <a href="/travel" className="text-sm text-muted hover:text-accent-purple">Travel Services</a>}
                         {SHOW_TRAVEL_CONSULTING && <span className="text-muted">|</span>}
@@ -2551,6 +2790,8 @@ const App: React.FC = () => {
                         <a href="/tech" className="text-sm text-muted hover:text-accent-purple">{t('Tech Solutions')}</a>
                         <span className="text-muted">|</span>
                         <a href="/partners" className="text-sm text-muted hover:text-accent-purple">{t('Partners')}</a>
+                        <span className="text-muted">|</span>
+                        <a href="/privacy-policy" className="text-sm text-muted hover:text-accent-purple">Privacy Policy</a>
                     </div>
                 </div>
                 <p className="copyright" style={{marginTop: '20px'}}>© 2026 Kayrosco. All rights reserved. | Global Bridge to Albania.</p>

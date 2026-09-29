@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SeoHead from "@/components/SeoHead";
 import CompanySwitcher from "@/components/CompanySwitcher";
-import { LanguagePill, useSiteLanguage } from "@/contexts/SiteLanguageContext";
+import { useSiteLanguage } from "@/contexts/SiteLanguageContext";
 import {
   createServiceRequest,
   getServicesByArea,
@@ -276,7 +276,7 @@ function CodeCard() {
 }
 
 function TechPage() {
-    const { t } = useSiteLanguage();
+    const { t, language, setLanguage } = useSiteLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showAllServices, setShowAllServices] = useState(false);
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
@@ -766,6 +766,22 @@ function TechPage() {
           transition: color 0.18s ease;
         }
         .vg-nav-btn:hover { color: hsl(40,6%,95%); }
+        .vg-lang-row { display: inline-flex; align-items: center; gap: 4px; }
+        .vg-lang-btn {
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.18);
+          color: rgba(243,241,238,0.75);
+          border-radius: 9999px;
+          cursor: pointer;
+          font-family: ${FONT_STACK};
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          padding: 4px 9px;
+          transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+        .vg-lang-btn:hover { color: hsl(40,6%,95%); border-color: rgba(255,255,255,0.35); }
+        .vg-lang-btn.active { background: rgba(255,255,255,0.14); color: hsl(40,6%,95%); border-color: rgba(255,255,255,0.35); }
         .vg-cta-btn {
           background: rgba(255,255,255,0.08);
           border: 1px solid rgba(255,255,255,0.2);
@@ -953,7 +969,18 @@ function TechPage() {
             </div>
 
             <div style={{ position: 'absolute', right: 32, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <LanguagePill dark />
+              <div className="vg-lang-row">
+                {(['en', 'ar', 'tr'] as const).map((lng) => (
+                  <button
+                    key={lng}
+                    type="button"
+                    className={`vg-lang-btn ${language === lng ? 'active' : ''}`}
+                    onClick={() => setLanguage(lng)}
+                  >
+                    {lng.toUpperCase()}
+                  </button>
+                ))}
+              </div>
               <CompanySwitcher current="tech" variant="dark" />
               <button
                 className="vg-cta-btn vg-nav-signup"
@@ -1543,6 +1570,27 @@ function TechPage() {
           </GlassCard>
         </div>
       </section>
+
+      <footer
+        style={{
+          borderTop: `1px solid ${C.borderSoft}`,
+          padding: "28px 24px",
+          textAlign: "center",
+          color: C.textSoft,
+          fontSize: 13,
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: 10 }}>
+          <a href="/" style={{ color: C.textSoft, textDecoration: "none" }}>Home</a>
+          <span>|</span>
+          <a href="/about" style={{ color: C.textSoft, textDecoration: "none" }}>About</a>
+          <span>|</span>
+          <a href="/contact" style={{ color: C.textSoft, textDecoration: "none" }}>Contact</a>
+          <span>|</span>
+          <a href="/privacy-policy" style={{ color: C.textSoft, textDecoration: "none" }}>Privacy Policy</a>
+        </div>
+        <p>© 2026 Kayrosco Tech, part of Kayrosco Group. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
